@@ -1,0 +1,9 @@
+export const APP_STATE = {
+    HOST: 'HOST',
+    GATHERING: 'GATHERING',
+    PASSIVE_BOARD: 'PASSIVE_BOARD',
+    ACTIVE_BOARD: 'ACTIVE_BOARD',
+    TERMINAL: 'TERMINAL',
+};
+
+Object.freeze(APP_STATE);
