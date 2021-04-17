@@ -28,6 +28,9 @@ export class Shape {
     copy(props) {
         this.props = {...props };
     }
+    export () {
+        return JSON.stringify(this.props);
+    }
 }
 
 export class activeShape extends Shape {

@@ -1,21 +1,39 @@
-import userEvent from '@testing-library/user-event';
-import React from 'react';
-import { Button } from 'antd';
+import React, { useState, useEffect} from 'react';
+import { Button, Card, Row, Col } from 'antd';
 
 const GatheringSpace = props => {
 
-    const { userType, startBoard } = props;
+    const { userType, startBoard, hostLobbyKey } = props;
+    const [ shareURL, setShareURL] = useState('');
+    useEffect(() => {
+        console.log({hostLobbyKey})
+        setShareURL(window.location.protocol + "//" + window.location.host + window.location.pathname + `?k=${hostLobbyKey}`);
+    }, [hostLobbyKey]);
 
     return (
         <>
-            {
-                userType === 'HOST'? 
-                    (
-                        <Button onClick={startBoard}> Start Board </Button>
-                    ):(
-                        'Host is connecting...'
-                    )
-            }
+            <Row justify='center'>
+                <Col span={12}>
+                    {
+                    userType === 'HOST'? 
+                        (
+                            <>
+                                <Row wrap={false} justify='center' align='middle'>
+                                    <Col flex="none">
+                                        <Card> Share this link </Card>
+                                    </Col>
+                                    <Col flex="auto">
+                                        <Card>{shareURL}</Card>
+                                    </Col>
+                                </Row>        
+                                <Button type="primary" onClick={startBoard}> Start Board </Button>
+                            </>
+                        ):(
+                            'Host is connecting...'
+                        )
+                    }
+                </Col>
+            </Row>
         </>
     )
 }

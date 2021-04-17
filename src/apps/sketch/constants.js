@@ -19,6 +19,9 @@ export const MESSAGE_TYPE = {
     CLIENT: 'CLIENT',
     OFFER: 'OFFER',
     ANSWER: 'ANSWER',
+    GUEST: 'GUEST'
 };
 
 Object.freeze(MESSAGE_TYPE);
+
+export const LOBBY_COLLECTION = 'LOBBY_COLLECTION';
