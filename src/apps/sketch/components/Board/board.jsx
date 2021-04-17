@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
 import { Row, Col } from 'antd';
+import Buttons from '../../buttons';
 
 const Board = props => {
+    // font and colours
+    const [font, setFont] = useState(5);
+    const [color, setColor] = useState('black');
 
     const { sketchChannel } = props;
     const [ brush, setBrush ] = useState();
@@ -14,12 +18,23 @@ const Board = props => {
       setChat(sketchChannel.current.getChannel('chat'));
     }, []);
 
-    return (
-      <Row>
+    const handleFont = (f) => {
+      setFont(f);
+    }
+
+  const handleColor = (c) => {
+      setColor(c);
+  }
+
+  return (
+    <Row>
       <Col xs={24} xl={20}>
         {
           brush 
-            ? <SketchBoard brush = {brush}/>
+            ? <>
+                <SketchBoard brush = {brush} font = {font} color = {color}/>
+                <Buttons handleFont={handleFont} handleColor={handleColor}/>
+              </>
             : <></>
         }
       </Col>

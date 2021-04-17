@@ -25,6 +25,8 @@ export default function SketchBoard(props) {
 
     const draw = p => {
         if (p.mouseIsPressed === true) {
+            currShape.setFont(props.font);
+            currShape.setColor(props.color);
             currShape.setStart(p.mouseX, p.mouseY);
             currShape.setEnd(p.pmouseX, p.pmouseY);
             const copyObj = new Shape();
