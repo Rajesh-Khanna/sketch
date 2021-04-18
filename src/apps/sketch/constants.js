@@ -7,3 +7,21 @@ export const APP_STATE = {
 };
 
 Object.freeze(APP_STATE);
+
+export const USER_TYPE = {
+    HOST: 'HOST',
+    GUEST: 'GUEST',
+};
+
+Object.freeze(USER_TYPE);
+
+export const MESSAGE_TYPE = {
+    CLIENT: 'CLIENT',
+    OFFER: 'OFFER',
+    ANSWER: 'ANSWER',
+    GUEST: 'GUEST'
+};
+
+Object.freeze(MESSAGE_TYPE);
+
+export const LOBBY_COLLECTION = 'LOBBY_COLLECTION';

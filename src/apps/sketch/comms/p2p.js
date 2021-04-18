@@ -1,13 +1,10 @@
-import signalChannel from './signalChannel';
-
 export default class p2pConnection {
 
     constructor(dataChannelListner) {
         this.dataChannelListner = dataChannelListner;
     }
 
-    async makeCall() {
-        const sc = new signalChannel();
+    async makeCall(sc) {
         const configuration = { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] }
         this.peerConnection = new RTCPeerConnection(configuration);
         this.peerConnection.createDataChannel('channel');
@@ -43,8 +40,7 @@ export default class p2pConnection {
         });
     }
 
-    async receiveCall() {
-        const sc = new signalChannel(false);
+    async receiveCall(sc) {
         const configuration = { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] }
 
         this.peerConnection = new RTCPeerConnection(configuration);
