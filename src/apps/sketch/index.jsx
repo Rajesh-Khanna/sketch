@@ -46,6 +46,7 @@ const Sketch = () => {
     }
 
     const startBoard = () => {
+        dataChannel.current.getChannel('meta').send('active_board');
         setAppState(APP_STATE.ACTIVE_BOARD);
     }
 
