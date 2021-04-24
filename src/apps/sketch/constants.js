@@ -25,3 +25,8 @@ export const MESSAGE_TYPE = {
 Object.freeze(MESSAGE_TYPE);
 
 export const LOBBY_COLLECTION = 'LOBBY_COLLECTION';
+
+export const MAX_FONT = 80;
+export const MIN_FONT = 1;
+
+export const DEFAULT_BACKGROUND_COLOR = 225;

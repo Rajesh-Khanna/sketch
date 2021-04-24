@@ -1,3 +1,5 @@
+import { DEFAULT_BACKGROUND_COLOR } from './../../constants';
+
 export class Shape {
     props = {
         start: {
@@ -15,7 +17,7 @@ export class Shape {
         if (this.props && this.props.start) {
             p.strokeWeight(this.props.thick);
             if (this.props.color === 'eraser') {
-                p.stroke(225);
+                p.stroke(DEFAULT_BACKGROUND_COLOR);
             } else {
                 p.stroke(this.props.color);
             }
@@ -47,5 +49,11 @@ export class activeShape extends Shape {
     }
     setFont(thickness) {
         this.props.thick = thickness;
+    }
+
+    isStationary() {
+        if (this.props.end.x === this.props.start.x && this.props.end.y === this.props.start.y)
+            return true;
+        return false;
     }
 }
