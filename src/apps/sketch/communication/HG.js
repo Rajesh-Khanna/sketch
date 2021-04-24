@@ -15,6 +15,8 @@ class ChannelEndSim {
 
     mod = false;
 
+    readyState = 'open';
+
     constructor(label, mod) {
         this.label = label;
         this.mod = mod;
