@@ -126,6 +126,9 @@ export class Host {
         return this.channels[channel_name];
     }
 
+    signalEnd() {
+        this.signal.end();
+    }
 }
 
 export class Guest {
@@ -177,5 +180,9 @@ export class Guest {
 
     getChannel(channel_name) {
         return this.channels[channel_name];
+    }
+
+    signalEnd() {
+        this.signal.end();
     }
 }
