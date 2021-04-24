@@ -156,4 +156,10 @@ export default class Signal {
         console.log({ workSpaceRef: this.workSpaceRef });
         // this.onMessage((v) => { console.log({ v }) });
     }
+
+    end() {
+        firebase.app().delete().then(() => {
+            console.log('signal app closed');
+        });
+    }
 }
