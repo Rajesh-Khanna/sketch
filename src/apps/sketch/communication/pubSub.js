@@ -20,8 +20,10 @@ export default class PubSub {
         console.log({ channel: message.currentTarget.label, message: message.data });
         const channel = message.currentTarget.label;
         this.channels[channel].forEach(line => {
-            console.log({ line })
-            line.send(message.data);
+            if (line.readyState === 'open')
+                line.send(message.data);
+            else
+                console.log('channel closed:', line);
         });
     }
 }
