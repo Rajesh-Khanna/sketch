@@ -16,8 +16,6 @@ export default class PubSub {
     }
 
     publish(message) {
-        console.log({ message });
-        console.log({ channel: message.currentTarget.label, message: message.data });
         const channel = message.currentTarget.label;
         this.channels[channel].forEach(line => {
             if (line.readyState === 'open')
