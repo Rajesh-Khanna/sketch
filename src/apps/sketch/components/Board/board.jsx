@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
 import { Row, Col } from 'antd';
-import Palette from '../../buttons';
 
 import { MAX_FONT, MIN_FONT } from '../../constants';
+import Palette from './../Palette';
 
 const Board = props => {
     // font and colours
