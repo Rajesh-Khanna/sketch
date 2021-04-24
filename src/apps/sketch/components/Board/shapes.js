@@ -1,4 +1,5 @@
 import { DEFAULT_BACKGROUND_COLOR } from './../../constants';
+import { isScreenLarge } from './../../utils';
 
 export class Shape {
     props = {
@@ -27,10 +28,28 @@ export class Shape {
     clone() {
         return JSON.parse(JSON.stringify(this.props));
     }
-    copy(props) {
+    copy(props, scale = false) {
+        const width = isScreenLarge() ? window.innerWidth * 5 / 6 : window.innerWidth;
+        if (scale) {
+            props.start.x *= width;
+            props.start.y *= width;
+            props.end.x *= width;
+            props.end.y *= width;
+            props.thick *= width;
+        }
         this.props = {...props };
     }
-    export () {
+    export (scale = false) {
+        const width = isScreenLarge() ? window.innerWidth * 5 / 6 : window.innerWidth;
+        if (scale) {
+            const scaleProp = Object.assign(this.props);
+            scaleProp.start.x /= width;
+            scaleProp.start.y /= width;
+            scaleProp.end.x /= width;
+            scaleProp.end.y /= width;
+            scaleProp.thick /= width;
+            return JSON.stringify(scaleProp);
+        }
         return JSON.stringify(this.props);
     }
 }

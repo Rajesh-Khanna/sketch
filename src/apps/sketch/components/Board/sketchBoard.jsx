@@ -2,6 +2,7 @@ import { activeShape, Shape } from './shapes';
 import React, {useEffect, useRef} from "react";
 import Sketch from "react-p5";
 import { DEFAULT_BACKGROUND_COLOR } from './../../constants';
+import { isScreenLarge } from './../../utils';
 
 export default function SketchBoard(props) {
 
@@ -16,7 +17,7 @@ export default function SketchBoard(props) {
         console.log(brush);
         brush.onmessage = (message) => {
             const x = new Shape();
-            x.copy(JSON.parse(message.data))
+            x.copy(JSON.parse(message.data), true);
             othersShapes.current.push(x);
         }
 
@@ -50,7 +51,8 @@ export default function SketchBoard(props) {
     }, []);
 
     const setup = (p, canvasParentRef) => {
-        p.createCanvas(1000, 600).parent(canvasParentRef);
+        const width = isScreenLarge()? window.innerWidth*5/6 : window.innerWidth;
+        p.createCanvas(width, width/2).parent(canvasParentRef);
         p.noFill();
         p.background(DEFAULT_BACKGROUND_COLOR);
     }
@@ -65,7 +67,7 @@ export default function SketchBoard(props) {
                 const copyObj = new Shape();
                 copyObj.copy(currShape.clone());
                 if(brush)
-                    brush.send(currShape.export());
+                    brush.send(currShape.export(true));
                 currShape.drawShape(p);
             }
         }

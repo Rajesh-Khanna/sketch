@@ -49,26 +49,31 @@ const Board = props => {
   }
 
   return (
-    <Row>
-      <Col xs={24} xl={20}>
-        {
-          brush 
-            ? <>
-                <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} />
-                <Palette handleFont={handleFont} handleColor={handleColor}/>
-              </>
-            : <></>
-        }
-      </Col>
-      <Col xs={24} xl={4}>
-      {
-          chat 
-            ? <ChatBoard chat = {chat} />
-            : <></>
-        }
-        
+    <Row justify='center'>
+      <Col lg={20} md={24}>
+        <Row>
+          <Col md={24} lg={20}>
+            {
+              brush 
+                ? <>
+                    <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} />
+                    <Palette handleFont={handleFont} handleColor={handleColor}/>
+                  </>
+                : <></>
+            }
+          </Col>
+          <Col md={24} lg={4}>
+          {
+              chat 
+                ? <ChatBoard chat = {chat} />
+                : <></>
+            }
+            
+          </Col>
+        </Row>
       </Col>
     </Row>
+
     );
 }
 

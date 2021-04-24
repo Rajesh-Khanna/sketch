@@ -12,3 +12,8 @@ export function insertParam(key, value) {
         window.history.pushState({ path: newurl }, '', newurl);
     }
 }
+
+export function isScreenLarge() {
+    if (window.screen.width >= 992) return true;
+    return false;
+}
