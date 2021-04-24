@@ -14,6 +14,6 @@ export function insertParam(key, value) {
 }
 
 export function isScreenLarge() {
-    if (window.screen.width >= 992) return true;
+    if (window.innerWidth >= 992) return true;
     return false;
 }

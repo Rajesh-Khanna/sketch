@@ -50,9 +50,9 @@ const Board = props => {
 
   return (
     <Row justify='center'>
-      <Col lg={20} md={24}>
+      <Col lg={20} xs={24}>
         <Row>
-          <Col md={24} lg={20}>
+          <Col lg={20} xs={24}>
             {
               brush 
                 ? <>
@@ -62,7 +62,7 @@ const Board = props => {
                 : <></>
             }
           </Col>
-          <Col md={24} lg={4}>
+          <Col lg={4} xs={24}>
           {
               chat 
                 ? <ChatBoard chat = {chat} />
