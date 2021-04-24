@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
 import { Row, Col } from 'antd';
-import Buttons from '../../buttons';
+
+import { MAX_FONT, MIN_FONT } from '../../constants';
+import Palette from './../Palette';
 
 const Board = props => {
     // font and colours
@@ -26,27 +28,52 @@ const Board = props => {
       setColor(c);
   }
 
+  const increaseFont = () => {
+    setFont(prevFont => {
+      return prevFont < MAX_FONT? prevFont + 1: prevFont;
+    })
+  }
+  
+  const reduceFont = () => {
+    setFont(prevFont => {
+      return prevFont > MIN_FONT? prevFont - 1 : prevFont;
+    })
+  }
+
+  const paletteHandler = {
+    font: handleFont,
+    color: handleColor,
+    getColor: () => { return color },
+    increaseFont: increaseFont,
+    reduceFont: reduceFont,
+  }
+
   return (
-    <Row>
-      <Col xs={24} xl={20}>
-        {
-          brush 
-            ? <>
-                <SketchBoard brush = {brush} font = {font} color = {color}/>
-                <Buttons handleFont={handleFont} handleColor={handleColor}/>
-              </>
-            : <></>
-        }
-      </Col>
-      <Col xs={24} xl={4}>
-      {
-          chat 
-            ? <ChatBoard chat = {chat} />
-            : <></>
-        }
-        
+    <Row justify='center'>
+      <Col lg={20} xs={24}>
+        <Row>
+          <Col lg={20} xs={24}>
+            {
+              brush 
+                ? <>
+                    <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} />
+                    <Palette handleFont={handleFont} handleColor={handleColor}/>
+                  </>
+                : <></>
+            }
+          </Col>
+          <Col lg={4} xs={24}>
+          {
+              chat 
+                ? <ChatBoard chat = {chat} />
+                : <></>
+            }
+            
+          </Col>
+        </Row>
       </Col>
     </Row>
+
     );
 }
 

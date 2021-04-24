@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Row, Col } from 'antd';
 
-
+import { VariableSizeList as List } from 'react-window';
+  
 const ChatBoard = props => {
 
     const { chat } = props;
@@ -9,7 +10,7 @@ const ChatBoard = props => {
     useEffect(() => {
         chat.onmessage = (message) => {
             setMessage(prev => {
-                return [...prev, message.data];
+                return [message.data, ...prev];
             });
         }
     }, []);
@@ -21,27 +22,31 @@ const ChatBoard = props => {
           event.target.value = '';
         }
     };
+
+    const MessageRow = ({ index, style }) => (
+        <div style={style}>{messages[index]}</div>
+    );      
+
     return (
-      <>
-        <Row>
-            <Col>
-              {
-                <ul>
-                    {
-                        messages.map(message => {
-                            return <li key={message}>{message}</li>
-                        })
-                    }
-                </ul>
-              }
-            </Col>
-        </Row>
+      <div style={{border: '2px solid black'}}>
         <Row>
             <Col>
                 <input placeholder="Enter to send" onKeyDown={handleKeyDown} />
             </Col>
         </Row>
-      </>
+        <Row>
+            <Col>
+                <List
+                    height={150}
+                    itemCount={messages.length}
+                    itemSize={() => 25}
+                    width={300}
+                >
+                    {MessageRow}
+                </List>
+            </Col>
+        </Row>
+      </div>
     );
 }
 
