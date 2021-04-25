@@ -48,6 +48,7 @@ export default function SketchBoard(props) {
 
         return () => window.removeEventListener('keyup', onKeyup);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const setup = (p, canvasParentRef) => {
