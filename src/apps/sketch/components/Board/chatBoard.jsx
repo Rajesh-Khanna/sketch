@@ -13,6 +13,7 @@ const ChatBoard = props => {
                 return [message.data, ...prev];
             });
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleKeyDown = (event) => {

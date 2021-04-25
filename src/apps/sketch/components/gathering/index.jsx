@@ -7,6 +7,7 @@ const GatheringSpace = props => {
     const metaChannel = useRef();
     const userName = useRef('');
     const players = useRef([]);
+    // eslint-disable-next-line no-unused-vars
     const [playerCount,setPlayerCount] = useState(0);
     const { userType, hostLobbyKey, dataChannel, setUserName, setPlayers, setAppState } = props;
     const [ shareURL, setShareURL] = useState('');
@@ -75,6 +76,7 @@ const GatheringSpace = props => {
                 }
             };
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

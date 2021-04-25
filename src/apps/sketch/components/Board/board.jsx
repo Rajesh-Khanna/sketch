@@ -18,6 +18,7 @@ const Board = props => {
     useEffect(() => {
       setBrush(sketchChannel.current.getChannel('brush'));
       setChat(sketchChannel.current.getChannel('chat'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleFont = (f) => {
