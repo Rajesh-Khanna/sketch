@@ -16,7 +16,8 @@ import { Host, Guest } from './communication/HG';
 
 const Sketch = () => {
     const dataChannel = useRef();
-    
+    const [players, setPlayers] = useState([]);
+    const [userName, setUserName] = useState();
     const [appState, setAppState] = useState(); 
     const [hostLobbyKey, setHostLobbyKey] = useState(null);
     const roomId = useRef('');
@@ -30,11 +31,9 @@ const Sketch = () => {
     const handleGuest = (lobbyKey) => {
         // write guest setup logic
         dataChannel.current = new Guest(lobbyKey, () => {
-            setAppState(APP_STATE.ACTIVE_BOARD);
+            setAppState(APP_STATE.GATHERING);
         });
         userType.current = 'GUEST';
-
-        setAppState(APP_STATE.GATHERING);
     }
 
     const handleHost = (onLobbyKey) => {
@@ -43,10 +42,6 @@ const Sketch = () => {
         userType.current = 'HOST';
 
         setAppState(APP_STATE.GATHERING);
-    }
-
-    const startBoard = () => {
-        setAppState(APP_STATE.ACTIVE_BOARD);
     }
 
     // useEffects
@@ -74,7 +69,14 @@ const Sketch = () => {
                         case APP_STATE.HOST: 
                             return <SketchHost handleHost = {handleHost}/> 
                         case APP_STATE.GATHERING:
-                            return <GatheringSpace hostLobbyKey={hostLobbyKey} userType={userType.current} startBoard={startBoard}/>
+                            return <GatheringSpace 
+                                        hostLobbyKey={hostLobbyKey} 
+                                        userType={userType.current} 
+                                        dataChannel={dataChannel} 
+                                        setUserName={setUserName}
+                                        setPlayers={setPlayers}
+                                        setAppState={setAppState}
+                                    />
                         case APP_STATE.PASSIVE_BOARD:
                             return <></>
                         case APP_STATE.ACTIVE_BOARD:

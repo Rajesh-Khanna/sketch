@@ -151,7 +151,6 @@ export class Guest {
     onChannel(channel) {
         console.log({ channel });
         this.channels[channel.label] = channel;
-        // channel.onmessage = message => console.log({ channel: message.currentTarget.label, message: message.data });
         if (Object.keys(this.channels).length >= 4) {
             this.onConnection()
         }
