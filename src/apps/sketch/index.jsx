@@ -16,7 +16,9 @@ import { Host, Guest } from './communication/HG';
 
 const Sketch = () => {
     const dataChannel = useRef();
+    // eslint-disable-next-line no-unused-vars
     const [players, setPlayers] = useState([]);
+    // eslint-disable-next-line no-unused-vars
     const [userName, setUserName] = useState();
     const [appState, setAppState] = useState(); 
     const [hostLobbyKey, setHostLobbyKey] = useState(null);
