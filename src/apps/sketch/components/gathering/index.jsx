@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect} from 'react';
 import { Input, Button, Card, Row, Col } from 'antd';
 import { APP_STATE } from '../../constants';
+import { gridStyle } from '../../style';
 
 const GatheringSpace = props => {
     const metaChannel = useRef();
@@ -9,11 +10,6 @@ const GatheringSpace = props => {
     const [playerCount,setPlayerCount] = useState(0);
     const { userType, hostLobbyKey, dataChannel, setUserName, setPlayers, setAppState } = props;
     const [ shareURL, setShareURL] = useState('');
-
-    const gridStyle = {
-        width: '25%',
-        textAlign: 'center',
-    };
 
     const setName = (name) => {
         userName.current = name;
@@ -28,9 +24,6 @@ const GatheringSpace = props => {
 
     const addPlayers = (name) => {
         const tempList = players.current.concat({name});
-        console.log('troubleshoot');
-        console.log(players.current);
-        console.log(tempList);
         let obj = {
             "PLAYERS_LIST": tempList
         };
