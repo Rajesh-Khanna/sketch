@@ -2,8 +2,10 @@ export default class PubSub {
 
     channels = {};
 
-    constructor() {
+    constructor(activityManager) {
         this.channels = {};
+        this.activityManager = activityManager;
+        this.activityManager.publish = (message) => { this.publish(message) };
     }
 
     push(channel_name, dataChannel) {
@@ -12,7 +14,7 @@ export default class PubSub {
         } else {
             this.channels[channel_name] = [dataChannel, ];
         }
-        dataChannel.onmessage = (message) => { this.publish(message) };
+        dataChannel.onmessage = (message) => { this.activityManager.handle(message) };
     }
 
     publish(message) {

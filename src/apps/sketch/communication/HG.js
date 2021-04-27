@@ -4,6 +4,7 @@ import RTC from './webRTCHandler';
 
 // constants
 import { USER_TYPE, MESSAGE_TYPE } from '../constants';
+import { ActivityManager } from './ActivityManager';
 
 class ChannelEndSim {
 
@@ -64,8 +65,11 @@ export class Host {
 
     channels = {};
 
+    activityManager;
+
     constructor(onLobbyKey) {
-        this.pubSub = new PubSub();
+        this.activityManager = new ActivityManager();
+        this.pubSub = new PubSub(this.activityManager);
         this.signal = new Signal('host', null, onLobbyKey);
         this.signal.onMessage((message) => { this.incomingMessage(message) });
         this.simulatedChannels();
