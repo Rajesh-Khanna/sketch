@@ -64,7 +64,7 @@ const Sketch = () => {
 
     return (
         <Layout>
-            <Header className='text-light'>Sketch Room</Header>
+            <Header className='text-light'>Sketch-Room</Header>
             <Content>
             {(() => {
                     switch(appState) { 
