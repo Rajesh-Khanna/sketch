@@ -17,3 +17,5 @@ export function isScreenLarge() {
     if (window.innerWidth >= 992) return true;
     return false;
 }
+
+export const getChannel = message => message.currentTarget.label;

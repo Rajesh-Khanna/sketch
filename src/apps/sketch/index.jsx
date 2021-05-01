@@ -17,9 +17,6 @@ import { Host, Guest } from './communication/HG';
 const Sketch = () => {
     const dataChannel = useRef();
     // eslint-disable-next-line no-unused-vars
-    const [players, setPlayers] = useState([]);
-    // eslint-disable-next-line no-unused-vars
-    const [userName, setUserName] = useState();
     const [appState, setAppState] = useState(); 
     const [hostLobbyKey, setHostLobbyKey] = useState(null);
     const roomId = useRef('');
@@ -33,6 +30,7 @@ const Sketch = () => {
     const handleGuest = (lobbyKey) => {
         // write guest setup logic
         dataChannel.current = new Guest(lobbyKey, () => {
+            console.log('APP_STATE.GATHERING');
             setAppState(APP_STATE.GATHERING);
         });
         userType.current = 'GUEST';
@@ -53,6 +51,7 @@ const Sketch = () => {
         if(lobbyKey){
             setRoomId(lobbyKey);
             handleGuest(lobbyKey);
+            // setHostLobbyKey(lobbyKey);
         }
         else{
             handleHost((hostKey) => {
@@ -75,8 +74,6 @@ const Sketch = () => {
                                         hostLobbyKey={hostLobbyKey} 
                                         userType={userType.current} 
                                         dataChannel={dataChannel} 
-                                        setUserName={setUserName}
-                                        setPlayers={setPlayers}
                                         setAppState={setAppState}
                                     />
                         case APP_STATE.PASSIVE_BOARD:
