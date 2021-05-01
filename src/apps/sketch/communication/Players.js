@@ -6,6 +6,8 @@ class Player {
 
     score = 0;
 
+    solved = false;
+
     constructor(id, name) {
         this.id = id;
         this.name = name;
@@ -13,6 +15,7 @@ class Player {
 
     addScore(points) {
         this.score += points;
+        this.solved = true;
     }
 
 }
@@ -21,8 +24,7 @@ export class Players {
 
     players = {}
 
-    addPlayer(name) {
-        const id = Math.random().toString(36).slice(-6);
+    addPlayer(id, name) {
         this.players[id] = new Player(id, name);
     }
 
@@ -48,6 +50,10 @@ export class Players {
                     name: player.name
                 };
             });
+    }
+
+    getUserById(id) {
+        return this.players[id];
     }
 
 }

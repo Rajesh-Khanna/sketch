@@ -1,6 +1,7 @@
 import { Players } from './Players';
 import { META_TYPES } from '../constants';
 import { getChannel } from '../utils';
+import { CHAT_TYPE } from './../constants';
 
 // all game logic goes here
 export class ActivityManager {
@@ -9,21 +10,40 @@ export class ActivityManager {
 
     players = new Players();
 
+    currWord = 'CORRECT';
+
     handle(message) {
-        console.log('handle');
         switch (getChannel(message)) {
             case 'meta':
                 this.handleMeta(message);
                 break;
             case 'chat':
+                this.handleChat(message);
+                break;
             case 'brush':
             default:
                 this.publish(message);
         }
     }
 
+    handleChat(message) {
+        const data = JSON.parse(message.data);
+        if (this.players.getUserById(data.userId).solved || !data.data)
+            return;
+
+        if (data.data === this.currWord) {
+            this.players.getUserById(data.userId).addScore(1);
+            const resp = {
+                userId: data.userId,
+                type: CHAT_TYPE.SOLVED,
+            };
+            this.publish({ data: JSON.stringify(resp) }, getChannel(message));
+        } else {
+            this.publish(message);
+        }
+    }
+
     handleMeta(message) {
-        console.log('handle meta');
         const data = JSON.parse(message.data);
         switch (data.type) {
             case META_TYPES.NEW_PLAYER:
@@ -35,7 +55,8 @@ export class ActivityManager {
     }
 
     handleNewPlayer(message) {
-        this.players.addPlayer(JSON.parse(message.data).name);
+        const data = JSON.parse(message.data);
+        this.players.addPlayer(data.userId, data.name);
         const resp = {
             type: META_TYPES.PLAYERS,
             players: this.players.getAllPlayers(),

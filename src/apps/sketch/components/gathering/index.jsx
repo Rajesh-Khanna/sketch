@@ -5,12 +5,11 @@ import { gridStyle } from '../../style';
 
 const GatheringSpace = props => {
     const metaChannel = useRef();
-    const userName = useRef('');
     const [players, setPlayers] = useState([]);
     const [isNameModalVisible, setNameModalVisible ] = useState(true);
     const [nameValue, setNameValue ] = useState('player');
     // eslint-disable-next-line no-unused-vars
-    const { userType, hostLobbyKey, dataChannel, setAppState } = props;
+    const { userType, hostLobbyKey = '', dataChannel, setAppState, setMyInfo, setAllPlayers } = props;
     const [ shareURL, setShareURL] = useState('');
 
     const startBoard = () => {
@@ -28,6 +27,7 @@ const GatheringSpace = props => {
             switch(messageObj.type){
                 case META_TYPES.PLAYERS:
                     setPlayers(messageObj.players);
+                    setAllPlayers(messageObj.players);
                     break;
                 case META_TYPES.START_GAME:
                     setAppState(APP_STATE.ACTIVE_BOARD);
@@ -40,10 +40,11 @@ const GatheringSpace = props => {
     }, []);
 
     const onTextChange = (e) => {
-        console.log({e});
         if(e.key === 'Enter'){
             if(nameValue.length > 0) {
-                metaChannel.current.send(JSON.stringify({ type: META_TYPES.NEW_PLAYER, name: nameValue }));
+                const id = Math.random().toString(36).slice(-6);
+                metaChannel.current.send(JSON.stringify({ type: META_TYPES.NEW_PLAYER, userId: id, name: nameValue }));
+                setMyInfo(id,nameValue);
                 setNameModalVisible(false);
             }
         }

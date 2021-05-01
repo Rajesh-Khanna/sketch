@@ -39,3 +39,9 @@ export const META_TYPES = {
     END_GAME: 'END_GAME',
     RESET_GAME: 'RESET_GAME',
 }
+
+export const CHAT_TYPE = {
+    GUESS: 'GUESS',
+    SOLVED: 'SOLVED',
+    CLUE: 'CLUE',
+}

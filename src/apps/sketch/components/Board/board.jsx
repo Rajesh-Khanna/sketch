@@ -12,7 +12,7 @@ const Board = props => {
     const [font, setFont] = useState(5);
     const [color, setColor] = useState('black');
 
-    const { sketchChannel } = props;
+    const { sketchChannel, getMyInfo, getPlayerById } = props;
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
 
@@ -68,7 +68,7 @@ const Board = props => {
           <Col lg={4} xs={24}>
             {
               chat
-                ? <ChatBoard chat = {chat} />
+                ? <ChatBoard chat = {chat} getPlayerById={getPlayerById} getMyInfo={getMyInfo}/>
                 : <></>
             }
           </Col>
