@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
+import Timer from './timer';
 import { Row, Col } from 'antd';
 
 import { MAX_FONT, MIN_FONT } from '../../constants';
@@ -59,6 +60,7 @@ const Board = props => {
                 ? <>
                     <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} />
                     <Palette handleFont={handleFont} handleColor={handleColor}/>
+                    <Timer/>
                   </>
                 : <></>
             }
