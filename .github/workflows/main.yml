@@ -27,7 +27,7 @@ jobs:
         with: 
           node-version: ${{ matrix.node-version }}
       - run: |
-          git remote set-url origin https://Rajesh-Khanna:{{ secrets.GITHUB_TOKEN  }}@github.com/Rajesh-Khanna/ol3-1.git
+          git remote set-url origin https://Rajesh-Khanna:{{ secrets.GITHUB_TOKEN  }}@github.com/Rajesh-Khanna/sketch.git
           git config --global user.email "chrajeshkhanna82798@gmail.com"
           git config --global user.name "Rajesh-Khanna"
           npm ci
