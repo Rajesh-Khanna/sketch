@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Row, Col, message } from 'antd';
+import { Row, Col } from 'antd';
 
 import { VariableSizeList as List } from 'react-window';
 import { CHAT_TYPE } from './../../constants';
