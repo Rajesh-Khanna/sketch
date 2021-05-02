@@ -29,9 +29,15 @@ const ChatBoard = props => {
     const MessageRow = ({ index, style }) => {
         const name = getPlayerById(messages[index].userId).name;
         const msg = messages[index].data
+        if(messages[index].type === CHAT_TYPE.SOLVED){
+            return(
+                <div style={style} color='yellow'><b>{name}: GUESSED CORRECTLY</b></div>
+            )
+        }
         return(
-        <div style={style}><b>{name}: </b>{msg}</div>
-    )}
+            <div style={style}><b>{name}: </b>{msg}</div>
+        )
+    }
 
     return (
       <div style={{border: '2px solid black'}}>
