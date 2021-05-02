@@ -16,10 +16,9 @@ import { Host, Guest } from './communication/HG';
 
 const Sketch = () => {
     const dataChannel = useRef();
+    const myInfo = useRef({});
+    const allPlayers = useRef({});
     // eslint-disable-next-line no-unused-vars
-    const [players, setPlayers] = useState([]);
-    // eslint-disable-next-line no-unused-vars
-    const [userName, setUserName] = useState();
     const [appState, setAppState] = useState(); 
     const [hostLobbyKey, setHostLobbyKey] = useState(null);
     const roomId = useRef('');
@@ -30,9 +29,26 @@ const Sketch = () => {
         roomId.current = id;
     }
 
+    const setAllPlayers = (data) => {
+        allPlayers.current = data.reduce((acc, curr) => {
+            return { [curr.userId]: { name: curr.name }, ...acc };
+        }, {});
+    } 
+
+    const getPlayerById = (id) => {
+        return allPlayers.current[id] || { name: 'MISSING' };
+    }
+ 
+    const setMyInfo = (id, name) => {
+        myInfo.current = { id, name };
+    }
+
+    const getMyInfo = () => myInfo.current;
+
     const handleGuest = (lobbyKey) => {
         // write guest setup logic
         dataChannel.current = new Guest(lobbyKey, () => {
+            console.log('APP_STATE.GATHERING');
             setAppState(APP_STATE.GATHERING);
         });
         userType.current = 'GUEST';
@@ -42,7 +58,6 @@ const Sketch = () => {
         // write hosting logic
         dataChannel.current = new Host(onLobbyKey);
         userType.current = 'HOST';
-
         setAppState(APP_STATE.GATHERING);
     }
 
@@ -50,9 +65,11 @@ const Sketch = () => {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const lobbyKey = urlParams.get('k');
+        console.log(lobbyKey);
         if(lobbyKey){
             setRoomId(lobbyKey);
             handleGuest(lobbyKey);
+            setHostLobbyKey(lobbyKey);
         }
         else{
             handleHost((hostKey) => {
@@ -75,14 +92,14 @@ const Sketch = () => {
                                         hostLobbyKey={hostLobbyKey} 
                                         userType={userType.current} 
                                         dataChannel={dataChannel} 
-                                        setUserName={setUserName}
-                                        setPlayers={setPlayers}
                                         setAppState={setAppState}
+                                        setMyInfo={setMyInfo}
+                                        setAllPlayers={setAllPlayers}
                                     />
                         case APP_STATE.PASSIVE_BOARD:
                             return <></>
                         case APP_STATE.ACTIVE_BOARD:
-                            return <Board sketchChannel={dataChannel}/>;
+                            return <Board sketchChannel={dataChannel} getMyInfo={getMyInfo} getPlayerById={getPlayerById}/>;
                         case APP_STATE.TERMINAL:
                             return <></>;
                         default:

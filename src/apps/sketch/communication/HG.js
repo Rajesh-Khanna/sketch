@@ -93,7 +93,8 @@ export class Host {
         const rtc = new RTC(
             USER_TYPE.HOST,
             (offer, guestId) => { this.signal.send('offer', offer, guestId) },
-            (e) => { this.createChannels(id) },
+            (e) => { console.log('on channel open set');
+                this.createChannels(id) },
             id
         );
         rtc.generateOffer();
@@ -101,6 +102,7 @@ export class Host {
     }
 
     createChannels(id) {
+        console.log('creating channel');
         this.pubSub.push('meta', this.guests[id].createChannel('meta'));
         this.pubSub.push('brush', this.guests[id].createChannel('brush'));
         this.pubSub.push('chat', this.guests[id].createChannel('chat'));
@@ -155,6 +157,7 @@ export class Guest {
     onChannel(channel) {
         console.log({ channel });
         this.channels[channel.label] = channel;
+        console.log(Object.keys(this.channels).length);
         if (Object.keys(this.channels).length >= 4) {
             this.onConnection()
         }

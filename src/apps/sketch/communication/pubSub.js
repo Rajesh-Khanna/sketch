@@ -1,3 +1,5 @@
+import { getChannel } from "../utils";
+
 export default class PubSub {
 
     channels = {};
@@ -5,7 +7,7 @@ export default class PubSub {
     constructor(activityManager) {
         this.channels = {};
         this.activityManager = activityManager;
-        this.activityManager.publish = (message) => { this.publish(message) };
+        this.activityManager.publish = (message, channel) => { this.publish(message, channel) };
     }
 
     push(channel_name, dataChannel) {
@@ -17,8 +19,8 @@ export default class PubSub {
         dataChannel.onmessage = (message) => { this.activityManager.handle(message) };
     }
 
-    publish(message) {
-        const channel = message.currentTarget.label;
+    publish(message, channel) {
+        if (!channel) channel = getChannel(message);
         this.channels[channel].forEach(line => {
             if (line.readyState === 'open')
                 line.send(message.data);

@@ -1,83 +1,54 @@
 import React, { useState, useRef, useEffect} from 'react';
-import { Input, Button, Card, Row, Col } from 'antd';
-import { APP_STATE } from '../../constants';
+import { Input, Button, Card, Row, Col, Modal } from 'antd';
+import { APP_STATE, META_TYPES } from '../../constants';
 import { gridStyle } from '../../style';
 
 const GatheringSpace = props => {
     const metaChannel = useRef();
-    const userName = useRef('');
-    const players = useRef([]);
+    const [players, setPlayers] = useState([]);
+    const [isNameModalVisible, setNameModalVisible ] = useState(true);
+    const [nameValue, setNameValue ] = useState('player');
     // eslint-disable-next-line no-unused-vars
-    const [playerCount,setPlayerCount] = useState(0);
-    const { userType, hostLobbyKey, dataChannel, setUserName, setPlayers, setAppState } = props;
+    const { userType, hostLobbyKey = '', dataChannel, setAppState, setMyInfo, setAllPlayers } = props;
     const [ shareURL, setShareURL] = useState('');
 
-    const setName = (name) => {
-        userName.current = name;
-        setUserName(userName.current);
-        let obj = {
-            "ADD_PLAYER": name
-        };
-        metaChannel.current.send(JSON.stringify(obj));
-        document.getElementById('waitingRoom').style.filter = 'blur(0px)'
-        document.getElementById('userName').style.display = 'none';
-    }
-
-    const addPlayers = (name) => {
-        const tempList = players.current.concat({name});
-        let obj = {
-            "PLAYERS_LIST": tempList
-        };
-        players.current = tempList;
-        metaChannel.current.send(JSON.stringify(obj));
-        setPlayers(tempList);
-    }
-
-    // const onNewPlayer = (playerName) => {
-    //     // addPlayer(playerName);
-    //     setPlayerCount((pc) => pc+1);
-    // }
-
     const startBoard = () => {
-        let obj = {
-            "ACTIVATE_BOARD": true
-        }
-        metaChannel.current.send(JSON.stringify(obj));
-        setAppState(APP_STATE.ACTIVE_BOARD);
+        metaChannel.current.send(JSON.stringify({type: META_TYPES.START_GAME}));
     }
 
     useEffect(() => {
         console.log({hostLobbyKey})
         setShareURL(window.location.protocol + "//" + window.location.host + window.location.pathname + `?k=${hostLobbyKey}`);
         metaChannel.current = dataChannel.current.getChannel('meta');
-        if(!userName.current) {
-            document.getElementById('waitingRoom').style.filter = 'blur(1px)'
-            document.getElementById('userName').style.display = '';
-        }
-        if(userType === 'HOST') {
-            metaChannel.current.onmessage = (message) => {
-                console.log(message.data);
-                const player = JSON.parse(message.data);
-                if (player.ADD_PLAYER) {
-                    addPlayers(player.ADD_PLAYER);
-                }
-            };
-        }
-        if(userType === 'GUEST') {
-            metaChannel.current.onmessage = (message) => {
-                console.log(message.data);
-                const messageObj = JSON.parse(message.data);
-                if (messageObj.PLAYERS_LIST) {
-                    players.current = messageObj.PLAYERS_LIST;
-                    setPlayers(messageObj.PLAYERS_LIST);
-                }
-                else if (messageObj.ACTIVATE_BOARD) {
+
+        metaChannel.current.onmessage = (message) => {
+            console.log(message);
+            const messageObj = JSON.parse(message.data);
+            switch(messageObj.type){
+                case META_TYPES.PLAYERS:
+                    setPlayers(messageObj.players);
+                    setAllPlayers(messageObj.players);
+                    break;
+                case META_TYPES.START_GAME:
                     setAppState(APP_STATE.ACTIVE_BOARD);
-                }
-            };
-        }
+                    break;
+                default:
+                    console.log(messageObj);
+            }
+        };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const onTextChange = (e) => {
+        if(e.key === 'Enter'){
+            if(nameValue.length > 0) {
+                const id = Math.random().toString(36).slice(-6);
+                metaChannel.current.send(JSON.stringify({ type: META_TYPES.NEW_PLAYER, userId: id, name: nameValue }));
+                setMyInfo(id,nameValue);
+                setNameModalVisible(false);
+            }
+        }
+    }
 
     return (
         <>
@@ -92,6 +63,7 @@ const GatheringSpace = props => {
                                 <Card>{shareURL}</Card>
                             </Col>
                         </Row>
+                        <center>
                         {
                             userType === 'HOST'?   
                                 (
@@ -100,12 +72,13 @@ const GatheringSpace = props => {
                                     'Waiting for host to start the game...'
                                 )
                         }
+                        </center>
                         {
-                            players.current ?
+                            players ?
                             (
                                 <Card>
-                                    {players.current.map((item) => (
-                                        <Card.Grid style={gridStyle}>{item.name}</Card.Grid>
+                                    {players.map((item, index) => (
+                                        <Card.Grid style={gridStyle} key={index}>{item.name}</Card.Grid>
                                     ))}
                                 </Card>
                             ):(
@@ -115,20 +88,11 @@ const GatheringSpace = props => {
                     </Col>
                 </Row>
             </div>
-            <div id = 'userName' style={{display: "none"}}>
-                <Row justify='center'>
-                    <Col span={12}>
-                        <Input style={{ width: 150, textAlign: 'center' }} placeholder="Enter your name" onKeyDown = { (e) => {
-                            if (e.key === "Enter") {
-                                console.log(e.target.value); 
-                                setName(e.target.value);
-                            }
-                        }}/>
-                    </Col>
-                </Row>
-            </div>
+            <Modal title="Basic Modal" visible={isNameModalVisible} closable={false} destroyOnClose={true} footer={null}>
+                <Input onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
+            </Modal>
         </>
     );
 }
 
-export default GatheringSpace;
+export default GatheringSpace;  

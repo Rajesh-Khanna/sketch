@@ -12,14 +12,14 @@ const Board = props => {
     const [font, setFont] = useState(5);
     const [color, setColor] = useState('black');
 
-    const { sketchChannel } = props;
+    const { sketchChannel, getMyInfo, getPlayerById } = props;
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
 
     useEffect(() => {
       setBrush(sketchChannel.current.getChannel('brush'));
       setChat(sketchChannel.current.getChannel('chat'));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleFont = (f) => {
@@ -66,12 +66,11 @@ const Board = props => {
             }
           </Col>
           <Col lg={4} xs={24}>
-          {
-              chat 
-                ? <ChatBoard chat = {chat} />
+            {
+              chat
+                ? <ChatBoard chat = {chat} getPlayerById={getPlayerById} getMyInfo={getMyInfo}/>
                 : <></>
             }
-            
           </Col>
         </Row>
       </Col>

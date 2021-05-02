@@ -24,7 +24,14 @@ export default class RTC {
 
         if (userType === USER_TYPE.HOST) {
             const dataChannel = this.createChannel('channel-name');
-            dataChannel.onopen = onChannel;
+            console.log('on open set');
+            this.rtc.addEventListener('connectionstatechange', event => {
+                if (this.rtc.connectionState === 'connected') {
+                    console.log('connection established');
+                    onChannel();
+                } else {}
+            });
+            dataChannel.onopen = (e) => { console.log('onOpen call'); };
         } else {
             this.rtc.ondatachannel = e => {
                 window.dataChannel = e.channel;

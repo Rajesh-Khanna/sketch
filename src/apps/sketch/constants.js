@@ -30,3 +30,18 @@ export const MAX_FONT = 80;
 export const MIN_FONT = 1;
 
 export const DEFAULT_BACKGROUND_COLOR = 225;
+
+// --------------- Meta Channel types ----------------------
+export const META_TYPES = {
+    NEW_PLAYER: 'NEW_PLAYER',
+    PLAYERS: 'PLAYERS',
+    START_GAME: 'START_GAME',
+    END_GAME: 'END_GAME',
+    RESET_GAME: 'RESET_GAME',
+}
+
+export const CHAT_TYPE = {
+    GUESS: 'GUESS',
+    SOLVED: 'SOLVED',
+    CLUE: 'CLUE',
+}
