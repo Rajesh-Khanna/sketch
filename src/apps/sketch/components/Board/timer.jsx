@@ -1,8 +1,8 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
-const Timer = (props) => {
+const Timer = () => {
+    const [timer, setTimer] = useState(60);
     const id = useRef(null);
-    const { timer, setTimer, timerFlag, handleTimeOut } = props;
 
     const clear = () => {
         window.clearInterval(id.current);
@@ -13,12 +13,11 @@ const Timer = (props) => {
             setTimer((time)=>time-1)
         },1000)
         //return ()=>clear();
-    }, [timerFlag]);
+    }, []);
 
     useEffect(() => {
         if (timer === 0) {
             clear();
-            handleTimeOut();
         }
     }, [timer]);
 

@@ -99,7 +99,7 @@ const Sketch = () => {
                         case APP_STATE.PASSIVE_BOARD:
                             return <></>
                         case APP_STATE.ACTIVE_BOARD:
-                            return <Board sketchChannel={dataChannel} getMyInfo={getMyInfo} getPlayerById={getPlayerById} userType={userType.current} allPlayers={allPlayers.current}/>;
+                            return <Board sketchChannel={dataChannel} getMyInfo={getMyInfo} getPlayerById={getPlayerById}/>;
                         case APP_STATE.TERMINAL:
                             return <></>;
                         default:
