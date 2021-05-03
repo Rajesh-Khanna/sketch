@@ -12,17 +12,6 @@ export class ActivityManager {
 
     currWord = 'CORRECT';
 
-    isGameSessionActive = false;
-
-    setGameSession(flag) {
-        this.isGameSessionActive = flag;
-    }
-
-    setCurrWord(word) {
-        this.currWord = word;
-        console.log(this.currWord);//
-    }
-
     handle(message) {
         switch (getChannel(message)) {
             case 'meta':
@@ -42,7 +31,7 @@ export class ActivityManager {
         if (this.players.getUserById(data.userId).solved || !data.data)
             return;
 
-        if ((data.data === this.currWord) && (this.isGameSessionActive) ) {
+        if (data.data === this.currWord) {
             this.players.getUserById(data.userId).addScore(1);
             const resp = {
                 userId: data.userId,
