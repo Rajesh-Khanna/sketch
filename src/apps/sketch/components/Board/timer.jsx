@@ -12,7 +12,8 @@ const Timer = (props) => {
         id.current = window.setInterval(() => {
             setTimer((time)=>time-1)
         },1000)
-        //return ()=>clear();
+        return ()=>clear();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timerFlag]);
 
     useEffect(() => {
@@ -20,6 +21,7 @@ const Timer = (props) => {
             clear();
             handleTimeOut();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timer]);
 
     return (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
+import {getNWords} from '../../words';
 import Timer from './timer';
 import { Row, Col, Modal, Button } from 'antd';
 
@@ -17,6 +18,7 @@ const Board = props => {
     const [timer, setTimer] = useState(-1);
     const [timerFlag, setTimerFlag] = useState(0);
     const choosedWord = useRef('');
+    const wordList = useRef(['','','']);
     const background = useRef();
     const { sketchChannel, getMyInfo, getPlayerById, userType, allPlayers } = props;
     const [ brush, setBrush ] = useState();
@@ -40,10 +42,11 @@ const Board = props => {
       }
     }
 
-    const chooseWord = () => {
+    const chooseWord = (index) => {
+      console.log(wordList.current[index]);//
       let wordObj = {
         "type": "SELECTED_WORD",
-        "word": 'word'
+        "word": wordList.current[index]
       };
       background.current.send(JSON.stringify(wordObj));
       setWordModalVisible(false);
@@ -90,6 +93,9 @@ const Board = props => {
         switch (obj.type) {
           case "INIT_TURN":
             if (getMyInfo().id === obj.userId){
+              wordList.current = getNWords(3);
+              console.log('words generated');
+              console.log(wordList.current);//
               setWordModalVisible(true);
             }
             break;
@@ -176,9 +182,9 @@ const Board = props => {
         </Col>
       </Row>
       <Modal title="Choose Word" visible={isWordModalVisible} closable={false} destroyOnClose={true} footer={null}>
-        <Button type="text" onClick={chooseWord}>Text Button1</Button>
-        <Button type="text" onClick={chooseWord}>Text Button2</Button>
-        <Button type="text" onClick={chooseWord}>Text Button3</Button>
+        <Button type="text" onClick={() => chooseWord(0)}>{wordList.current[0]}</Button>
+        <Button type="text" onClick={() => chooseWord(1)}>{wordList.current[1]}</Button>
+        <Button type="text" onClick={() => chooseWord(2)}>{wordList.current[2]}</Button>
       </Modal>
     </>
     );
