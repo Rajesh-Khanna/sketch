@@ -106,20 +106,24 @@ export class Host {
         this.pubSub.push('meta', this.guests[id].createChannel('meta'));
         this.pubSub.push('brush', this.guests[id].createChannel('brush'));
         this.pubSub.push('chat', this.guests[id].createChannel('chat'));
+        this.pubSub.push('background', this.guests[id].createChannel('background'));
     }
 
     simulatedChannels() {
         const metaChannel = new ChannelSim('meta');
         const brushChannel = new ChannelSim('brush');
         const chatChannel = new ChannelSim('chat');
+        const backgroundChannel = new ChannelSim('background');
 
         this.channels['meta'] = metaChannel.intakeChannel;
         this.channels['brush'] = brushChannel.intakeChannel;
         this.channels['chat'] = chatChannel.intakeChannel;
+        this.channels['background'] = backgroundChannel.intakeChannel;
 
         this.pubSub.push('meta', metaChannel.dc1);
         this.pubSub.push('brush', brushChannel.dc1);
         this.pubSub.push('chat', chatChannel.dc1);
+        this.pubSub.push('background', backgroundChannel.dc1);
     }
 
     handleAnswer(guest) {
@@ -158,7 +162,7 @@ export class Guest {
         console.log({ channel });
         this.channels[channel.label] = channel;
         console.log(Object.keys(this.channels).length);
-        if (Object.keys(this.channels).length >= 4) {
+        if (Object.keys(this.channels).length >= 5) {
             this.onConnection()
         }
     }
