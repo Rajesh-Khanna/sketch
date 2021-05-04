@@ -3,7 +3,7 @@ import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
 import {getNWords} from '../../words';
 import Timer from './timer';
-import { Row, Col, Modal, Button } from 'antd';
+import { Table, Row, Col, Modal, Button } from 'antd';
 
 import { MAX_FONT, MIN_FONT } from '../../constants';
 import Palette from './../Palette';
@@ -14,7 +14,23 @@ const Board = props => {
     const [color, setColor] = useState('black');
 
     const playerIds = useRef([]);
+    const scoreColumns = useRef([
+      {
+        title: 'Player',
+        dataIndex: 'name',
+      },
+      {
+        title: 'Score',
+        dataIndex: 'sessionScore',
+        sorter: {
+          compare: (a, b) => a.sessionScore - b.sessionScore,
+          multiple: 1,
+        },
+      },
+    ]);
+    const [sessionScores, setSessionScores] = useState();
     const [isWordModalVisible, setWordModalVisible ] = useState(false);
+    const [isScoresVisible, setIsScoreVisible] = useState(false);
     const [timer, setTimer] = useState(-1);
     const [timerFlag, setTimerFlag] = useState(0);
     const choosedWord = useRef('');
@@ -38,6 +54,11 @@ const Board = props => {
         console.log('hello');//
         sketchChannel.current.activityManager.setGameSession(false);
         // send scores
+        let endObj = {
+          "type": "END_TURN",
+          "scores": sketchChannel.current.activityManager.players
+        };
+        background.current.send(JSON.stringify(endObj));
         initiateSession();
       }
     }
@@ -92,6 +113,7 @@ const Board = props => {
         let obj = JSON.parse(message.data);
         switch (obj.type) {
           case "INIT_TURN":
+            setIsScoreVisible(false);
             if (getMyInfo().id === obj.userId){
               wordList.current = getNWords(3);
               console.log('words generated');
@@ -117,6 +139,14 @@ const Board = props => {
           case "BLANKS":
             setTimer(10);
             setTimerFlag((timerFlag) => timerFlag+1)
+            break;
+
+          case "END_TURN":
+            console.log("testing end turn");//
+            console.log(obj.scores);//
+            setSessionScores(Object.values(obj.scores.players));
+            setIsScoreVisible(true);
+            console.log(sessionScores);//
             break;
 
           default:
@@ -185,6 +215,9 @@ const Board = props => {
         <Button type="text" onClick={() => chooseWord(0)}>{wordList.current[0]}</Button>
         <Button type="text" onClick={() => chooseWord(1)}>{wordList.current[1]}</Button>
         <Button type="text" onClick={() => chooseWord(2)}>{wordList.current[2]}</Button>
+      </Modal>
+      <Modal title="Scores" visible={isScoresVisible} closable={false} destroyonClose={true} footer={null}>
+        <Table columns={scoreColumns.current} dataSource={sessionScores}/>
       </Modal>
     </>
     );

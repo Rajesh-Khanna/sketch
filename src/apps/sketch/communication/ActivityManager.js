@@ -43,7 +43,7 @@ export class ActivityManager {
             return;
 
         if ((data.data === this.currWord) && (this.isGameSessionActive) ) {
-            this.players.getUserById(data.userId).addScore(1);
+            this.players.getUserById(data.userId).addSessionScore(1);
             const resp = {
                 userId: data.userId,
                 type: CHAT_TYPE.SOLVED,
