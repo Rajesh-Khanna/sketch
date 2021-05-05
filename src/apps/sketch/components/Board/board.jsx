@@ -53,10 +53,11 @@ const Board = props => {
       if(userType === 'HOST') {
         console.log('hello');//
         sketchChannel.current.activityManager.setGameSession(false);
+        console.log(sketchChannel.current.activityManager.players.getScore());
         // send scores
         let endObj = {
           "type": "END_TURN",
-          "scores": sketchChannel.current.activityManager.players
+          "scores": sketchChannel.current.activityManager.players.getScore()
         };
         background.current.send(JSON.stringify(endObj));
         initiateSession();
@@ -144,7 +145,7 @@ const Board = props => {
           case "END_TURN":
             console.log("testing end turn");//
             console.log(obj.scores);//
-            setSessionScores(Object.values(obj.scores.players));
+            setSessionScores(obj.scores);
             setIsScoreVisible(true);
             console.log(sessionScores);//
             break;
