@@ -1,8 +1,8 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 
-const Timer = () => {
-    const [timer, setTimer] = useState(60);
+const Timer = (props) => {
     const id = useRef(null);
+    const { timer, setTimer, timerFlag, handleTimeOut } = props;
 
     const clear = () => {
         window.clearInterval(id.current);
@@ -12,13 +12,16 @@ const Timer = () => {
         id.current = window.setInterval(() => {
             setTimer((time)=>time-1)
         },1000)
-        //return ()=>clear();
-    }, []);
+        return ()=>clear();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [timerFlag]);
 
     useEffect(() => {
         if (timer === 0) {
             clear();
+            handleTimeOut();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timer]);
 
     return (
