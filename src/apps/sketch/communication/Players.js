@@ -4,6 +4,8 @@ class Player {
 
     name = 'Player';
 
+    sessionScore = 0;
+
     score = 0;
 
     solved = false;
@@ -15,6 +17,7 @@ class Player {
 
     addScore(points) {
         this.score += points;
+        this.sessionScore = points;
         this.solved = true;
     }
 
@@ -31,12 +34,14 @@ export class Players {
     getScore() {
         return Object.values(this.players)
             .sort(function(a, b) {
-                return a.score - b.score;
+                return a.sessionScore - b.sessionScore;
             })
             .map((player, index) => {
                 return {
+                    name: player.name,
                     userId: player.id,
-                    score: player.score,
+                    sessionScore: player.sessionScore,
+                    score:player.score,
                     rank: index,
                 };
             });
