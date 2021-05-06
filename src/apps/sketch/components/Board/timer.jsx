@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 
 const Timer = (props) => {
     const id = useRef(null);
-    const { timer, setTimer, timerFlag, handleTimeOut } = props;
+    const { timer, setTimer, timerFlag } = props;
 
     const clear = () => {
         window.clearInterval(id.current);
@@ -19,9 +19,7 @@ const Timer = (props) => {
     useEffect(() => {
         if (timer === 0) {
             clear();
-            handleTimeOut();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timer]);
 
     return (

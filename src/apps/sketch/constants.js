@@ -45,3 +45,5 @@ export const CHAT_TYPE = {
     SOLVED: 'SOLVED',
     CLUE: 'CLUE',
 }
+
+export const POPUP_TIMEOUT = 2000;

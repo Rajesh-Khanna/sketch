@@ -1,5 +1,5 @@
 import { Players } from './Players';
-import { META_TYPES } from '../constants';
+import { META_TYPES, POPUP_TIMEOUT } from '../constants';
 import { getChannel } from '../utils';
 import { CHAT_TYPE } from './../constants';
 
@@ -12,9 +12,13 @@ export class ActivityManager {
 
     currWord = 'CORRECT';
 
+    playerIds = [];
+
+    roundNum = 0;
+
     isGameSessionActive = false;
 
-    tunrTime = 80;
+    turnTime = 10;
 
     rounds = 3;
 
@@ -35,9 +39,85 @@ export class ActivityManager {
             case 'chat':
                 this.handleChat(message);
                 break;
+            case 'background':
+                this.handleBackGround(message);
+                break;
             case 'brush':
             default:
                 this.publish(message);
+        }
+    }
+
+    handleTimeOut() {
+        console.log('hello');//
+        this.setGameSession(false);
+        console.log(this.players.getScore());
+        // send scores
+        let endObj = {
+            "type": "END_TURN",
+            "scores": this.players.getScore()
+        };
+        this.publish({ data: JSON.stringify(endObj) }, 'background');
+        this.initiateSession();
+    }
+
+    initiateSession() {
+        if (this.playerIds.length === 0) {
+            if(this.roundNum < this.rounds) {
+                this.playerIds = this.players.getAllPlayers();
+                console.log(this.playerIds);//
+                this.roundNum = this.roundNum + 1;
+            }
+        }
+
+        if (this.playerIds.length){
+            console.log(this.playerIds); //
+            console.log(this.playerIds[this.playerIds.length-1]); //
+            const userId = this.playerIds[this.playerIds.length-1].userId;
+            console.log(userId);
+            /** timeout is added so that users get the time to check the scores
+            * Note: Initially(when the page loads for the first time), it might happen that host sends the message
+            * before guests start listening. Adding time out also mitigates this issue.
+            */
+            setTimeout(() => {
+                console.log('message sent');//
+                let initObj = {
+                    "type": "INIT_TURN",
+                    "userId": userId,
+                    "roundNum": this.rounds
+                };
+                this.publish({ data: JSON.stringify(initObj) }, 'background');
+            }, POPUP_TIMEOUT);
+            this.playerIds.pop();
+        }
+        else {
+            // Game over logic
+        }
+    }
+
+    generateBlanks() {
+        return '_ _ _ _ _ _ _';
+    }
+
+    handleBackGround(message) {
+        const data = JSON.parse(message.data);
+
+        if (data.type === "SELECTED_WORD") {
+            this.setCurrWord(data.word);
+            this.setGameSession(true);
+
+            let blanks = this.generateBlanks();
+            let blankObj = {
+                "type": "BLANKS",
+                "blanks": blanks
+            };
+            this.publish({ data: JSON.stringify(blankObj) }, 'background');
+            setTimeout(() => {
+                this.handleTimeOut();
+            }, (this.turnTime)*1000);
+        }
+        else {
+            this.publish(message);
         }
     }
 
@@ -74,8 +154,10 @@ export class ActivityManager {
 
     handleStartGame(message) {
         const data = JSON.parse(message.data);
-        this.tunrTime = data.turns;
+        this.turnTime = data.turns;
         this.rounds = data.rounds;
+
+        this.initiateSession();
     }
 
     handleNewPlayer(message) {
