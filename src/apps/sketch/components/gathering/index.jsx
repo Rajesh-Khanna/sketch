@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect} from 'react';
-import { Input, Button, Card, Row, Col, Modal, Select, Option } from 'antd';
+import { Input, Button, Card, Row, Col, Modal } from 'antd';
 import { APP_STATE, META_TYPES } from '../../constants';
 import { gridStyle } from '../../style';
 
