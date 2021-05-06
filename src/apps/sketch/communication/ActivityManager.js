@@ -14,13 +14,17 @@ export class ActivityManager {
 
     isGameSessionActive = false;
 
+    tunrTime = 80;
+
+    rounds = 3;
+
     setGameSession(flag) {
         this.isGameSessionActive = flag;
     }
 
     setCurrWord(word) {
         this.currWord = word;
-        console.log(this.currWord);//
+        console.log(this.currWord); //
     }
 
     handle(message) {
@@ -42,7 +46,7 @@ export class ActivityManager {
         if (this.players.getUserById(data.userId).solved || !data.data)
             return;
 
-        if ((data.data === this.currWord) && (this.isGameSessionActive) ) {
+        if ((data.data === this.currWord) && (this.isGameSessionActive)) {
             this.players.getUserById(data.userId).addScore(1);
             const resp = {
                 userId: data.userId,
@@ -60,9 +64,18 @@ export class ActivityManager {
             case META_TYPES.NEW_PLAYER:
                 this.handleNewPlayer(message);
                 break;
+            case META_TYPES.START_GAME:
+                this.handleStartGame(message);
+                // eslint-disable-next-line no-fallthrough
             default:
                 this.publish(message)
         }
+    }
+
+    handleStartGame(message) {
+        const data = JSON.parse(message.data);
+        this.tunrTime = data.turns;
+        this.rounds = data.rounds;
     }
 
     handleNewPlayer(message) {

@@ -11,9 +11,12 @@ const GatheringSpace = props => {
     // eslint-disable-next-line no-unused-vars
     const { userType, hostLobbyKey = '', dataChannel, setAppState, setMyInfo, setAllPlayers } = props;
     const [ shareURL, setShareURL] = useState('');
+    const turns = useRef(); 
+    const rounds = useRef(); 
+
 
     const startBoard = () => {
-        metaChannel.current.send(JSON.stringify({type: META_TYPES.START_GAME}));
+        metaChannel.current.send(JSON.stringify({type: META_TYPES.START_GAME, turns: turns.current.state.value, rounds: rounds.current.state.value }));
     }
 
     useEffect(() => {
@@ -67,7 +70,11 @@ const GatheringSpace = props => {
                         {
                             userType === 'HOST'?   
                                 (
+                                    <>
+                                    <Input ref={turns} addonBefore="Timeout per turn" defaultValue={80} type="number" />
+                                    <Input ref={rounds} addonBefore="Rounds" defaultValue={3} type="number" />
                                     <Button type="primary" onClick={startBoard}> Start Board </Button>
+                                    </>
                                 ):(
                                     'Waiting for host to start the game...'
                                 )
