@@ -25,7 +25,9 @@ const Board = props => {
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
 
+    // eslint-disable-next-line no-unused-vars
     const [ disableBoard, setDisableBoard ] = useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [ disableChat, setDisableChat ] = useState(false);
 
     useEffect(() => {
