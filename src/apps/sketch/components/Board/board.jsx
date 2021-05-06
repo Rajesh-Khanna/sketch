@@ -36,7 +36,7 @@ const Board = props => {
     const background = useRef();
 
     const sizeRef = useRef();
-    const { sketchChannel, getMyInfo, getPlayerById, userType, allPlayers } = props;
+    const { sketchChannel, getMyInfo, getPlayerById } = props;
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
 
@@ -73,16 +73,23 @@ const Board = props => {
         switch (obj.type) {
           case "INIT_TURN":
             setIsScoreVisible(false);
-            if (getMyInfo().id === obj.userId){
+            setTimer(obj.timer);
+            if (getMyInfo().id === obj.userId) {
+              setDisableBoard(false);
+              setDisableChat(true);
+
               wordList.current = getNWords(3);
               console.log('words generated');
               console.log(wordList.current);//
               setWordModalVisible(true);
             }
+            else {
+              setDisableBoard(true);
+              setDisableChat(false);
+            }
             break;
 
           case "BLANKS":
-            setTimer(10);
             setTimerFlag((timerFlag) => timerFlag+1)
             break;
 
@@ -151,7 +158,7 @@ const Board = props => {
                         ? <></>
                         : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font}/>
                       }
-                      <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag} handleTimeOut={handleTimeOut}/>
+                      <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag}/>
                     </>
                   : <></>
               }

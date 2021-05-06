@@ -84,7 +84,9 @@ export class ActivityManager {
                 let initObj = {
                     "type": "INIT_TURN",
                     "userId": userId,
-                    "roundNum": this.rounds
+                    "roundNum": this.roundNum,
+                    "timer": this.turnTime,
+                    "rounds": this.rounds
                 };
                 this.publish({ data: JSON.stringify(initObj) }, 'background');
             }, POPUP_TIMEOUT);

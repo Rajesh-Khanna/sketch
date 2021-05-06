@@ -71,7 +71,7 @@ const GatheringSpace = props => {
                             userType === 'HOST'?   
                                 (
                                     <>
-                                    <Input ref={turns} addonBefore="Timeout per turn" defaultValue={80} type="number" />
+                                    <Input ref={turns} addonBefore="Timeout per turn" defaultValue={10} type="number" />
                                     <Input ref={rounds} addonBefore="Rounds" defaultValue={3} type="number" />
                                     <Button type="primary" onClick={startBoard}> Start Board </Button>
                                     </>

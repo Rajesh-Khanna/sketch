@@ -44,7 +44,9 @@ export class MessageFormat {
         let obj = {
             "type": "INIT_TURN",
             "userId": id, // String
-            "roundNum": roundNum // int
+            "roundNum": roundNum, // int
+            "timer": timer, // int
+            "rounds": rounds //int
         };
         return JSON.stringify(obj);
     }
