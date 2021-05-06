@@ -6,7 +6,7 @@ import { CHAT_TYPE } from './../../constants';
   
 const ChatBoard = props => {
 
-    const { chat, getMyInfo, getPlayerById } = props;
+    const { chat, getMyInfo, getPlayerById, disable } = props;
     const [messages, setMessage] = useState([]);
     useEffect(() => {
         chat.onmessage = (message) => {
@@ -19,7 +19,7 @@ const ChatBoard = props => {
     }, []);
 
     const handleKeyDown = (event) => {
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && !disable) {
             console.log(event.target.value);
             chat.send(JSON.stringify({type: CHAT_TYPE.GUESS, userId: getMyInfo().id, data: event.target.value}));
             event.target.value = '';
@@ -43,7 +43,7 @@ const ChatBoard = props => {
       <div style={{border: '2px solid black'}}>
         <Row>
             <Col>
-                <input placeholder="Enter to send" onKeyDown={handleKeyDown} />
+                <input placeholder="Enter to send" onKeyDown={handleKeyDown} disabled={disable}/>
             </Col>
         </Row>
         <Row>
