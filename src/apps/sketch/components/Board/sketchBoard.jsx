@@ -6,7 +6,7 @@ import { isScreenLarge } from './../../utils';
 
 export default function SketchBoard(props) {
 
-    const { brush, paletteHandler } = props;
+    const { brush, paletteHandler, disable } = props;
     let currShape = new activeShape();
     const othersShapes = useRef([]);
 
@@ -22,6 +22,8 @@ export default function SketchBoard(props) {
         }
 
         function onKeyup(e) {
+            if(disable)
+                return;
             switch(e.key){
                 case 'd':
                 case 'D':
@@ -59,7 +61,7 @@ export default function SketchBoard(props) {
     }
 
     const draw = p => {
-        if (p.mouseIsPressed === true || touchBrush.current) {
+        if ((p.mouseIsPressed === true || touchBrush.current) && !disable) {
             currShape.setFont(props.font);
             currShape.setColor(props.color);
             currShape.setStart(p.mouseX, p.mouseY);
