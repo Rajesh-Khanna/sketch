@@ -20,9 +20,15 @@ const Board = props => {
     const choosedWord = useRef('');
     const wordList = useRef(['','','']);
     const background = useRef();
+    const sizeRef = useRef();
     const { sketchChannel, getMyInfo, getPlayerById, userType, allPlayers } = props;
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
+
+    // eslint-disable-next-line no-unused-vars
+    const [ disableBoard, setDisableBoard ] = useState(false);
+    // eslint-disable-next-line no-unused-vars
+    const [ disableChat, setDisableChat ] = useState(false);
 
     useEffect(() => {
       setBrush(sketchChannel.current.getChannel('brush'));
@@ -128,6 +134,7 @@ const Board = props => {
     }
 
     const handleFont = (f) => {
+      sizeRef.current.state.ref = f;
       setFont(f);
     }
 
@@ -137,14 +144,21 @@ const Board = props => {
 
   const increaseFont = () => {
     setFont(prevFont => {
+      sizeRef.current.state.value = prevFont < MAX_FONT? prevFont + 1: prevFont;
       return prevFont < MAX_FONT? prevFont + 1: prevFont;
     })
   }
   
   const reduceFont = () => {
     setFont(prevFont => {
+      sizeRef.current.state.value = prevFont > MIN_FONT? prevFont - 1 : prevFont;
       return prevFont > MIN_FONT? prevFont - 1 : prevFont;
     })
+  }
+
+  const onFontSlider = (e) => {
+    console.log({e});
+    setFont(e);
   }
 
   const paletteHandler = {
@@ -164,8 +178,11 @@ const Board = props => {
               {
                 brush 
                   ? <>
-                      <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} />
-                      <Palette handleFont={handleFont} handleColor={handleColor}/>
+                      <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} disable={disableBoard}/>
+                      {disableBoard
+                        ? <></>
+                        : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font}/>
+                      }
                       <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag} handleTimeOut={handleTimeOut}/>
                     </>
                   : <></>
@@ -174,7 +191,7 @@ const Board = props => {
             <Col lg={4} xs={24}>
               {
                 chat
-                  ? <ChatBoard chat = {chat} getPlayerById={getPlayerById} getMyInfo={getMyInfo}/>
+                  ? <ChatBoard chat = {chat} getPlayerById={getPlayerById} getMyInfo={getMyInfo} disable={disableChat}/>
                   : <></>
               }
             </Col>
