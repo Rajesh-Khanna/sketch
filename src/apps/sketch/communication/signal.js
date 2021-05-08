@@ -92,7 +92,7 @@ export default class Signal {
                 // ON_ANSWER
                 this.workSpaceRef.child(`guests/${guestKey}/answer`).on('value', callbackClosure(guestKey,
                     (k, answer) => {
-                        console.log({ answer, guestKey: k })
+                        console.log({ answer, guestKey: k, val: answer.val() })
                         if (answer.val())
                             callBack({ type: MESSAGE_TYPE.ANSWER, guest: { id: k, answer: answer.val() } });
                     }));
