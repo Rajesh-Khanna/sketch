@@ -5,6 +5,7 @@ import {getNWords} from '../../words';
 import Timer from './timer';
 import { Card, Table, Row, Col, Modal, Button } from 'antd';
 
+
 import { MAX_FONT, MIN_FONT } from '../../constants';
 import Palette from './../Palette';
 
@@ -45,6 +46,10 @@ const Board = props => {
     const [isWordModalVisible, setWordModalVisible ] = useState(false);
     const [isScoresVisible, setIsScoreVisible] = useState(false);
     const [isGameOver, setIsGameOver] = useState(false);
+
+    const [sessionScores, setSessionScores] = useState();
+    const [isWordModalVisible, setWordModalVisible ] = useState(false);
+    const [isScoresVisible, setIsScoreVisible] = useState(false);
     const [timer, setTimer] = useState(0);
     const [timerFlag, setTimerFlag] = useState(0);
     const wordList = useRef(['','','']);
@@ -90,6 +95,7 @@ const Board = props => {
         switch (obj.type) {
           case "INIT_TURN":
             setRefreshBoard(false);
+
             setIsScoreVisible(false);
             setTimer(obj.timer);
             if (getMyInfo().id === obj.userId) {
@@ -115,6 +121,7 @@ const Board = props => {
               blank.current = word.current;
             }
             setDisplayBlank(true);
+
             setTimerFlag((timerFlag) => timerFlag+1)
             break;
 
@@ -126,6 +133,7 @@ const Board = props => {
             setDisplayBlank(false);
             word.current = '';
             blank.current = '';
+
             setIsScoreVisible(true);
             console.log(sessionScores);//
             break;
@@ -192,6 +200,7 @@ const Board = props => {
                   ? <>
 
                       <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} disable={disableBoard} refresh={refreshBoard}/>
+
                       {disableBoard
                         ? <></>
                         : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font}/>

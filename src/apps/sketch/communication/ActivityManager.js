@@ -73,6 +73,7 @@ export class ActivityManager {
         };
         this.publish({ data: JSON.stringify(endObj) }, 'background');
         this.resetSessionScores();
+
         this.initiateSession();
     }
 
@@ -141,6 +142,7 @@ export class ActivityManager {
             this.setGameSession(true);
 
             let blanks = this.generateBlanks(data.word);
+
             let blankObj = {
                 "type": "BLANKS",
                 "blanks": blanks
