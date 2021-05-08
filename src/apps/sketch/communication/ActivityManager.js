@@ -22,6 +22,8 @@ export class ActivityManager {
 
     rounds = 3;
 
+    handleTimeOutVariable;
+
     setGameSession(flag) {
         this.isGameSessionActive = flag;
     }
@@ -66,6 +68,13 @@ export class ActivityManager {
         console.log('hello');//
         this.setGameSession(false);
         console.log(this.players.getScore());
+
+        const correctWord = {
+            "type": "CORRECT_WORD",
+            "data": this.currWord
+        };
+        this.publish({ data: JSON.stringify(correctWord) }, 'chat');
+
         // send scores
         let endObj = {
             "type": "END_TURN",
@@ -135,6 +144,20 @@ export class ActivityManager {
         return blank + '_'
     }
 
+    checkIfEveryOneSolved() {
+        let allPlayers = this.players.getAllPlayers();
+        let count = allPlayers.length;
+        for (let i = 0; i< allPlayers.length; i++) {
+            if (this.players.getUserById(allPlayers[i].userId).solved === true) {
+                count = count-1;
+            }
+        }
+        if (count === 1) {
+            clearTimeout(this.handleTimeOutVariable);
+            this.handleTimeOut();
+        }
+    }
+
     handleBackGround(message) {
         const data = JSON.parse(message.data);
 
@@ -149,7 +172,7 @@ export class ActivityManager {
                 "blanks": blanks
             };
             this.publish({ data: JSON.stringify(blankObj) }, 'background');
-            setTimeout(() => {
+            this.handleTimeOutVariable = setTimeout(() => {
                 this.handleTimeOut();
             }, (this.turnTime)*1000);
         }
@@ -163,13 +186,14 @@ export class ActivityManager {
         if (this.players.getUserById(data.userId).solved || !data.data)
             return;
 
-        if ((data.data === this.currWord) && (this.isGameSessionActive)) {
+        if ((data.data.toLowerCase() === this.currWord.toLowerCase()) && (this.isGameSessionActive)) {
             this.players.getUserById(data.userId).addScore(1);
             const resp = {
                 userId: data.userId,
                 type: CHAT_TYPE.SOLVED,
             };
             this.publish({ data: JSON.stringify(resp) }, getChannel(message));
+            this.checkIfEveryOneSolved();
         } else {
             this.publish(message);
         }

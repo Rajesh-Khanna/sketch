@@ -102,6 +102,14 @@ export class MessageFormat {
         return JSON.stringify(obj);
     }
 
+    displayCorrectWord() {
+        let obj = {
+            "type": CORRECT_WORD,
+            data: word // String
+        }
+        return JSON.stringify(obj);
+    }
+
     clues(id, data) {
         let obj = {
             "type": "CLUE",

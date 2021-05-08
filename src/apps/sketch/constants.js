@@ -44,6 +44,7 @@ export const CHAT_TYPE = {
     GUESS: 'GUESS',
     SOLVED: 'SOLVED',
     CLUE: 'CLUE',
+    CORRECT_WORD: 'CORRECT_WORD',
 }
 
 export const POPUP_TIMEOUT = 4000;
