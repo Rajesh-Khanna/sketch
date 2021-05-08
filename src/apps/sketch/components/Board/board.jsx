@@ -3,7 +3,8 @@ import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
 import {getNWords} from '../../words';
 import Timer from './timer';
-import { Table, Row, Col, Modal, Button } from 'antd';
+import { Card, Table, Row, Col, Modal, Button } from 'antd';
+
 
 import { MAX_FONT, MIN_FONT } from '../../constants';
 import Palette from './../Palette';
@@ -13,7 +14,7 @@ const Board = props => {
     const [font, setFont] = useState(5);
     const [color, setColor] = useState('black');
 
-    const scoreColumns = useRef([
+    const sessionScoreColumns = useRef([
       {
         title: 'Player',
         dataIndex: 'name',
@@ -27,9 +28,25 @@ const Board = props => {
         },
       },
     ]);
+
+    const scoreColumns = useRef([
+      {
+        title: 'Player',
+        dataIndex: 'name',
+      },
+      {
+        title: 'Score',
+        dataIndex: 'score',
+      },
+    ]);
+    const [displayBlank, setDisplayBlank] = useState(false);
+    const blank = useRef('');
+    const word = useRef('');
     const [sessionScores, setSessionScores] = useState();
     const [isWordModalVisible, setWordModalVisible ] = useState(false);
     const [isScoresVisible, setIsScoreVisible] = useState(false);
+    const [isGameOver, setIsGameOver] = useState(false);
+
     const [timer, setTimer] = useState(0);
     const [timerFlag, setTimerFlag] = useState(0);
     const wordList = useRef(['','','']);
@@ -39,9 +56,10 @@ const Board = props => {
     const { sketchChannel, getMyInfo, getPlayerById } = props;
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
+    const [refreshBoard, setRefreshBoard] = useState(false);
 
     // eslint-disable-next-line no-unused-vars
-    const [ disableBoard, setDisableBoard ] = useState(false);
+    const [ disableBoard, setDisableBoard ] = useState(true);
     // eslint-disable-next-line no-unused-vars
     const [ disableChat, setDisableChat ] = useState(false);
 
@@ -55,6 +73,7 @@ const Board = props => {
 
     const chooseWord = (index) => {
       console.log(wordList.current[index]);//
+      word.current = wordList.current[index];
       let wordObj = {
         "type": "SELECTED_WORD",
         "word": wordList.current[index]
@@ -72,6 +91,8 @@ const Board = props => {
         let obj = JSON.parse(message.data);
         switch (obj.type) {
           case "INIT_TURN":
+            setRefreshBoard(false);
+
             setIsScoreVisible(false);
             setTimer(obj.timer);
             if (getMyInfo().id === obj.userId) {
@@ -90,15 +111,32 @@ const Board = props => {
             break;
 
           case "BLANKS":
+            if (word.current === '') {
+              blank.current = obj.blanks;
+            }
+            else {
+              blank.current = word.current;
+            }
+            setDisplayBlank(true);
+
             setTimerFlag((timerFlag) => timerFlag+1)
             break;
 
           case "END_TURN":
             console.log("testing end turn");//
             console.log(obj.scores);//
+            setRefreshBoard(true);
             setSessionScores(obj.scores);
+            setDisplayBlank(false);
+            word.current = '';
+            blank.current = '';
+
             setIsScoreVisible(true);
             console.log(sessionScores);//
+            break;
+
+          case "WINNER":
+            setIsGameOver(true);
             break;
 
           default:
@@ -145,6 +183,11 @@ const Board = props => {
 
   return (
     <>
+      {
+        displayBlank
+          ? <Card  style={{textAlign: 'center'}}> {blank.current} </Card>
+          : <></>
+      }
       <Row justify='center'>
         <Col lg={20} xs={24}>
           <Row>
@@ -153,7 +196,8 @@ const Board = props => {
                 brush 
                   ? <>
 
-                      <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} disable={disableBoard}/>
+                      <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} disable={disableBoard} refresh={refreshBoard}/>
+
                       {disableBoard
                         ? <></>
                         : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font}/>
@@ -173,12 +217,16 @@ const Board = props => {
           </Row>
         </Col>
       </Row>
+      <Table columns={scoreColumns.current} dataSource={sessionScores}/>
       <Modal title="Choose Word" visible={isWordModalVisible} closable={false} destroyOnClose={true} footer={null}>
         <Button type="text" onClick={() => chooseWord(0)}>{wordList.current[0]}</Button>
         <Button type="text" onClick={() => chooseWord(1)}>{wordList.current[1]}</Button>
         <Button type="text" onClick={() => chooseWord(2)}>{wordList.current[2]}</Button>
       </Modal>
       <Modal title="Scores" visible={isScoresVisible} closable={false} destroyonClose={true} footer={null}>
+        <Table columns={sessionScoreColumns.current} dataSource={sessionScores}/>
+      </Modal>
+      <Modal title="Leader Board" visible={isGameOver} closable={false} destroyonClose={true} footer={null}>
         <Table columns={scoreColumns.current} dataSource={sessionScores}/>
       </Modal>
     </>
