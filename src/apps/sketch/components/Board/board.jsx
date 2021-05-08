@@ -47,9 +47,6 @@ const Board = props => {
     const [isScoresVisible, setIsScoreVisible] = useState(false);
     const [isGameOver, setIsGameOver] = useState(false);
 
-    const [sessionScores, setSessionScores] = useState();
-    const [isWordModalVisible, setWordModalVisible ] = useState(false);
-    const [isScoresVisible, setIsScoreVisible] = useState(false);
     const [timer, setTimer] = useState(0);
     const [timerFlag, setTimerFlag] = useState(0);
     const wordList = useRef(['','','']);
