@@ -117,6 +117,7 @@ export class ActivityManager {
             this.publish({ data: JSON.stringify(winnerObj) }, 'background');
 
             this.resetScores();
+            this.roundNum = 0;
             let engObj = {
                 "type": "END_GAME"
             };
