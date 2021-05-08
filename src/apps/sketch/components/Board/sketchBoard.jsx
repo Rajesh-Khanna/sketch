@@ -6,7 +6,7 @@ import { isScreenLarge } from './../../utils';
 
 export default function SketchBoard(props) {
 
-    const { brush, paletteHandler, disable } = props;
+    const { brush, paletteHandler, disable, refresh } = props;
     let currShape = new activeShape();
     const othersShapes = useRef([]);
 
@@ -61,6 +61,9 @@ export default function SketchBoard(props) {
     }
 
     const draw = p => {
+        if (refresh) {
+            p.background(DEFAULT_BACKGROUND_COLOR);
+        }
         if ((p.mouseIsPressed === true || touchBrush.current) && !disable) {
             currShape.setFont(props.font);
             currShape.setColor(props.color);

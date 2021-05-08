@@ -48,6 +48,20 @@ export class ActivityManager {
         }
     }
 
+    resetScores() {
+        let allPlayers = this.players.getAllPlayers();
+        for (let i = 0; i< allPlayers.length; i++) {
+            this.players.getUserById(allPlayers[i].userId).resetScore();
+        }
+    }
+
+    resetSessionScores() {
+        let allPlayers = this.players.getAllPlayers();
+        for (let i = 0; i< allPlayers.length; i++) {
+            this.players.getUserById(allPlayers[i].userId).resetSessionScore();
+        }
+    }
+
     handleTimeOut() {
         console.log('hello');//
         this.setGameSession(false);
@@ -58,6 +72,7 @@ export class ActivityManager {
             "scores": this.players.getScore()
         };
         this.publish({ data: JSON.stringify(endObj) }, 'background');
+        this.resetSessionScores();
         this.initiateSession();
     }
 
@@ -94,11 +109,28 @@ export class ActivityManager {
         }
         else {
             // Game over logic
+            let winnerObj = {
+                "type": "WINNER",
+                "scores": this.players.getScore()
+            }
+            this.publish({ data: JSON.stringify(winnerObj) }, 'background');
+
+            this.resetScores();
+            let engObj = {
+                "type": "END_GAME"
+            };
+            setTimeout(() => {
+                this.publish({ data: JSON.stringify(engObj) }, 'meta');
+            }, POPUP_TIMEOUT);
         }
     }
 
-    generateBlanks() {
-        return '_ _ _ _ _ _ _';
+    generateBlanks(word) {
+        let blank = ''
+        for (let i = 0; i < word.length-1 ; i++) {
+            blank = blank + '_ ';
+        }
+        return blank + '_'
     }
 
     handleBackGround(message) {
@@ -108,7 +140,7 @@ export class ActivityManager {
             this.setCurrWord(data.word);
             this.setGameSession(true);
 
-            let blanks = this.generateBlanks();
+            let blanks = this.generateBlanks(data.word);
             let blankObj = {
                 "type": "BLANKS",
                 "blanks": blanks

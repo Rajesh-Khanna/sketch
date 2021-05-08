@@ -15,6 +15,17 @@ class Player {
         this.name = name;
     }
 
+    resetSessionScore() {
+        this.sessionScore = 0;
+        this.solved = false;
+    }
+
+    resetScore() {
+        this.score = 0;
+        this.sessionScore = 0;
+        this.solved = false;
+    }
+
     addScore(points) {
         this.score += points;
         this.sessionScore = points;

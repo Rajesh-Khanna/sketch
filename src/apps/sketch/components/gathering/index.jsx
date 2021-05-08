@@ -6,10 +6,10 @@ import { gridStyle } from '../../style';
 const GatheringSpace = props => {
     const metaChannel = useRef();
     const [players, setPlayers] = useState([]);
-    const [isNameModalVisible, setNameModalVisible ] = useState(true);
+    const [isNameModalVisible, setNameModalVisible ] = useState(false);
     const [nameValue, setNameValue ] = useState('player');
     // eslint-disable-next-line no-unused-vars
-    const { userType, hostLobbyKey = '', dataChannel, setAppState, setMyInfo, setAllPlayers } = props;
+    const { userType, hostLobbyKey = '', dataChannel, setAppState, setMyInfo, setAllPlayers, myInfo, allPlayers } = props;
     const [ shareURL, setShareURL] = useState('');
     const turns = useRef(); 
     const rounds = useRef(); 
@@ -29,11 +29,15 @@ const GatheringSpace = props => {
             const messageObj = JSON.parse(message.data);
             switch(messageObj.type){
                 case META_TYPES.PLAYERS:
+                    console.log(messageObj.players);//
                     setPlayers(messageObj.players);
                     setAllPlayers(messageObj.players);
                     break;
                 case META_TYPES.START_GAME:
                     setAppState(APP_STATE.ACTIVE_BOARD);
+                    break;
+                case META_TYPES.END_GAME:
+                    setAppState(APP_STATE.GATHERING);
                     break;
                 default:
                     console.log(messageObj);
@@ -41,6 +45,26 @@ const GatheringSpace = props => {
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        console.log(myInfo);
+        if (!myInfo.id) {
+            setNameModalVisible(true);
+        }
+        else {
+            let keys = Object.keys(allPlayers);
+            console.log(keys);//
+            console.log(players);//
+            let p = [];
+            for (let i=0; i< keys.length; i++) {
+                console.log(allPlayers[keys[i]]);//
+                p.push({'userId':keys[i], 'name':allPlayers[keys[i]].name});
+            }
+            console.log(p)//
+            setPlayers(p);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nameValue]);
 
     const onTextChange = (e) => {
         if(e.key === 'Enter'){
@@ -95,7 +119,7 @@ const GatheringSpace = props => {
                     </Col>
                 </Row>
             </div>
-            <Modal title="Basic Modal" visible={isNameModalVisible} closable={false} destroyOnClose={true} footer={null}>
+            <Modal title="Name" visible={isNameModalVisible} closable={false} destroyOnClose={true} footer={null}>
                 <Input onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
             </Modal>
         </>

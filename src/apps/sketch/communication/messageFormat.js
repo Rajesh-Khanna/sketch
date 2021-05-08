@@ -75,6 +75,13 @@ export class MessageFormat {
         return JSON.stringify(obj);
     }
 
+    WINNER(scores) { // used when game is over 
+        let obj = {
+            "type": "WINNER",
+            "scores": scores // Array<{userId<String>, score<int>, rank<int>}>
+        };
+        return JSON.stringify(obj);
+    }
     /** Chat Protocol */ 
 
     guessWord(id, data) {

@@ -46,4 +46,4 @@ export const CHAT_TYPE = {
     CLUE: 'CLUE',
 }
 
-export const POPUP_TIMEOUT = 2000;
+export const POPUP_TIMEOUT = 4000;
