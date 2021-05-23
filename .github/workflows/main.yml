@@ -46,7 +46,7 @@ name: React app deployement
 
 on:
   push:
-    branches: [ networking ]
+    branches: [ master ]
 
 jobs:
   build:
