@@ -52,7 +52,7 @@ export class Players {
                     name: player.name,
                     userId: player.id,
                     sessionScore: player.sessionScore,
-                    score:player.score,
+                    score: player.score,
                     rank: index,
                 };
             });
@@ -70,6 +70,10 @@ export class Players {
 
     getUserById(id) {
         return this.players[id];
+    }
+
+    deletePlayer(id) {
+        delete this.players[id];
     }
 
 }

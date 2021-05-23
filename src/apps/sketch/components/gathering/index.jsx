@@ -9,7 +9,7 @@ const GatheringSpace = props => {
     const [isNameModalVisible, setNameModalVisible ] = useState(false);
     const [nameValue, setNameValue ] = useState('player');
     // eslint-disable-next-line no-unused-vars
-    const { userType, hostLobbyKey = '', dataChannel, setAppState, setMyInfo, setAllPlayers, myInfo, allPlayers } = props;
+    const { userType, hostLobbyKey = '', dataChannel, setAppState, setMyInfo, setAllPlayers, myInfo, allPlayers, getMyInfo } = props;
     const [ shareURL, setShareURL] = useState('');
     const [ gameMeta, setGameMeta ] = useState({ rounds: ROUNDS, turns: TURN_TIME });
     const turns = useRef(); 
@@ -39,6 +39,10 @@ const GatheringSpace = props => {
                     break;
                 case META_TYPES.END_GAME:
                     setAppState(APP_STATE.GATHERING);
+                    break;
+                case META_TYPES.HEART_BEAT:
+                    console.log({ type: META_TYPES.ALIVE, userId: getMyInfo()}) //
+                    metaChannel.current.send(JSON.stringify({ type: META_TYPES.ALIVE, userId: getMyInfo().id}));
                     break;
                 case META_TYPES.TURN_TIME:
                     setGameMeta(p => { return { ...p, turns: messageObj.value } });

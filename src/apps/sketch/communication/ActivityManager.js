@@ -24,6 +24,12 @@ export class ActivityManager {
 
     handleTimeOutVariable;
 
+    alivePlayers;
+
+    // constructor() {
+    //     setInterval( () => {if(this.publish) this.checkHeartBeat();}, 1000)
+    // }
+
     setGameSession(flag) {
         this.isGameSessionActive = flag;
     }
@@ -205,6 +211,9 @@ export class ActivityManager {
             case META_TYPES.NEW_PLAYER:
                 this.handleNewPlayer(message);
                 break;
+            case META_TYPES.ALIVE:
+                this.checkLiveness(message);
+                break;
             case META_TYPES.START_GAME:
                 this.handleStartGame(message);
                 // eslint-disable-next-line no-fallthrough
@@ -229,5 +238,34 @@ export class ActivityManager {
             players: this.players.getAllPlayers(),
         }
         this.publish({ data: JSON.stringify(resp) }, getChannel(message));
+    }
+
+    checkHeartBeat() {
+        this.alivePlayers = [];
+        let heartBeat = {
+            type: META_TYPES.HEART_BEAT,
+        }
+        this.publish({ data: JSON.stringify(heartBeat) }, 'meta');
+
+        setTimeout(() => { 
+            let allPlayers = this.players.getAllPlayers();
+            console.log(this.alivePlayers);
+            for (let i = 0; i < allPlayers.length; i++) {
+                // console.log(allPlayers[i]);
+                if (!this.alivePlayers.includes(allPlayers[i].userId)) {
+                    console.log(allPlayers[i].userId);
+                    this.players.deletePlayer(allPlayers[i].userId);
+                    console.log(this.players.getAllPlayers());
+                }
+            }
+        }, 3000);
+    }
+
+    checkLiveness(message) {
+        console.log(message);//
+        const data = JSON.parse(message.data);
+        console.log(data);//
+        console.log('alive player: ', data.userId);//
+        this.alivePlayers.push(data.userId);
     }
 }

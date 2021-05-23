@@ -25,6 +25,8 @@ export default class PubSub {
         } else {
             dataChannel.onmessage = (message) => { this.activityManager.handle(message) };
         }
+        if (channel_name === 'meta')
+            dataChannel.onclose = (e) => {this.activityManager.checkHeartBeat()}
     }
 
     publish(message, channel) {

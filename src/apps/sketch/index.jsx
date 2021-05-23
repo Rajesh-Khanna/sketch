@@ -97,6 +97,7 @@ const Sketch = () => {
                                         setAllPlayers={setAllPlayers}
                                         myInfo={myInfo.current}
                                         allPlayers={allPlayers.current}
+                                        getMyInfo={getMyInfo}
                                     />
                         case APP_STATE.PASSIVE_BOARD:
                             return <></>
