@@ -38,6 +38,8 @@ export const META_TYPES = {
     START_GAME: 'START_GAME',
     END_GAME: 'END_GAME',
     RESET_GAME: 'RESET_GAME',
+    TURN_TIME: 'TURN_TIME',
+    ROUND_NUM: 'ROUND_NUM',
 }
 
 export const CHAT_TYPE = {
@@ -48,3 +50,6 @@ export const CHAT_TYPE = {
 }
 
 export const POPUP_TIMEOUT = 4000;
+
+export const TURN_TIME = 10;
+export const ROUNDS = 3;
