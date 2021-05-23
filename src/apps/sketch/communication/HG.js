@@ -95,9 +95,11 @@ export class Host {
             (offer, guestId) => { this.signal.send('offer', offer, guestId) },
             (e) => { console.log('on channel open set');
                 this.createChannels(id) },
+            (candidate, guestId) => { this.signal.send('host_candidate', candidate, guestId) },
             id
         );
-        rtc.generateOffer();
+        this.signal.onCandidate((candidate) => {rtc.storeCandidate(candidate)},id);
+        rtc.sendOffer();
         this.guests[id] = rtc;
     }
 
@@ -154,7 +156,10 @@ export class Guest {
         this.onConnection = onConnection;
         this.rtc = new RTC(USER_TYPE.GUEST, (answer, id) => {
             this.signal.send('answer', answer);
-        }, (channel) => { this.onChannel(channel); });
+        }, (channel) => { this.onChannel(channel); }, 
+        (candidate, guestId) => { this.signal.send('guest_candidate', candidate, guestId) }
+        );
+        this.signal.onCandidate((candidate) => {this.rtc.storeCandidate(candidate)});
         this.signal.onMessage((message) => { this.incomingMessage(message) });
     }
 
@@ -185,7 +190,7 @@ export class Guest {
     }
 
     handleOffer(host) {
-        this.rtc.setOffer(host.offer);
+        this.rtc.setAndSendOffer(host.offer);
     }
 
     getChannel(channel_name) {

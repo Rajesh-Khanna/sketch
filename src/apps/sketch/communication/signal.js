@@ -71,9 +71,39 @@ export default class Signal {
         });
     }
 
+    onCandidate(callBack, guestKey) {
+        if (this.userType === USER_TYPE.GUEST) {
+            // host candidate
+            this.workSpaceRef.child('host_candidate').on('value', (snapShot) => {
+                console.log('host candidate received', snapShot);
+                console.log({ candidate: snapShot.val() });
+                // store candidate
+                callBack(snapShot.val());
+            });
+        }
+        if (this.userType === USER_TYPE.HOST) {
+            if (guestKey === null) {
+                console.log("guest key shouldn't be null");
+            }
+            // guest candidate
+            this.workSpaceRef.child(`guests/${guestKey}/guest_candidate`).on('value', (snapShot) => {
+                console.log('guest candidate received', snapShot);
+                console.log({ candidate: snapShot.val() });
+                // store candidate
+                callBack(snapShot.val());
+            });
+        }
+    }
+
     onMessage(callBack) {
         console.log('onMessage callback set');
         if (this.userType === USER_TYPE.GUEST) {
+            // host candidate
+            this.workSpaceRef.child('host_candidate').on('value', (snapShot) => {
+                console.log('host candidate received', snapShot);
+                console.log({ candidate: snapShot.val() });
+                // store candidate
+            });
             this.workSpaceRef.child('offer').on('value', (snapShot) => {
                 console.log('offer recived', snapShot);
                 console.log({ offer: snapShot.val() });
