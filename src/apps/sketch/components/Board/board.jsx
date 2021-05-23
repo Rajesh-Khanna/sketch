@@ -47,6 +47,8 @@ const Board = props => {
     const [isScoresVisible, setIsScoreVisible] = useState(false);
     const [isGameOver, setIsGameOver] = useState(false);
     const [roundNum, setRoundNum] = useState(1);
+    const currPlayer = useRef('');
+
 
     const [timer, setTimer] = useState(0);
     const [timerFlag, setTimerFlag] = useState(0);
@@ -107,6 +109,7 @@ const Board = props => {
               setWordModalVisible(true);
             }
             else {
+              currPlayer.current = getPlayerById(obj.userId);
               setDisableBoard(true);
               setDisableChat(false);
             }
@@ -186,11 +189,11 @@ const Board = props => {
   return (
     <>
       {
-        displayBlank
+        displayBlank 
           ? <Card  style={{textAlign: 'center'}}> {blank.current} </Card>
           : <></>
       }
-      <div>Round: {roundNum}</div>
+      <div>Round: {roundNum} ({currPlayer.current})</div>
       <Row justify='center'>
         <Col lg={20} xs={24}>
           <Row>
