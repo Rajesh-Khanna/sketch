@@ -38,6 +38,8 @@ export const META_TYPES = {
     START_GAME: 'START_GAME',
     END_GAME: 'END_GAME',
     RESET_GAME: 'RESET_GAME',
+    HEART_BEAT: 'HEART_BEAT',
+    ALIVE: 'ALIVE',
 }
 
 export const CHAT_TYPE = {

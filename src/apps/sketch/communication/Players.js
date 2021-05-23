@@ -72,4 +72,11 @@ export class Players {
         return this.players[id];
     }
 
+    deletePlayer(id) {
+        console.log(id);
+        console.log(this.players);
+        delete this.players[id];
+        console.log(this.players);
+    }
+
 }
