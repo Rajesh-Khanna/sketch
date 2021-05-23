@@ -33,6 +33,12 @@ const Board = props => {
       {
         title: 'Player',
         dataIndex: 'name',
+        // render: (text, row, index) => {
+        //   if (text === currPlayer.current) {
+        //     return <b style={{color: '#ffff00'}} >{text}</b>;
+        //   }
+        //   return <span>{text}</span>;
+        // },
       },
       {
         title: 'Score',
@@ -56,7 +62,7 @@ const Board = props => {
     const background = useRef();
 
     const sizeRef = useRef();
-    const { sketchChannel, getMyInfo, getPlayerById } = props;
+    const { sketchChannel, getMyInfo, getPlayerById, allPlayers } = props;
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
     const [refreshBoard, setRefreshBoard] = useState(false);
@@ -67,6 +73,9 @@ const Board = props => {
     const [ disableChat, setDisableChat ] = useState(false);
 
     useEffect(() => {
+      setSessionScores(Object.values(allPlayers).reduce((acc,player) => {
+        return [ ...acc, { name: player.name, score: 0 } ];
+      }, []));
       setBrush(sketchChannel.current.getChannel('brush'));
       setChat(sketchChannel.current.getChannel('chat'));
       background.current = sketchChannel.current.getChannel('background');
@@ -109,7 +118,7 @@ const Board = props => {
               setWordModalVisible(true);
             }
             else {
-              currPlayer.current = getPlayerById(obj.userId);
+              currPlayer.current = getPlayerById(obj.userId).name;
               setDisableBoard(true);
               setDisableChat(false);
             }
