@@ -2,11 +2,18 @@ import { USER_TYPE } from "../constants";
 
 export default class RTC {
 
+    onIce;
+
+    guestId;
+
     rtc;
 
     localDescription;
 
-    constructor(userType, onIce, onChannel, guestId) {
+    constructor(userType, onIce, onChannel, onCandidate, guestId) {
+        this.onIce = onIce;
+        this.guestId = guestId;
+
         const configuration = {
             'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' },
                 { 'url': 'stun:stun1.l.google.com:19302' },
@@ -17,14 +24,22 @@ export default class RTC {
         }
         this.rtc = new RTCPeerConnection(configuration);
 
-        this.rtc.addEventListener("icegatheringstatechange", ev => {
-            console.log(this.rtc.iceGatheringState, ev);
-            switch (this.rtc.iceGatheringState) {
-                case "complete":
-                    onIce(this.rtc.localDescription, guestId);
-                    break;
-                default:
-                    console.log(this.rtc.iceGatheringState);
+        // this.rtc.addEventListener("icegatheringstatechange", ev => {
+        //     console.log(this.rtc.iceGatheringState, ev);
+        //     switch (this.rtc.iceGatheringState) {
+        //         case "complete":
+        //             onIce(this.rtc.localDescription, guestId);
+        //             break;
+        //         default:
+        //             console.log(this.rtc.iceGatheringState);
+        //     }
+        // });
+
+        this.rtc.addEventListener("icecandidate", event => {
+            if (event.candidate) {
+                console.log(event.candidate);
+                // send candidate
+                onCandidate(event.candidate, guestId);
             }
         });
 
@@ -56,9 +71,10 @@ export default class RTC {
         return dataChannel;
     }
 
-    async generateOffer() {
+    async sendOffer() {
         console.log('generateOffer');
         const offer = await this.rtc.createOffer();
+        this.onIce(offer,this.guestId);
         await this.rtc.setLocalDescription(offer);
     }
 
@@ -68,12 +84,18 @@ export default class RTC {
         this.rtc.setRemoteDescription(answer);
     }
 
-    async setOffer(offer) {
+    async setAndSendOffer(offer) {
         console.log('setOffer', offer);
         console.log(JSON.stringify(offer));
         await this.rtc.setRemoteDescription(offer);
         const answer = await this.rtc.createAnswer();
+        this.onIce(answer,this.guestId);
         console.log(JSON.stringify(answer));
         this.rtc.setLocalDescription(answer);
+    }
+
+    async storeCandidate(candidate) {
+        console.log('candidate:', candidate);
+        await this.rtc.addIceCandidate(candidate);
     }
 }
