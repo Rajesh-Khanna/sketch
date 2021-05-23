@@ -40,6 +40,8 @@ export const META_TYPES = {
     RESET_GAME: 'RESET_GAME',
     HEART_BEAT: 'HEART_BEAT',
     ALIVE: 'ALIVE',
+    TURN_TIME: 'TURN_TIME',
+    ROUND_NUM: 'ROUND_NUM',
 }
 
 export const CHAT_TYPE = {
@@ -50,3 +52,6 @@ export const CHAT_TYPE = {
 }
 
 export const POPUP_TIMEOUT = 4000;
+
+export const TURN_TIME = 10;
+export const ROUNDS = 3;

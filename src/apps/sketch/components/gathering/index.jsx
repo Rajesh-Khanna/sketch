@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect} from 'react';
 import { Input, Button, Card, Row, Col, Modal } from 'antd';
-import { APP_STATE, META_TYPES } from '../../constants';
+import { APP_STATE, META_TYPES, ROUNDS, TURN_TIME } from '../../constants';
 import { gridStyle } from '../../style';
 
 const GatheringSpace = props => {
@@ -11,6 +11,7 @@ const GatheringSpace = props => {
     // eslint-disable-next-line no-unused-vars
     const { userType, hostLobbyKey = '', dataChannel, setAppState, setMyInfo, setAllPlayers, myInfo, allPlayers, getMyInfo } = props;
     const [ shareURL, setShareURL] = useState('');
+    const [ gameMeta, setGameMeta ] = useState({ rounds: ROUNDS, turns: TURN_TIME });
     const turns = useRef(); 
     const rounds = useRef(); 
 
@@ -42,6 +43,12 @@ const GatheringSpace = props => {
                 case META_TYPES.HEART_BEAT:
                     console.log({ type: META_TYPES.ALIVE, userId: getMyInfo()}) //
                     metaChannel.current.send(JSON.stringify({ type: META_TYPES.ALIVE, userId: getMyInfo().id}));
+                    break;
+                case META_TYPES.TURN_TIME:
+                    setGameMeta(p => { return { ...p, turns: messageObj.value } });
+                    break;
+                case META_TYPES.ROUND_NUM:
+                    setGameMeta(p => { return { ...p, rounds: messageObj.value } });
                     break;
                 default:
                     console.log(messageObj);
@@ -81,6 +88,14 @@ const GatheringSpace = props => {
         }
     }
 
+    const updateTurnTime = (e) => {
+        metaChannel.current.send(JSON.stringify({ type: META_TYPES.TURN_TIME, value: e.target.value }));
+    }
+
+    const updateRoundNum = (e) => {
+        metaChannel.current.send(JSON.stringify({ type: META_TYPES.ROUND_NUM, value: e.target.value }));
+    }
+
     return (
         <>
             <div id = 'waitingRoom'>
@@ -99,12 +114,21 @@ const GatheringSpace = props => {
                             userType === 'HOST'?   
                                 (
                                     <>
-                                    <Input ref={turns} addonBefore="Timeout per turn" defaultValue={10} type="number" />
-                                    <Input ref={rounds} addonBefore="Rounds" defaultValue={3} type="number" />
+                                    <Input ref={turns} onChange={updateTurnTime} addonBefore="Timeout per turn" defaultValue={10} type="number" />
+                                    <Input ref={rounds} onChange={updateRoundNum} addonBefore="Rounds" defaultValue={3} type="number" />
                                     <Button type="primary" onClick={startBoard}> Start Board </Button>
                                     </>
                                 ):(
-                                    'Waiting for host to start the game...'
+                                    <>
+                                        <Card>
+                                            <p>
+                                                Number of turns: {gameMeta.turns}
+                                            </p>
+                                            <p>
+                                                Rounds: {gameMeta.rounds}
+                                            </p>
+                                        </Card>
+                                    </>
                                 )
                         }
                         </center>
