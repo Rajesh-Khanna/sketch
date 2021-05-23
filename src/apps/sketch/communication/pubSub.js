@@ -4,8 +4,11 @@ export default class PubSub {
 
     channels = {};
 
-    constructor(activityManager) {
+    bridgeChannels = [];
+
+    constructor(activityManager, bridgeChannels) {
         this.channels = {};
+        this.bridgeChannels = bridgeChannels || [];
         this.activityManager = activityManager;
         this.activityManager.publish = (message, channel) => { this.publish(message, channel) };
     }
@@ -16,7 +19,12 @@ export default class PubSub {
         } else {
             this.channels[channel_name] = [dataChannel, ];
         }
-        dataChannel.onmessage = (message) => { this.activityManager.handle(message) };
+
+        if (channel_name in this.bridgeChannels) {
+            dataChannel.onmessage = (message) => { this.publish(message) };
+        } else {
+            dataChannel.onmessage = (message) => { this.activityManager.handle(message) };
+        }
     }
 
     publish(message, channel) {
