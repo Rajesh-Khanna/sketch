@@ -3,7 +3,7 @@ import Signal from './signal';
 import RTC from './webRTCHandler';
 
 // constants
-import { USER_TYPE, MESSAGE_TYPE } from '../constants';
+import { USER_TYPE, MESSAGE_TYPE, CHANNELS } from '../constants';
 import { ActivityManager } from './ActivityManager';
 
 class ChannelEndSim {
@@ -105,27 +105,19 @@ export class Host {
 
     createChannels(id) {
         console.log('creating channel');
-        this.pubSub.push('meta', this.guests[id].createChannel('meta'));
-        this.pubSub.push('brush', this.guests[id].createChannel('brush'));
-        this.pubSub.push('chat', this.guests[id].createChannel('chat'));
-        this.pubSub.push('background', this.guests[id].createChannel('background'));
+        for (const channel_name of Object.values(CHANNELS)) {
+            console.log(channel_name);
+            this.pubSub.push(channel_name, this.guests[id].createChannel(channel_name));
+        }
     }
 
     simulatedChannels() {
-        const metaChannel = new ChannelSim('meta');
-        const brushChannel = new ChannelSim('brush');
-        const chatChannel = new ChannelSim('chat');
-        const backgroundChannel = new ChannelSim('background');
-
-        this.channels['meta'] = metaChannel.intakeChannel;
-        this.channels['brush'] = brushChannel.intakeChannel;
-        this.channels['chat'] = chatChannel.intakeChannel;
-        this.channels['background'] = backgroundChannel.intakeChannel;
-
-        this.pubSub.push('meta', metaChannel.dc1);
-        this.pubSub.push('brush', brushChannel.dc1);
-        this.pubSub.push('chat', chatChannel.dc1);
-        this.pubSub.push('background', backgroundChannel.dc1);
+        for (const channel_name of Object.values(CHANNELS)) {
+            console.log(channel_name);
+            const channelSim = new ChannelSim(channel_name);
+            this.channels[channel_name] = channelSim.intakeChannel;
+            this.pubSub.push(channel_name, channelSim.dc1);
+        }
     }
 
     handleAnswer(guest) {
@@ -167,7 +159,7 @@ export class Guest {
         console.log({ channel });
         this.channels[channel.label] = channel;
         console.log(Object.keys(this.channels).length);
-        if (Object.keys(this.channels).length >= 5) {
+        if (Object.keys(this.channels).length >= Object.values(CHANNELS).length) {
             this.onConnection()
         }
     }

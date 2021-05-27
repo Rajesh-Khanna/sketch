@@ -1,3 +1,21 @@
+// --------------- Networking ---------------------- 
+export const CONFIGURATION = {
+    'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' },
+        { 'url': 'stun:stun1.l.google.com:19302' },
+        { 'url': 'stun:stun2.l.google.com:19302' },
+        { 'url': 'stun:stun3.l.google.com:19302' },
+        { 'url': 'stun:stun4.l.google.com:19302' },
+    ]
+};
+
+export const CHANNELS = {
+    META: 'meta',
+    BRUSH: 'brush',
+    CHAT: 'chat',
+    BACKGROUND: 'background',
+};
+// -------------------------------------------------
+
 export const APP_STATE = {
     HOST: 'HOST',
     GATHERING: 'GATHERING',

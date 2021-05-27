@@ -98,12 +98,6 @@ export default class Signal {
     onMessage(callBack) {
         console.log('onMessage callback set');
         if (this.userType === USER_TYPE.GUEST) {
-            // host candidate
-            this.workSpaceRef.child('host_candidate').on('value', (snapShot) => {
-                console.log('host candidate received', snapShot);
-                console.log({ candidate: snapShot.val() });
-                // store candidate
-            });
             this.workSpaceRef.child('offer').on('value', (snapShot) => {
                 console.log('offer recived', snapShot);
                 console.log({ offer: snapShot.val() });
