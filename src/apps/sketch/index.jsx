@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {APP_STATE} from './constants';
+import {APP_STATE, SKETCH_CHANNELS} from './constants';
 
 // componenets
 import SketchHost from './components/sketchHost/SketchHost';
@@ -13,6 +13,7 @@ import { insertParam } from './utils';
 // import { sketchChannelHandler, messageChannelHandler } from './comms/channels';
 
 import { Host, Guest } from './communication/HG';
+import { ActivityManager } from './communication/ActivityManager';
 
 const Sketch = () => {
     const dataChannel = useRef();
@@ -56,7 +57,8 @@ const Sketch = () => {
 
     const handleHost = (onLobbyKey) => {
         // write hosting logic
-        dataChannel.current = new Host(onLobbyKey);
+        const activityManager = new ActivityManager();
+        dataChannel.current = new Host(onLobbyKey, SKETCH_CHANNELS, activityManager);
         userType.current = 'HOST';
         setAppState(APP_STATE.GATHERING);
     }

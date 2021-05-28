@@ -73,3 +73,10 @@ export const POPUP_TIMEOUT = 4000;
 
 export const TURN_TIME = 10;
 export const ROUNDS = 3;
+
+export const SKETCH_CHANNELS = [
+    { name: 'meta', type: 'data' },
+    { name: 'brush', type: 'data' },
+    { name: 'chat', type: 'data' },
+    { name: 'background', type: 'data' }
+];

@@ -108,12 +108,13 @@ const Board = props => {
             setIsScoreVisible(false);
             setTimer(obj.timer);
             setRoundNum(obj.roundNum);
-            if (getMyInfo().id === obj.userId) {
+            const myInfo = getMyInfo();
+            currPlayer.current = myInfo.name;
+            if (myInfo.id === obj.userId) {
               setDisableBoard(false);
               setDisableChat(true);
 
               wordList.current = getNWords(3);
-              console.log('words generated');
               console.log(wordList.current);//
               setWordModalVisible(true);
             }

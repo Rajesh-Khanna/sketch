@@ -4,6 +4,7 @@ import RTC from './webRTCHandler';
 
 // constants
 import { USER_TYPE, MESSAGE_TYPE } from '../constants';
+import { ActivityManager } from './ActivityManager';
 
 class ChannelEndSim {
 
@@ -64,24 +65,29 @@ export class Host {
 
     channels = {};
 
-    req_channels = [];
+    activityManager;
 
-    constructor(onLobbyKey, req_channels, activityManager) {
-        this.req_channels = req_channels;
-        this.pubSub = new PubSub(activityManager, req_channels, null, onLobbyKey);
+    constructor(onLobbyKey) {
+        this.activityManager = new ActivityManager();
+        this.pubSub = new PubSub(this.activityManager, null, onLobbyKey);
         this.simulatedChannels();
     }
 
     simulatedChannels() {
-        this.req_channels.forEach(channel => {
-            const currChannel = new ChannelSim(channel.name);
-            this.channels[channel.name] = currChannel.intakeChannel;
-            this.pubSub.push(channel.name, currChannel.dc1);
-        });
-    }
+        const metaChannel = new ChannelSim('meta');
+        const brushChannel = new ChannelSim('brush');
+        const chatChannel = new ChannelSim('chat');
+        const backgroundChannel = new ChannelSim('background');
 
-    getChannel(channel_name) {
-        return this.channels[channel_name];
+        this.channels['meta'] = metaChannel.intakeChannel;
+        this.channels['brush'] = brushChannel.intakeChannel;
+        this.channels['chat'] = chatChannel.intakeChannel;
+        this.channels['background'] = backgroundChannel.intakeChannel;
+
+        this.pubSub.push('meta', metaChannel.dc1);
+        this.pubSub.push('brush', brushChannel.dc1);
+        this.pubSub.push('chat', chatChannel.dc1);
+        this.pubSub.push('background', backgroundChannel.dc1);
     }
 
 }
@@ -94,9 +100,7 @@ export class Guest {
 
     channels = {};
 
-    req_channels = [];
-
-    constructor(lobbyKey, req_channels, onConnection) {
+    constructor(lobbyKey, onConnection) {
         this.signal = new Signal(USER_TYPE.GUEST, lobbyKey);
         this.onConnection = onConnection;
         this.rtc = new RTC(USER_TYPE.GUEST, (answer, id) => {
@@ -112,7 +116,7 @@ export class Guest {
         console.log({ channel });
         this.channels[channel.label] = channel;
         console.log(Object.keys(this.channels).length);
-        if (Object.keys(this.channels).length >= Object.values(this.req_channels).length) {
+        if (Object.keys(this.channels).length >= 5) {
             this.onConnection()
         }
     }
@@ -125,6 +129,13 @@ export class Guest {
             default:
                 console.log('invalid message Type', message);
         }
+    }
+
+    send() {
+        var channel = prompt("Please enter your channel:", "meta");
+        var message = prompt("What is ur message:", "my test message");
+
+        this.channels[channel].send(message);
     }
 
     handleOffer(host) {
