@@ -8,12 +8,6 @@ export const CONFIGURATION = {
     ]
 };
 
-export const CHANNELS = {
-    META: 'meta',
-    BRUSH: 'brush',
-    CHAT: 'chat',
-    BACKGROUND: 'background',
-};
 // -------------------------------------------------
 
 export const APP_STATE = {
@@ -80,3 +74,13 @@ export const SKETCH_CHANNELS = [
     { name: 'chat', type: 'data' },
     { name: 'background', type: 'data' }
 ];
+
+export const firebaseConfig = {
+    apiKey: "AIzaSyC76AeV9WHmHfgN0dSJcMLfXOHHI09ZZDs",
+    authDomain: "sketch-e5889.firebaseapp.com",
+    projectId: "sketch-e5889",
+    storageBucket: "sketch-e5889.appspot.com",
+    messagingSenderId: "417640075335",
+    appId: "1:417640075335:web:d27812bbfa1a905bcea162",
+    measurementId: "G-2RWBX5QBR6"
+};
