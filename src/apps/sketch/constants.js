@@ -1,3 +1,15 @@
+// --------------- Networking ---------------------- 
+export const CONFIGURATION = {
+    'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' },
+        { 'url': 'stun:stun1.l.google.com:19302' },
+        { 'url': 'stun:stun2.l.google.com:19302' },
+        { 'url': 'stun:stun3.l.google.com:19302' },
+        { 'url': 'stun:stun4.l.google.com:19302' },
+    ]
+};
+
+// -------------------------------------------------
+
 export const APP_STATE = {
     HOST: 'HOST',
     GATHERING: 'GATHERING',
@@ -62,3 +74,13 @@ export const SKETCH_CHANNELS = [
     { name: 'chat', type: 'data' },
     { name: 'background', type: 'data' }
 ];
+
+export const firebaseConfig = {
+    apiKey: "AIzaSyC76AeV9WHmHfgN0dSJcMLfXOHHI09ZZDs",
+    authDomain: "sketch-e5889.firebaseapp.com",
+    projectId: "sketch-e5889",
+    storageBucket: "sketch-e5889.appspot.com",
+    messagingSenderId: "417640075335",
+    appId: "1:417640075335:web:d27812bbfa1a905bcea162",
+    measurementId: "G-2RWBX5QBR6"
+};

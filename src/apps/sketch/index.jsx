@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {APP_STATE, SKETCH_CHANNELS} from './constants';
+import { APP_STATE, SKETCH_CHANNELS, firebaseConfig } from './constants';
 
 // componenets
 import SketchHost from './components/sketchHost/SketchHost';
@@ -48,7 +48,7 @@ const Sketch = () => {
 
     const handleGuest = (lobbyKey) => {
         // write guest setup logic
-        dataChannel.current = new Guest(lobbyKey, () => {
+        dataChannel.current = new Guest(lobbyKey, firebaseConfig, SKETCH_CHANNELS , () => {
             console.log('APP_STATE.GATHERING');
             setAppState(APP_STATE.GATHERING);
         });
@@ -58,7 +58,7 @@ const Sketch = () => {
     const handleHost = (onLobbyKey) => {
         // write hosting logic
         const activityManager = new ActivityManager();
-        dataChannel.current = new Host(onLobbyKey, SKETCH_CHANNELS, activityManager);
+        dataChannel.current = new Host(onLobbyKey, firebaseConfig, SKETCH_CHANNELS, activityManager);
         userType.current = 'HOST';
         setAppState(APP_STATE.GATHERING);
     }

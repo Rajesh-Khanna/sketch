@@ -33,21 +33,11 @@ export default class Signal {
 
     name
 
-    firebaseConfig = {
-        apiKey: "AIzaSyC76AeV9WHmHfgN0dSJcMLfXOHHI09ZZDs",
-        authDomain: "sketch-e5889.firebaseapp.com",
-        projectId: "sketch-e5889",
-        storageBucket: "sketch-e5889.appspot.com",
-        messagingSenderId: "417640075335",
-        appId: "1:417640075335:web:d27812bbfa1a905bcea162",
-        measurementId: "G-2RWBX5QBR6"
-    };
-
-    constructor(name, lobbyKey, onLobbyKey) {
+    constructor(name, firebaseConfig, lobbyKey, onLobbyKey) {
         this.name = name; // todo: name should be less then 16 char, only a-zA-Z0-9_
 
         if (!firebase.apps.length) {
-            firebase.initializeApp(this.firebaseConfig);
+            firebase.initializeApp(firebaseConfig);
         } else {
             firebase.app();
         }
@@ -98,12 +88,6 @@ export default class Signal {
     onMessage(callBack) {
         console.log('onMessage callback set');
         if (this.userType === USER_TYPE.GUEST) {
-            // host candidate
-            this.workSpaceRef.child('host_candidate').on('value', (snapShot) => {
-                console.log('host candidate received', snapShot);
-                console.log({ candidate: snapShot.val() });
-                // store candidate
-            });
             this.workSpaceRef.child('offer').on('value', (snapShot) => {
                 console.log('offer recived', snapShot);
                 console.log({ offer: snapShot.val() });

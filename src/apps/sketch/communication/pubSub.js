@@ -13,9 +13,9 @@ export default class PubSub {
 
     req_channels = [];
 
-    constructor(activityManager, req_channels, bridgeChannels, onLobbyKey) {
+    constructor(activityManager, firebaseConfig, req_channels, bridgeChannels, onLobbyKey) {
 
-        this.signal = new Signal('host', null, onLobbyKey);
+        this.signal = new Signal('host', firebaseConfig, null, onLobbyKey);
         this.signal.onMessage((message) => { this.incomingMessage(message) });
         this.req_channels = req_channels;
         this.channels = (req_channels || []).reduce((acc, curr) => { return {...acc, [curr.name]: [] } }, {});

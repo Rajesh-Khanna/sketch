@@ -1,4 +1,4 @@
-import { USER_TYPE } from "../constants";
+import { USER_TYPE, CONFIGURATION } from "../constants";
 
 export default class RTC {
 
@@ -14,26 +14,7 @@ export default class RTC {
         this.onIce = onIce;
         this.guestId = guestId;
 
-        const configuration = {
-            'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' },
-                { 'url': 'stun:stun1.l.google.com:19302' },
-                { 'url': 'stun:stun2.l.google.com:19302' },
-                { 'url': 'stun:stun3.l.google.com:19302' },
-                { 'url': 'stun:stun4.l.google.com:19302' },
-            ]
-        }
-        this.rtc = new RTCPeerConnection(configuration);
-
-        // this.rtc.addEventListener("icegatheringstatechange", ev => {
-        //     console.log(this.rtc.iceGatheringState, ev);
-        //     switch (this.rtc.iceGatheringState) {
-        //         case "complete":
-        //             onIce(this.rtc.localDescription, guestId);
-        //             break;
-        //         default:
-        //             console.log(this.rtc.iceGatheringState);
-        //     }
-        // });
+        this.rtc = new RTCPeerConnection(CONFIGURATION);
 
         this.rtc.addEventListener("icecandidate", event => {
             if (event.candidate) {

@@ -66,9 +66,9 @@ export class Host {
 
     req_channels = [];
 
-    constructor(onLobbyKey, req_channels, activityManager) {
+    constructor(onLobbyKey, firebaseConfig, req_channels, activityManager) {
         this.req_channels = req_channels;
-        this.pubSub = new PubSub(activityManager, req_channels, null, onLobbyKey);
+        this.pubSub = new PubSub(activityManager, firebaseConfig, req_channels, null, onLobbyKey);
         this.simulatedChannels();
     }
 
@@ -94,8 +94,11 @@ export class Guest {
 
     channels = {};
 
-    constructor(lobbyKey, onConnection) {
-        this.signal = new Signal(USER_TYPE.GUEST, lobbyKey);
+    req_channels = [];
+
+    constructor(lobbyKey, firebaseConfig, req_channels, onConnection) {
+        this.signal = new Signal(USER_TYPE.GUEST, firebaseConfig, lobbyKey);
+        this.req_channels = req_channels;
         this.onConnection = onConnection;
         this.rtc = new RTC(USER_TYPE.GUEST, (answer, id) => {
                 this.signal.send('answer', answer);
@@ -110,7 +113,7 @@ export class Guest {
         console.log({ channel });
         this.channels[channel.label] = channel;
         console.log(Object.keys(this.channels).length);
-        if (Object.keys(this.channels).length >= 5) {
+        if (Object.keys(this.channels).length >= Object.values(this.req_channels).length) {
             this.onConnection()
         }
     }
