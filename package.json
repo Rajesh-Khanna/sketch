@@ -16,7 +16,8 @@
         "react-p5-wrapper": "^2.3.0",
         "react-scripts": "^4.0.1",
         "react-window": "^1.8.6",
-        "web-vitals": "^0.2.4"
+        "web-vitals": "^0.2.4",
+        "webrtc-firebase": "^1.0.1"
     },
     "scripts": {
         "start": "react-scripts start",

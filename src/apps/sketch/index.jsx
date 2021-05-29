@@ -6,13 +6,13 @@ import SketchHost from './components/sketchHost/SketchHost';
 import { Layout } from 'antd';
 import GatheringSpace from './components/gathering/index';
 import Board from './components/Board/board';
-
+import rtcFirebase from 'webrtc-firebase';
 // utils
 import { insertParam } from './utils';
 // import sketchSync from './comms/sketchChannels';
 // import { sketchChannelHandler, messageChannelHandler } from './comms/channels';
 
-import { Host, Guest } from './communication/HG';
+// import { Host, Guest } from './communication/HG';
 import { ActivityManager } from './communication/ActivityManager';
 
 const Sketch = () => {
@@ -48,7 +48,7 @@ const Sketch = () => {
 
     const handleGuest = (lobbyKey) => {
         // write guest setup logic
-        dataChannel.current = new Guest(lobbyKey, firebaseConfig, SKETCH_CHANNELS , () => {
+        dataChannel.current = new rtcFirebase.Guest(lobbyKey, firebaseConfig, SKETCH_CHANNELS , () => {
             console.log('APP_STATE.GATHERING');
             setAppState(APP_STATE.GATHERING);
         });
@@ -58,7 +58,7 @@ const Sketch = () => {
     const handleHost = (onLobbyKey) => {
         // write hosting logic
         const activityManager = new ActivityManager();
-        dataChannel.current = new Host(onLobbyKey, firebaseConfig, SKETCH_CHANNELS, activityManager);
+        dataChannel.current = new rtcFirebase.RoomHost(onLobbyKey, firebaseConfig, SKETCH_CHANNELS, activityManager);
         userType.current = 'HOST';
         setAppState(APP_STATE.GATHERING);
     }
