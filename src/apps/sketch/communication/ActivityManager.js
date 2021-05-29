@@ -26,6 +26,10 @@ export class ActivityManager {
 
     alivePlayers;
 
+    sessionBrushQueue = {};
+
+    playerPositions = {};
+
     // constructor() {
     //     setInterval( () => {if(this.publish) this.checkHeartBeat();}, 1000)
     // }
@@ -56,24 +60,45 @@ export class ActivityManager {
         }
     }
 
+    addBoardcastChannel(channel_name, dataChannel) {
+        if (!(channel_name in this.sessionBrushQueue)) {
+            this.sessionBrushQueue[channel_name] = [];
+        }
+        this.pollBrushQueue(channel_name, dataChannel);
+    }
+
+    pollBrushQueue(channel_name, dataChannel) {
+        let myPosition = 0;
+        setTimeout(() => {
+            const queueL = this.sessionBrushQueue[channel_name].length;
+            const stroks = this.sessionBrushQueue[channel_name].slice(myPosition, queueL);
+            if (stroks.length > 0) {
+                myPosition = queueL;
+                dataChannel.send(JSON.stringify(stroks));
+            }
+        }, 100);
+    }
+
     resetScores() {
         let allPlayers = this.players.getAllPlayers();
-        for (let i = 0; i< allPlayers.length; i++) {
+        for (let i = 0; i < allPlayers.length; i++) {
             this.players.getUserById(allPlayers[i].userId).resetScore();
         }
     }
 
     resetSessionScores() {
         let allPlayers = this.players.getAllPlayers();
-        for (let i = 0; i< allPlayers.length; i++) {
+        for (let i = 0; i < allPlayers.length; i++) {
             this.players.getUserById(allPlayers[i].userId).resetSessionScore();
         }
     }
 
     handleTimeOut() {
-        console.log('hello');//
+        console.log('hello'); //
         this.setGameSession(false);
         console.log(this.players.getScore());
+
+        this.sessionBrushQueue['brush'] = [];
 
         const correctWord = {
             "type": "CORRECT_WORD",
@@ -94,24 +119,24 @@ export class ActivityManager {
 
     initiateSession() {
         if (this.playerIds.length === 0) {
-            if(this.roundNum < this.rounds) {
+            if (this.roundNum < this.rounds) {
                 this.playerIds = this.players.getAllPlayers();
-                console.log(this.playerIds);//
+                console.log(this.playerIds); //
                 this.roundNum = this.roundNum + 1;
             }
         }
 
-        if (this.playerIds.length){
+        if (this.playerIds.length) {
             console.log(this.playerIds); //
-            console.log(this.playerIds[this.playerIds.length-1]); //
-            const userId = this.playerIds[this.playerIds.length-1].userId;
+            console.log(this.playerIds[this.playerIds.length - 1]); //
+            const userId = this.playerIds[this.playerIds.length - 1].userId;
             console.log(userId);
             /** timeout is added so that users get the time to check the scores
-            * Note: Initially(when the page loads for the first time), it might happen that host sends the message
-            * before guests start listening. Adding time out also mitigates this issue.
-            */
+             * Note: Initially(when the page loads for the first time), it might happen that host sends the message
+             * before guests start listening. Adding time out also mitigates this issue.
+             */
             setTimeout(() => {
-                console.log('message sent');//
+                console.log('message sent'); //
                 let initObj = {
                     "type": "INIT_TURN",
                     "userId": userId,
@@ -122,8 +147,7 @@ export class ActivityManager {
                 this.publish({ data: JSON.stringify(initObj) }, 'background');
             }, POPUP_TIMEOUT);
             this.playerIds.pop();
-        }
-        else {
+        } else {
             // Game over logic
             let winnerObj = {
                 "type": "WINNER",
@@ -144,7 +168,7 @@ export class ActivityManager {
 
     generateBlanks(word) {
         let blank = ''
-        for (let i = 0; i < word.length-1 ; i++) {
+        for (let i = 0; i < word.length - 1; i++) {
             blank = blank + '_ ';
         }
         return blank + '_'
@@ -153,9 +177,9 @@ export class ActivityManager {
     checkIfEveryOneSolved() {
         let allPlayers = this.players.getAllPlayers();
         let count = allPlayers.length;
-        for (let i = 0; i< allPlayers.length; i++) {
+        for (let i = 0; i < allPlayers.length; i++) {
             if (this.players.getUserById(allPlayers[i].userId).solved === true) {
-                count = count-1;
+                count = count - 1;
             }
         }
         if (count === 1) {
@@ -180,9 +204,8 @@ export class ActivityManager {
             this.publish({ data: JSON.stringify(blankObj) }, 'background');
             this.handleTimeOutVariable = setTimeout(() => {
                 this.handleTimeOut();
-            }, (this.turnTime)*1000);
-        }
-        else {
+            }, (this.turnTime) * 1000);
+        } else {
             this.publish(message);
         }
     }
@@ -247,7 +270,7 @@ export class ActivityManager {
         }
         this.publish({ data: JSON.stringify(heartBeat) }, 'meta');
 
-        setTimeout(() => { 
+        setTimeout(() => {
             let allPlayers = this.players.getAllPlayers();
             console.log(this.alivePlayers);
             for (let i = 0; i < allPlayers.length; i++) {
@@ -262,10 +285,10 @@ export class ActivityManager {
     }
 
     checkLiveness(message) {
-        console.log(message);//
+        console.log(message); //
         const data = JSON.parse(message.data);
-        console.log(data);//
-        console.log('alive player: ', data.userId);//
+        console.log(data); //
+        console.log('alive player: ', data.userId); //
         this.alivePlayers.push(data.userId);
     }
 }

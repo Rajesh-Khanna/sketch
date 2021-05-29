@@ -16,9 +16,18 @@ export default function SketchBoard(props) {
         console.log({brush});
         console.log(brush);
         brush.onmessage = (message) => {
-            const x = new Shape();
-            x.copy(JSON.parse(message.data), true);
-            othersShapes.current.push(x);
+            if( Array.isArray(message.data)){
+                const points = JSON.parse(message.data);
+                points.forEach(point => {
+                    const x = new Shape();
+                    x.copy(JSON.parse(point), true);
+                    othersShapes.current.push(x);    
+                })
+            }else{
+                const x = new Shape();
+                x.copy(JSON.parse(message.data), true);
+                othersShapes.current.push(x);
+            }
         }
 
         function onKeyup(e) {
