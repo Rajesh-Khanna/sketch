@@ -1,3 +1,17 @@
+@font-face {
+    font-family: 'MyFont';
+    src: local('MyFont'), url(./Merienda-Regular.ttf) format('truetype');
+}
+
+.App {
+    font-family: MyFont;
+}
+
 .text-light {
     color: aliceblue;
+}
+
+.startButton {
+    height: 80px;
+    border-radius: 50% 10% 50% 50% / 40% 30% 60% 50%;
 }

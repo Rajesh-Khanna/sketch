@@ -65,7 +65,7 @@ export const CHAT_TYPE = {
 
 export const POPUP_TIMEOUT = 4000;
 
-export const TURN_TIME = 10;
+export const TURN_TIME = 80;
 export const ROUNDS = 3;
 
 export const SKETCH_CHANNELS = [

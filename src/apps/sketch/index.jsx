@@ -3,7 +3,7 @@ import { APP_STATE, SKETCH_CHANNELS, firebaseConfig } from './constants';
 
 // componenets
 import SketchHost from './components/sketchHost/SketchHost';
-import { Layout } from 'antd';
+import { Layout, Row, Col } from 'antd';
 import GatheringSpace from './components/gathering/index';
 import Board from './components/Board/board';
 import rtcFirebase from 'webrtc-firebase';
@@ -83,8 +83,17 @@ const Sketch = () => {
 
     return (
         <Layout>
-            <Header className='text-light'>Sketch-Room</Header>
-            <Content>
+            <Header className='text-light'>
+                <Row>
+                    <Col md={{ span: 24 }} lg={{ span: 2, offset: 6 }} >
+                        Sketch-Room
+                    </Col>
+                    <Col md={{ span: 24 }} lg={{ span: 4, offset: 6 }} >
+                        Other games
+                    </Col>
+                </Row>
+            </Header>
+            <Content style={{ padding: '8px' }}>
             {(() => {
                     switch(appState) { 
                         case APP_STATE.HOST: 
@@ -113,7 +122,10 @@ const Sketch = () => {
                 })()
             }
             </Content>
-            <Footer> license </Footer> 
+            <Footer style={{ textAlign: 'center' }}> 
+                Authors: <a style={{paddingRight: '5px'}} href="https://github.com/Rajesh-Khanna">@Rajesh</a>
+                <a href="https://github.com/theVirtualMan">@Rohit</a>
+            </Footer> 
         </Layout>
     );
 }

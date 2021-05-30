@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect} from 'react';
-import { Input, Button, Card, Row, Col, Modal } from 'antd';
+import { Input, Button, Card, Row, Col, Modal, Divider } from 'antd';
 import { APP_STATE, META_TYPES, ROUNDS, TURN_TIME } from '../../constants';
 import { gridStyle } from '../../style';
 
@@ -100,7 +100,7 @@ const GatheringSpace = props => {
         <>
             <div id = 'waitingRoom'>
                 <Row justify='center'>
-                    <Col span={12}>
+                    <Col md={24} lg={16}>
                         <Row wrap={false} justify='center' align='middle'>
                             <Col flex="none">
                                 <Card> Share this link </Card>
@@ -109,14 +109,32 @@ const GatheringSpace = props => {
                                 <Card>{shareURL}</Card>
                             </Col>
                         </Row>
-                        <center>
+                            <Divider> Game Settings </Divider>
                         {
                             userType === 'HOST'?   
                                 (
                                     <>
-                                    <Input ref={turns} onChange={updateTurnTime} addonBefore="Timeout per turn" defaultValue={10} type="number" />
-                                    <Input ref={rounds} onChange={updateRoundNum} addonBefore="Rounds" defaultValue={3} type="number" />
-                                    <Button type="primary" onClick={startBoard}> Start Board </Button>
+                                    <Row justify='center' gutter={[4, 4]}>
+                                        <Col md={24} lg={6}>
+                                            Timeout per turn
+                                        </Col>
+                                        <Col md={24} lg={4}>
+                                            <Input style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={10} type="number" />
+                                        </Col>
+                                    </Row>
+                                    <Row justify='center' gutter={[4, 4]}>
+                                        <Col md={24} lg={6}>
+                                            Rounds
+                                        </Col>
+                                        <Col md={24} lg={4}>
+                                            <Input style={{ textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={3} type="number" /> <br />
+                                        </Col>
+                                    </Row>
+                                    <Row justify='center'>
+                                        <Col md={24} lg={6}  style={{ textAlign: 'center', padding: '8px' }}>
+                                            <Button type="primary" className='startButton' onClick={startBoard}> Start Board </Button>
+                                        </Col>                                    
+                                    </Row>
                                     </>
                                 ):(
                                     <>
@@ -127,11 +145,14 @@ const GatheringSpace = props => {
                                             <p>
                                                 Rounds: {gameMeta.rounds}
                                             </p>
+                                            <p style={{ textAlign: 'center', border: 'solid' }}>
+                                                Waiting for Host to start the game.
+                                            </p>
                                         </Card>
                                     </>
                                 )
                         }
-                        </center>
+                        <Divider > Players </Divider>
                         {
                             players ?
                             (
