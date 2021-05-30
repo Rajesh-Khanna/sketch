@@ -242,7 +242,7 @@ const Board = props => {
       </Modal>
       <Modal title="Scores" visible={isScoresVisible} closable={false} destroyonClose={true} footer={null}>
         <center>
-          <h3> Word is: {correctWord.current} </h3>
+          <h3> Word is: <b> {correctWord.current} </b> </h3>
         </center>
         <Table columns={sessionScoreColumns.current} dataSource={sessionScores}/>
       </Modal>
