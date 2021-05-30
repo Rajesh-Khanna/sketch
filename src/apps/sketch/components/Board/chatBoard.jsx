@@ -45,7 +45,7 @@ const ChatBoard = props => {
     }
 
     return (
-      <div style={{border: '2px solid black'}}>
+      <div className='roboto_font' style={{border: '2px solid black'}}>
         <Row>
             <Col>
                 <input placeholder="Enter to send" onKeyDown={handleKeyDown} disabled={disable}/>

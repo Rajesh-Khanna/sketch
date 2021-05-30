@@ -109,7 +109,8 @@ export class ActivityManager {
         // send scores
         let endObj = {
             "type": "END_TURN",
-            "scores": this.players.getScore()
+            "scores": this.players.getScore(),
+            "correctWord": this.corrWord
         };
         this.publish({ data: JSON.stringify(endObj) }, 'background');
         this.resetSessionScores();

@@ -50,6 +50,7 @@ const Board = props => {
     const word = useRef('');
     const [sessionScores, setSessionScores] = useState();
     const [isWordModalVisible, setWordModalVisible ] = useState(false);
+    const correctWord = useRef('');
     const [isScoresVisible, setIsScoreVisible] = useState(false);
     const [isGameOver, setIsGameOver] = useState(false);
     const [roundNum, setRoundNum] = useState(1);
@@ -145,7 +146,7 @@ const Board = props => {
             setDisplayBlank(false);
             word.current = '';
             blank.current = '';
-
+            correctWord.current = obj.correctWord;
             setIsScoreVisible(true);
             console.log(sessionScores);//
             break;
@@ -240,6 +241,9 @@ const Board = props => {
         <Button type="text" onClick={() => chooseWord(2)}>{wordList.current[2]}</Button>
       </Modal>
       <Modal title="Scores" visible={isScoresVisible} closable={false} destroyonClose={true} footer={null}>
+        <center>
+          <h3> Word is: {correctWord.current} </h3>
+        </center>
         <Table columns={sessionScoreColumns.current} dataSource={sessionScores}/>
       </Modal>
       <Modal title="Leader Board" visible={isGameOver} closable={false} destroyonClose={true} footer={null}>

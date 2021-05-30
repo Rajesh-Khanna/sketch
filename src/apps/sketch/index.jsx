@@ -65,6 +65,14 @@ const Sketch = () => {
 
     // useEffects
     useEffect(() => {
+        window.addEventListener("beforeunload", function (e) {
+            var confirmationMessage = 'You will be disconnected from current session if you leave the page';
+        
+            (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+            return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+        });
+        // window.beforeunload = ;
+
         const urlParams = new URLSearchParams(window.location.search);
         const lobbyKey = urlParams.get('k');
         console.log(lobbyKey);
@@ -88,8 +96,11 @@ const Sketch = () => {
                     <Col md={{ span: 24 }} lg={{ span: 2, offset: 6 }} >
                         Sketch-Room
                     </Col>
-                    <Col md={{ span: 24 }} lg={{ span: 4, offset: 6 }} >
+                    <Col md={{ span: 24 }} lg={{ span: 2, offset: 6 }} >
                         Other games
+                    </Col>
+                    <Col md={{ span: 24 }} lg={{ span: 2 }} >
+                        About us
                     </Col>
                 </Row>
             </Header>
@@ -123,8 +134,8 @@ const Sketch = () => {
             }
             </Content>
             <Footer style={{ textAlign: 'center' }}> 
-                Authors: <a style={{paddingRight: '5px'}} href="https://github.com/Rajesh-Khanna">@Rajesh</a>
-                <a href="https://github.com/theVirtualMan">@Rohit</a>
+                Authors: <a  target="_blank" rel='noreferrer' style={{paddingRight: '5px'}} href="https://github.com/Rajesh-Khanna">@Rajesh</a>
+                <a  target="_blank" rel='noreferrer' href="https://github.com/theVirtualMan">@Rohit</a>
             </Footer> 
         </Layout>
     );
