@@ -116,7 +116,7 @@ const GatheringSpace = props => {
                                     <>
                                     <Row justify='center' gutter={[4, 4]}>
                                         <Col md={24} lg={6}>
-                                            Timeout per turn
+                                            Time per turn
                                         </Col>
                                         <Col md={24} lg={4}>
                                             <Input style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={10} type="number" />
@@ -140,7 +140,7 @@ const GatheringSpace = props => {
                                     <>
                                         <Card>
                                             <p>
-                                                Number of turns: {gameMeta.turns}
+                                                Time per turn: {gameMeta.turns}
                                             </p>
                                             <p>
                                                 Rounds: {gameMeta.rounds}

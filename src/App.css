@@ -3,6 +3,11 @@
     src: local('MyFont'), url(./Merienda-Regular.ttf) format('truetype');
 }
 
+@font-face {
+    font-family: 'Roboto';
+    src: local('Roboto'), url(./roboto/Roboto-Regular.ttf) format('truetype');
+}
+
 .App {
     font-family: MyFont;
 }
@@ -14,4 +19,8 @@
 .startButton {
     height: 80px;
     border-radius: 50% 10% 50% 50% / 40% 30% 60% 50%;
+}
+
+.roboto_font {
+    font-family: Roboto;
 }
