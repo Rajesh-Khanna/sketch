@@ -172,7 +172,7 @@ const GatheringSpace = props => {
                     </Col>
                 </Row>
             </div>
-            <Modal title="Name" visible={isNameModalVisible} closable={false} destroyOnClose={true} footer={null}>
+            <Modal className='blob' title="Name" visible={isNameModalVisible} closable={false} destroyOnClose={true} footer={null}>
                 Type your name and press ENTER <br/>
                 <Input style={{ margin: '4px' }} onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
                 <br />

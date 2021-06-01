@@ -25,7 +25,7 @@ const Sketch = () => {
     const roomId = useRef('');
     const userType = useRef('');
     
-    const { Header, Footer, Content } = Layout;
+    const { Header, Content } = Layout;
     const setRoomId = (id) => {
         roomId.current = id;
     }

@@ -281,18 +281,18 @@ const Board = props => {
           }
         </Col>
       </Row>
-      <Modal title="Choose Word" visible={isWordModalVisible} closable={false} destroyOnClose={true} footer={null}>
+      <Modal className='blob' title="Choose Word" visible={isWordModalVisible} closable={false} destroyOnClose={true} footer={null}>
         <Button type="text" onClick={() => chooseWord(0)}>{wordList.current[0]}</Button>
         <Button type="text" onClick={() => chooseWord(1)}>{wordList.current[1]}</Button>
         <Button type="text" onClick={() => chooseWord(2)}>{wordList.current[2]}</Button>
       </Modal>
-      <Modal title="Scores" visible={isScoresVisible} closable={false} destroyonClose={true} footer={null}>
+      <Modal className='blob' title="Scores" visible={isScoresVisible} closable={false} destroyonClose={true} footer={null}>
         <center>
           <h3> Word is: <b> {correctWord.current} </b> </h3>
         </center>
         <Table columns={sessionScoreColumns.current} dataSource={sessionScores}/>
       </Modal>
-      <Modal title="Leader Board" visible={isGameOver} closable={false} destroyonClose={true} footer={null}>
+      <Modal className='blob' title="Leader Board" visible={isGameOver} closable={false} destroyonClose={true} footer={null}>
         <Table columns={scoreColumns.current} dataSource={sessionScores}/>
       </Modal>
     </>
