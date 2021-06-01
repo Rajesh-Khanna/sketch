@@ -77,14 +77,18 @@ const GatheringSpace = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nameValue]);
 
+    const sumbitName = () => {
+        if(nameValue.length > 0) {
+            const id = Math.random().toString(36).slice(-6);
+            metaChannel.current.send(JSON.stringify({ type: META_TYPES.NEW_PLAYER, userId: id, name: nameValue }));
+            setMyInfo(id,nameValue);
+            setNameModalVisible(false);
+        }
+    }
+
     const onTextChange = (e) => {
         if(e.key === 'Enter'){
-            if(nameValue.length > 0) {
-                const id = Math.random().toString(36).slice(-6);
-                metaChannel.current.send(JSON.stringify({ type: META_TYPES.NEW_PLAYER, userId: id, name: nameValue }));
-                setMyInfo(id,nameValue);
-                setNameModalVisible(false);
-            }
+            sumbitName();
         }
     }
 
@@ -169,7 +173,12 @@ const GatheringSpace = props => {
                 </Row>
             </div>
             <Modal title="Name" visible={isNameModalVisible} closable={false} destroyOnClose={true} footer={null}>
-                <Input onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
+                Type your name and press ENTER <br/>
+                <Input style={{ margin: '4px' }} onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
+                <br />
+                <center>
+                    <Button type='primary' onClick={sumbitName}> Submit </Button>
+                </center>
             </Modal>
         </>
     );

@@ -3,7 +3,7 @@ import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
 import {getNWords} from '../../words';
 import Timer from './timer';
-import { Table, Row, Col, Modal, Button, Card } from 'antd';
+import { Table, Row, Col, Modal, Button } from 'antd';
 
 
 import { MAX_FONT, MIN_FONT } from '../../constants';

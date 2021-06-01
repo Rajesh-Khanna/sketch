@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Tooltip, Slider, Card, Col, Row } from 'antd';
+import { Button, Tooltip, Slider, Col, Row } from 'antd';
 
 export default function Palette(props) {
 
