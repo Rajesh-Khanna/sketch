@@ -1,18 +1,40 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
 import {getNWords} from '../../words';
 import Timer from './timer';
-import { Table, Row, Col, Modal, Button } from 'antd';
+import { Table, Row, Col, Modal, Button, Card } from 'antd';
 
 
 import { MAX_FONT, MIN_FONT } from '../../constants';
 import Palette from './../Palette';
 
+function useHookWithRefCallback() {
+  const ref = useRef(null)
+  const setRef = useCallback(node => {
+    if (ref.current) {
+      console.log({'ref.current': ref.current});
+      // Make sure to cleanup any events/references added to the last instance
+    }
+    
+    if (node) {
+      console.log({node});
+      // Check if a node is actually passed. Otherwise node would be null.
+      // You can now do what you need to, addEventListeners, measure, etc.
+    }
+    
+    // Save a reference to the node
+    ref.current = node
+  }, [])
+  
+  return [setRef]
+}
+
 const Board = props => {
     // font and colours
     const [font, setFont] = useState(5);
     const [color, setColor] = useState('black');
+    const [sketchBoardRef] = useHookWithRefCallback();
 
     const sessionScoreColumns = useRef([
       {
@@ -197,6 +219,15 @@ const Board = props => {
     reduceFont: reduceFont,
   }
 
+  var circleStyle = {
+    display:"inline-block",
+    backgroundColor: color === 'eraser'? 'white' : color,
+    borderRadius: color === 'eraser'? '0%' : "50%",
+    borderStyle: color === 'eraser'? 'solid': 'none',
+    width: font,
+    height: font,
+  };
+
   return (
     <>
       <div>Round: {roundNum} ({currPlayer.current})</div>
@@ -204,37 +235,48 @@ const Board = props => {
         <Col lg={4} className='fullHeight'>
           <Table columns={scoreColumns.current} dataSource={sessionScores}/>
         </Col>
-        <Col lg={20}>
-          <Row>
-            <Col lg={18} xs={24}>
-              {
-                brush 
-                  ? <>
-                      {
-                        displayBlank 
-                          ? <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px', background:'white'}}> {blank.current} </div>
-                          : <></>
-                      }
 
-                      <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} disable={disableBoard} refresh={refreshBoard}/>
-
-                      {disableBoard
-                        ? <></>
-                        : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font}/>
-                      }
-                      <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag}/>
-                    </>
-                  : <></>
-              }
-            </Col>
-            <Col lg={6} xs={24}>
-              {
-                chat
-                  ? <ChatBoard chat = {chat} getPlayerById={getPlayerById} getMyInfo={getMyInfo} disable={disableChat}/>
-                  : <></>
-              }
-            </Col>
-          </Row>
+        <Col lg={16}>
+          {
+            brush 
+              ? <>
+                  {
+                    displayBlank 
+                      ? 
+                      <Row style={{background:'white'}}  align="middle">
+                        <Col span={4}>
+                          <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag}/>
+                        </Col>
+                        <Col span={20}>
+                          <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px'}}> {blank.current} </div>
+                        </Col>
+                      </Row>
+                      : <></>
+                  }
+                    <div style={{ position: 'relative' }}>
+                    {disableBoard
+                    ? <></>
+                    :<div bordered style={{ width: font, height: font, marginLeft: '10px' , textAlign:'center', position: 'absolute'}}>
+                      <div style={circleStyle}>
+                      </div>
+                    </div>
+                  }
+                    <SketchBoard ref = {sketchBoardRef} sketchBoardRef={sketchBoardRef} brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} disable={disableBoard} refresh={refreshBoard}/>
+                  </div>
+                  {disableBoard
+                    ? <></>
+                    : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font}/>
+                  }
+                </>
+              : <></>
+          }
+        </Col>
+        <Col lg={4} xs={24}>
+          {
+            chat
+              ? <ChatBoard chat = {chat} getPlayerById={getPlayerById} getMyInfo={getMyInfo} disable={disableChat}/>
+              : <></>
+          }
         </Col>
       </Row>
       <Modal title="Choose Word" visible={isWordModalVisible} closable={false} destroyOnClose={true} footer={null}>

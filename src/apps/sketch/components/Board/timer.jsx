@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from 'react';
+import { ClockCircleOutlined } from '@ant-design/icons';
 
 const Timer = (props) => {
     const id = useRef(null);
@@ -24,7 +25,7 @@ const Timer = (props) => {
 
     return (
         <div className="Timer">
-            <div>Time left : {timer} </div>
+            <div><ClockCircleOutlined /> {timer} sec </div>
         </div>
     );
 }

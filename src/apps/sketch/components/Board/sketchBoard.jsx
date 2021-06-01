@@ -6,16 +6,17 @@ import { isScreenLarge } from './../../utils';
 
 export default function SketchBoard(props) {
 
-    const { brush, disable, refresh } = props;
+    const { brush, disable, refresh, sketchBoardRef } = props;
 
     const canvasRef = useRef(null);
     const contextRef = useRef(null);      
 
     const prepareCanvas = () => {
       const canvas = canvasRef.current
-      const width = isScreenLarge()? window.innerWidth*4/6 : window.innerWidth;
+      const width = isScreenLarge()? window.innerWidth*5/8 : window.innerWidth - 10;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${width/2}px`;
+      canvas.style.cursor = 'crosshair';
 
       canvas.width = width;
       canvas.height = width/2;
@@ -90,6 +91,10 @@ export default function SketchBoard(props) {
     }, []);
 
     useEffect(() => {
+        console.log(sketchBoardRef);
+    }, [sketchBoardRef]);
+
+    useEffect(() => {
         prepareCanvas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [canvasRef]);
@@ -100,12 +105,14 @@ export default function SketchBoard(props) {
     }, [refresh]);
 
     return (
-        <canvas
-          onMouseDown={startDrawing}
-          onMouseUp={finishDrawing}
-          onMouseMove={mouseMove}
-          ref={canvasRef}
-        />
+        <center>
+            <canvas
+                onMouseDown={startDrawing}
+                onMouseUp={finishDrawing}
+                onMouseMove={mouseMove}
+                ref={canvasRef}
+            />
+        </center>
     );
 
     // return <Sketch setup={setup} draw={draw} />;

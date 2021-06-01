@@ -1,17 +1,7 @@
 import React from 'react';
-import { Button, Tooltip, Slider, Card } from 'antd';
+import { Button, Tooltip, Slider, Card, Col, Row } from 'antd';
 
 export default function Palette(props) {
-
-    var circleStyle = {
-        display:"inline-block",
-        backgroundColor: props.color === 'eraser'? 'white' : props.color,
-        borderRadius: props.color === 'eraser'? '0%' : "50%",
-        borderStyle: props.color === 'eraser'? 'solid': 'none',
-        width: props.font,
-        height: props.font,
-      };
-
 
     const ColorOptions = () => {
         const colors = [ '#000000',
@@ -43,7 +33,7 @@ export default function Palette(props) {
             '#6f3198',
             '#b5a5d5', ];
         
-        return  colors.map(color => <Card.Grid style={{ backgroundColor: color, width: '10px' }} onClick={ () => { props.handleColor(color) } } ></Card.Grid>)
+        return  colors.map(color => <Col> <Button style={{ backgroundColor: color}} onClick={ () => { props.handleColor(color) } } > • </Button> </Col>)
     }
 
     return (
@@ -56,23 +46,25 @@ export default function Palette(props) {
                 defaultValue={10}
                 value={props.font}
             />
-            <Button onClick={ () => props.handleFont(1)}> 1px </Button>
-            <Button onClick={ () => props.handleFont(5)}> 5px </Button>
-            <Button onClick={ () => props.handleFont(10)}> 10px </Button>
+            <Row>
+                <Col span={8}>
+                    <Button onClick={ () => props.handleFont(1)}> 1px </Button>
+                    <Button onClick={ () => props.handleFont(5)}> 5px </Button>
+                    <Button onClick={ () => props.handleFont(10)}> 10px </Button>
 
-            <Tooltip placement="top" title='or click "d"'>
-                <Button onClick={ () => props.handleColor('black')}> pen </Button>
-            </Tooltip>
-            <Tooltip placement="top" title='or click "e"'>
-                <Button onClick={ () => props.handleColor('eraser')}> eraser </Button>
-            </Tooltip>
-            <Card title="Card Title">
-                <ColorOptions />
-            </Card>,
-            <Card bordered style={{ width: 150, height: 150, textAlign:'center'}}>
-                <div style={circleStyle}>
-                </div>
-            </Card>
+                    <Tooltip placement="top" title='or click "d"'>
+                        <Button onClick={ () => props.handleColor('black')}> pen </Button>
+                    </Tooltip>
+                    <Tooltip placement="top" title='or click "e"'>
+                        <Button onClick={ () => props.handleColor('eraser')}> eraser </Button>
+                    </Tooltip>                
+                </Col>
+                <Col span={16}>
+                    <Row>
+                        <ColorOptions />
+                    </Row>
+                </Col>
+            </Row>
         </div>
     );
 }
