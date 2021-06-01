@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useRef } from "react";
 import { DEFAULT_BACKGROUND_COLOR } from './../../constants';
-import { setCanvasSize, isScreenLarge } from './../../utils';
+import { isScreenLarge } from './../../utils';
 
 
 export default function SketchBoard(props) {
@@ -8,17 +9,7 @@ export default function SketchBoard(props) {
     const { brush, disable, refresh } = props;
 
     const canvasRef = useRef(null);
-    const contextRef = useRef(null); 
-  
-    function getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-      }
-      
+    const contextRef = useRef(null);      
 
     const prepareCanvas = () => {
       const canvas = canvasRef.current
@@ -100,6 +91,7 @@ export default function SketchBoard(props) {
 
     useEffect(() => {
         prepareCanvas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [canvasRef]);
     
     useEffect(() => {
