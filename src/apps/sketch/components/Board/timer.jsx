@@ -25,7 +25,7 @@ const Timer = (props) => {
 
     return (
         <div className="Timer">
-            <div><ClockCircleOutlined /> {timer} sec </div>
+            <div style={{ paddingLeft: '4px' }}><ClockCircleOutlined /> {timer} sec </div>
         </div>
     );
 }

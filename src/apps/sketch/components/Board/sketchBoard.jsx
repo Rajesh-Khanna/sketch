@@ -63,6 +63,8 @@ export default function SketchBoard(props) {
     };
 
     const send = (start, end) => {
+        start = {x: start.x / canvasRef.current.width, y: start.y / canvasRef.current.height };
+        end = {x: end.x / canvasRef.current.width, y: end.y / canvasRef.current.height };
         brush.send(JSON.stringify( { start, end, thick: props.font, color: props.color } ));
     }
 
@@ -76,15 +78,22 @@ export default function SketchBoard(props) {
         startPos.current = end;
     }
 
+    const projectPoints = (point) => {
+        let { start, end } = point;
+        start = {x: start.x * canvasRef.current.width, y: start.y * canvasRef.current.height };
+        end = {x: end.x * canvasRef.current.width, y: end.y * canvasRef.current.height };
+        return { ...point, start, end };
+    }
+
     useEffect(() => {
         brush.onmessage = (message) => {
             if( Array.isArray(message.data)){
                 const points = JSON.parse(message.data);
                 points.forEach(point => {
-                    draw(point);
-                })
+                    draw(projectPoints(point));
+                });
             }else{
-                draw(JSON.parse(message.data));
+                draw(projectPoints(JSON.parse(message.data)));
             }
         }
 
