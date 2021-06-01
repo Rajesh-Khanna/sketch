@@ -24,3 +24,21 @@
 .roboto_font {
     font-family: Roboto;
 }
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(0, 255, 213);
+}
+
+.fullHeight {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.halfHeight {
+    height: 50%;
+    overflow-y: scroll;
+}

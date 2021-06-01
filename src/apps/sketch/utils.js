@@ -19,3 +19,16 @@ export function isScreenLarge() {
 }
 
 export const getChannel = message => message.currentTarget.label;
+
+export const setCanvasSize = (canvas, width, height) => {
+    const relativeHeight = parseInt(width / 2);
+    const relativeWidth = height * 2;
+
+    if (relativeHeight > height) {
+        canvas.height = height;
+        canvas.width = relativeWidth;
+    } else {
+        canvas.height = relativeHeight;
+        canvas.width = width;
+    }
+}

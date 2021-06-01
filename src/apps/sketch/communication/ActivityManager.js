@@ -168,11 +168,7 @@ export class ActivityManager {
     }
 
     generateBlanks(word) {
-        let blank = ''
-        for (let i = 0; i < word.length - 1; i++) {
-            blank = blank + '_ ';
-        }
-        return blank + '_'
+        return word.replace(/([a-zA-Z])/g, "_ ").slice(0, -1);
     }
 
     checkIfEveryOneSolved() {
