@@ -42,7 +42,7 @@ export default function SketchBoard(props) {
     }
 
     const draw = ({ start, end, thick, color }) => {
-        contextRef.current.strokeStyle = color || props.color;
+        contextRef.current.strokeStyle = (color || props.color) === 'eraser'? DEFAULT_BACKGROUND_COLOR : props.color;
         contextRef.current.lineWidth = thick || props.font;
         contextRef.current.beginPath();
         contextRef.current.moveTo(start.x, start.y);
