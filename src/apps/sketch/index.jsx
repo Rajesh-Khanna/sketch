@@ -90,7 +90,7 @@ const Sketch = () => {
     }, []);
 
     return (
-        <Layout>
+        <Layout className='fullHeight'>
             <Header className='text-light'>
                 <Row>
                     <Col md={{ span: 24 }} lg={{ span: 2, offset: 6 }} >

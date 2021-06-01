@@ -3,7 +3,7 @@ import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
 import {getNWords} from '../../words';
 import Timer from './timer';
-import { Card, Table, Row, Col, Modal, Button } from 'antd';
+import { Table, Row, Col, Modal, Button } from 'antd';
 
 
 import { MAX_FONT, MIN_FONT } from '../../constants';
@@ -199,19 +199,22 @@ const Board = props => {
 
   return (
     <>
-      {
-        displayBlank 
-          ? <Card  style={{textAlign: 'center'}}> {blank.current} </Card>
-          : <></>
-      }
       <div>Round: {roundNum} ({currPlayer.current})</div>
       <Row justify='center'>
-        <Col lg={20} xs={24}>
+        <Col lg={4} className='fullHeight'>
+          <Table columns={scoreColumns.current} dataSource={sessionScores}/>
+        </Col>
+        <Col lg={20}>
           <Row>
-            <Col lg={20} xs={24}>
+            <Col lg={18} xs={24}>
               {
                 brush 
                   ? <>
+                      {
+                        displayBlank 
+                          ? <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px', background:'white'}}> {blank.current} </div>
+                          : <></>
+                      }
 
                       <SketchBoard brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} disable={disableBoard} refresh={refreshBoard}/>
 
@@ -224,7 +227,7 @@ const Board = props => {
                   : <></>
               }
             </Col>
-            <Col lg={4} xs={24}>
+            <Col lg={6} xs={24}>
               {
                 chat
                   ? <ChatBoard chat = {chat} getPlayerById={getPlayerById} getMyInfo={getMyInfo} disable={disableChat}/>
@@ -234,7 +237,6 @@ const Board = props => {
           </Row>
         </Col>
       </Row>
-      <Table columns={scoreColumns.current} dataSource={sessionScores}/>
       <Modal title="Choose Word" visible={isWordModalVisible} closable={false} destroyOnClose={true} footer={null}>
         <Button type="text" onClick={() => chooseWord(0)}>{wordList.current[0]}</Button>
         <Button type="text" onClick={() => chooseWord(1)}>{wordList.current[1]}</Button>

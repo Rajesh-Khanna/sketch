@@ -45,7 +45,7 @@ const ChatBoard = props => {
     }
 
     return (
-      <div className='roboto_font' style={{border: '2px solid black'}}>
+      <div className='roboto_font halfHeight' style={{border: '2px solid black'}}>
         <Row>
             <Col>
                 <input placeholder="Enter to send" onKeyDown={handleKeyDown} disabled={disable}/>
@@ -57,7 +57,7 @@ const ChatBoard = props => {
                     height={150}
                     itemCount={messages.length}
                     itemSize={() => 25}
-                    width={300}
+                    width={250}
                 >
                     {MessageRow}
                 </List>
