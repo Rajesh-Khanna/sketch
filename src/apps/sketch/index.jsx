@@ -90,7 +90,7 @@ const Sketch = () => {
     }, []);
 
     return (
-        <Layout className='fullHeight'>
+        <Layout className='gradientBg fullHeight' >
             <Header className='text-light'>
                 <Row>
                     <Col md={{ span: 24 }} lg={{ span: 2, offset: 6 }} >
@@ -104,7 +104,7 @@ const Sketch = () => {
                     </Col>
                 </Row>
             </Header>
-            <Content style={{ padding: '8px' }}>
+            <Content className='fullHeight' style={{ padding: '8px', height: '100%' }}>
             {(() => {
                     switch(appState) { 
                         case APP_STATE.HOST: 
@@ -133,10 +133,10 @@ const Sketch = () => {
                 })()
             }
             </Content>
-            <Footer style={{ textAlign: 'center' }}> 
+            {/* <Footer style={{ textAlign: 'center' }}> 
                 Authors: <a  target="_blank" rel='noreferrer' style={{paddingRight: '5px'}} href="https://github.com/Rajesh-Khanna">@Rajesh</a>
                 <a  target="_blank" rel='noreferrer' href="https://github.com/theVirtualMan">@Rohit</a>
-            </Footer> 
+            </Footer>  */}
         </Layout>
     );
 }

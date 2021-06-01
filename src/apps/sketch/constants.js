@@ -41,7 +41,7 @@ export const LOBBY_COLLECTION = 'LOBBY_COLLECTION';
 export const MAX_FONT = 80;
 export const MIN_FONT = 1;
 
-export const DEFAULT_BACKGROUND_COLOR = '#ddd';
+export const DEFAULT_BACKGROUND_COLOR = '#fff';
 
 // --------------- Meta Channel types ----------------------
 export const META_TYPES = {

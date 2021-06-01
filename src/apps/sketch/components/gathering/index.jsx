@@ -107,10 +107,10 @@ const GatheringSpace = props => {
                     <Col md={24} lg={16}>
                         <Row wrap={false} justify='center' align='middle'>
                             <Col flex="none">
-                                <Card> Share this link </Card>
+                                <Card className='clearBg'> Share this link </Card>
                             </Col>
                             <Col flex="auto">
-                                <Card>{shareURL}</Card>
+                                <Card  className='clearBg'>{shareURL}</Card>
                             </Col>
                         </Row>
                             <Divider> Game Settings </Divider>
@@ -142,7 +142,7 @@ const GatheringSpace = props => {
                                     </>
                                 ):(
                                     <>
-                                        <Card>
+                                        <Card  className='clearBg'>
                                             <p>
                                                 Time per turn: {gameMeta.turns}
                                             </p>
@@ -160,7 +160,7 @@ const GatheringSpace = props => {
                         {
                             players ?
                             (
-                                <Card>
+                                <Card  className='clearBg'>
                                     {players.map((item, index) => (
                                         <Card.Grid style={gridStyle} key={index}>{item.name}</Card.Grid>
                                     ))}

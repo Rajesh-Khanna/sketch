@@ -15,6 +15,7 @@ body {
 
 .styleFont {
     font-family: MyFont;
+    height: 100%;
 }
 
 code {

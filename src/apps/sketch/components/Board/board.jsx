@@ -55,6 +55,7 @@ const Board = props => {
       {
         title: 'Player',
         dataIndex: 'name',
+        props:{ className:'clearBg' }
         // render: (text, row, index) => {
         //   if (text === currPlayer.current) {
         //     return <b style={{color: '#ffff00'}} >{text}</b>;
@@ -65,6 +66,7 @@ const Board = props => {
       {
         title: 'Score',
         dataIndex: 'score',
+        props:{ className:'clearBg' }
       },
     ]);
     const [displayBlank, setDisplayBlank] = useState(false);
@@ -233,7 +235,7 @@ const Board = props => {
       <div>Round: {roundNum} ({currPlayer.current})</div>
       <Row justify='center'>
         <Col lg={4} className='fullHeight'>
-          <Table columns={scoreColumns.current} dataSource={sessionScores}/>
+          <Table className='clearBg' columns={scoreColumns.current} dataSource={sessionScores}/>
         </Col>
 
         <Col lg={16}>
@@ -243,7 +245,7 @@ const Board = props => {
                   {
                     displayBlank 
                       ? 
-                      <Row style={{background:'white'}}  align="middle">
+                      <Row style={{background:'white', margin: '4px'}}  align="middle">
                         <Col span={4}>
                           <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag}/>
                         </Col>

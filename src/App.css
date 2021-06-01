@@ -8,8 +8,37 @@
     src: local('Roboto'), url(./roboto/Roboto-Regular.ttf) format('truetype');
 }
 
+html,
+body,
+#root,
+.App {
+    height: 100%;
+}
+
 .App {
     font-family: MyFont;
+    height: 100%;
+}
+
+.gradientBg {
+    background: #D3CCE3;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #E9E4F0, #D3CCE3);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #E9E4F0, #D3CCE3);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .text-light {
@@ -41,4 +70,9 @@
 .halfHeight {
     height: 50%;
     overflow-y: scroll;
+}
+
+.clearBg {
+    background: none;
+    border: none;
 }
