@@ -36,8 +36,8 @@ export default function SketchBoard(props) {
       context.lineCap = "round";
       context.lineJoin = 'round'
 
-      context.strokeStyle = "black";
-      context.lineWidth = 2;
+      context.strokeStyle = props.color;
+      context.lineWidth = props.font;
       contextRef.current = context;
 
     };
@@ -50,8 +50,8 @@ export default function SketchBoard(props) {
     }
 
     const draw = ({ start, end, thick, color }) => {
-        contextRef.current.strokeStyle = color || contextRef.current.strokeStyle;
-        contextRef.current.lineWidth = thick || contextRef.current.lineWidth;
+        contextRef.current.strokeStyle = color || props.color;
+        contextRef.current.lineWidth = thick || props.font;
         contextRef.current.beginPath();
         contextRef.current.moveTo(start.x, start.y);
         contextRef.current.lineTo(end.x, end.y);
@@ -71,7 +71,7 @@ export default function SketchBoard(props) {
     };
 
     const send = (start, end) => {
-        brush.send(JSON.stringify( { start, end, thick: contextRef.current.lineWidth, color: contextRef.current.strokeStyle } ));
+        brush.send(JSON.stringify( { start, end, thick: props.font, color: props.color } ));
     }
 
     const mouseMove = ({ nativeEvent }) => {
