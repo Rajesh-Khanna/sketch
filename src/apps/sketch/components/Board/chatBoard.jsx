@@ -55,6 +55,7 @@ const ChatBoard = props => {
             <Col>
                 <List
                     height={150}
+                    width={250}
                     itemCount={messages.length}
                     itemSize={() => 25}
                 >
