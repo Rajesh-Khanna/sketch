@@ -150,6 +150,13 @@ const Board = props => {
               wordList.current = getNWords(3);
               console.log(wordList.current);//
               setWordModalVisible(true);
+              setTimeout(() => {
+                console.log('word choosing time out',word.current);
+                if(word.current === '') {
+                  console.log('word not choosen');
+                  chooseWord(Math.floor(Math.random() * (3)));
+                }
+              }, 10000);
             }
             else {
               currPlayer.current = getPlayerById(obj.userId).name;
