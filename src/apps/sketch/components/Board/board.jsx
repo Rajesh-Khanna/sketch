@@ -8,6 +8,7 @@ import { Table, Row, Col, Modal, Button } from 'antd';
 
 import {MAX_FONT, MIN_FONT, HOME_PAGE_URL} from '../../constants';
 import Palette from './../Palette';
+import { EditFilled } from '@ant-design/icons';
 
 function useHookWithRefCallback() {
   const ref = useRef(null)
@@ -55,13 +56,18 @@ const Board = props => {
       {
         title: 'Player',
         dataIndex: 'name',
-        props:{ className:'clearBg' }
-        // render: (text, row, index) => {
-        //   if (text === currPlayer.current) {
-        //     return <b style={{color: '#ffff00'}} >{text}</b>;
-        //   }
-        //   return <span>{text}</span>;
-        // },
+        props:{ className:'clearBg' },
+        render: (text, row, index) => {
+          if (text === currPlayer.current) {
+            return (
+              <>
+                <b>{text}</b>
+                <EditFilled /> 
+              </>
+            );
+          }
+          return <span>{text}</span>;
+        },
       },
       {
         title: 'Score',
@@ -247,10 +253,10 @@ const Board = props => {
 
   return (
     <>
-      <div>Round: {roundNum} ({currPlayer.current})</div>
+      <div>Round: {roundNum}</div>
       <Row justify='center'>
         <Col lg={4} className='fullHeight'>
-          <Table className='clearBg' columns={scoreColumns.current} dataSource={sessionScores}/>
+          <Table className='clearBg' columns={scoreColumns.current} dataSource={sessionScores} pagination={false}/>
         </Col>
 
         <Col lg={16}>
@@ -304,10 +310,10 @@ const Board = props => {
         <center>
           <h3> Word is: <b> {correctWord.current} </b> </h3>
         </center>
-        <Table columns={sessionScoreColumns.current} dataSource={sessionScores}/>
+        <Table columns={sessionScoreColumns.current} dataSource={sessionScores} pagination={false}/>
       </Modal>
       <Modal className='blob' title="Leader Board" visible={isGameOver} closable={false} destroyonClose={true} footer={null}>
-        <Table columns={scoreColumns.current} dataSource={sessionScores}/>
+        <Table columns={scoreColumns.current} dataSource={sessionScores} pagination={false}/>
       </Modal>
       <Modal className='blob' title="Unable to Connect to Server" visible={isSessionDisconnected} closable={false} destroyonClose={true} footer={null}>
         <center>
