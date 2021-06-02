@@ -91,6 +91,7 @@ const Board = props => {
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
     const [refreshBoard, setRefreshBoard] = useState(false);
+    const [sessionClosed, setSessionClosed] = useState(false);
 
     // eslint-disable-next-line no-unused-vars
     const [ disableBoard, setDisableBoard ] = useState(true);
@@ -104,9 +105,16 @@ const Board = props => {
       setBrush(sketchChannel.current.getChannel('brush'));
       setChat(sketchChannel.current.getChannel('chat'));
       background.current = sketchChannel.current.getChannel('background');
+
+      handleSessionClosed();
+
       initTurn();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const handleSessionClosed = () => {
+      background.current.onclose = (e) => { setSessionClosed(true); }
+    }
 
     const chooseWord = (index) => {
       console.log(wordList.current[index]);//
@@ -243,17 +251,21 @@ const Board = props => {
             brush 
               ? <>
                   {
-                    displayBlank 
-                      ? 
-                      <Row style={{background:'white', margin: '4px'}}  align="middle">
-                        <Col span={4}>
-                          <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag}/>
-                        </Col>
-                        <Col span={20}>
-                          <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px'}}> {blank.current} </div>
-                        </Col>
-                      </Row>
-                      : <></>
+                    sessionClosed === true?
+                      (
+                        <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px'}}> Session disconnected </div>
+                      ):(
+                        displayBlank? 
+                          <Row style={{background:'white', margin: '4px'}}  align="middle">
+                            <Col span={4}>
+                              <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag}/>
+                            </Col>
+                            <Col span={20}>
+                              <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px'}}> {blank.current} </div>
+                            </Col>
+                          </Row>
+                          : <></>
+                      )
                   }
                     <div style={{ position: 'relative' }}>
                     {disableBoard

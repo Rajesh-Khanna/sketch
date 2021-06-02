@@ -278,6 +278,12 @@ export class ActivityManager {
                     console.log(this.players.getAllPlayers());
                 }
             }
+            // whenever a player disconnects updated players list will be sent to everyone
+            const resp = {
+                type: META_TYPES.PLAYERS,
+                players: this.players.getAllPlayers(),
+            }
+            this.publish({ data: JSON.stringify(resp) }, 'meta');
         }, 3000);
     }
 
