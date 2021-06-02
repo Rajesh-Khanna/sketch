@@ -128,10 +128,7 @@ export class ActivityManager {
         }
 
         if (this.playerIds.length) {
-            console.log(this.playerIds); //
-            console.log(this.playerIds[this.playerIds.length - 1]); //
             const userId = this.playerIds[this.playerIds.length - 1].userId;
-            console.log(userId);
             /** timeout is added so that users get the time to check the scores
              * Note: Initially(when the page loads for the first time), it might happen that host sends the message
              * before guests start listening. Adding time out also mitigates this issue.
