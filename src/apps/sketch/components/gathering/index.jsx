@@ -6,6 +6,7 @@ import { gridStyle } from '../../style';
 const GatheringSpace = props => {
     const metaChannel = useRef();
     const [players, setPlayers] = useState([]);
+    const [sessionClosed, setSessionClosed] = useState(false);
     const [isNameModalVisible, setNameModalVisible ] = useState(false);
     const [nameValue, setNameValue ] = useState('player');
     // eslint-disable-next-line no-unused-vars
@@ -20,10 +21,16 @@ const GatheringSpace = props => {
         metaChannel.current.send(JSON.stringify({type: META_TYPES.START_GAME, turns: turns.current.state.value, rounds: rounds.current.state.value }));
     }
 
+    const handleSessionClosed = () => {
+        metaChannel.current.onclose = (e) => { setSessionClosed(true); }
+    }
+
     useEffect(() => {
         console.log({hostLobbyKey})
         setShareURL(window.location.protocol + "//" + window.location.host + window.location.pathname + `?k=${hostLobbyKey}`);
         metaChannel.current = dataChannel.current.getChannel('meta');
+
+        handleSessionClosed();
 
         metaChannel.current.onmessage = (message) => {
             console.log(message);
@@ -106,12 +113,23 @@ const GatheringSpace = props => {
                 <Row justify='center'>
                     <Col md={24} lg={16}>
                         <Row wrap={false} justify='center' align='middle'>
-                            <Col flex="none">
-                                <Card className='clearBg'> Share this link </Card>
-                            </Col>
-                            <Col flex="auto">
-                                <Card  className='clearBg'>{shareURL}</Card>
-                            </Col>
+                            {
+                                sessionClosed === true?
+                                    (
+                                        <Row justify='center'>
+                                            <Card className='clearBg'> Session disconnected </Card>
+                                        </Row>
+                                    ):(
+                                        <>
+                                            <Col flex="none">
+                                                <Card className='clearBg'> Share this link </Card>
+                                            </Col>
+                                            <Col flex="auto">
+                                                <Card  className='clearBg'>{shareURL}</Card>
+                                            </Col>
+                                        </>
+                                    )
+                            }
                         </Row>
                             <Divider> Game Settings </Divider>
                         {
