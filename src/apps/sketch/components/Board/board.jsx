@@ -6,7 +6,7 @@ import Timer from './timer';
 import { Table, Row, Col, Modal, Button } from 'antd';
 
 
-import { MAX_FONT, MIN_FONT } from '../../constants';
+import {MAX_FONT, MIN_FONT, HOME_PAGE_URL} from '../../constants';
 import Palette from './../Palette';
 
 function useHookWithRefCallback() {
@@ -91,7 +91,7 @@ const Board = props => {
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
     const [refreshBoard, setRefreshBoard] = useState(false);
-    const [sessionClosed, setSessionClosed] = useState(false);
+    const [isSessionDisconnected, setSessionDisconnect] = useState(false);
 
     // eslint-disable-next-line no-unused-vars
     const [ disableBoard, setDisableBoard ] = useState(true);
@@ -106,14 +106,14 @@ const Board = props => {
       setChat(sketchChannel.current.getChannel('chat'));
       background.current = sketchChannel.current.getChannel('background');
 
-      handleSessionClosed();
+      handleSessionDisconnected();
 
       initTurn();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleSessionClosed = () => {
-      background.current.onclose = (e) => { setSessionClosed(true); }
+    const handleSessionDisconnected = () => {
+      background.current.onclose = (e) => { setSessionDisconnect(true); }
     }
 
     const chooseWord = (index) => {
@@ -251,21 +251,16 @@ const Board = props => {
             brush 
               ? <>
                   {
-                    sessionClosed === true?
-                      (
-                        <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px'}}> Session disconnected </div>
-                      ):(
-                        displayBlank? 
-                          <Row style={{background:'white', margin: '4px'}}  align="middle">
-                            <Col span={4}>
-                              <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag}/>
-                            </Col>
-                            <Col span={20}>
-                              <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px'}}> {blank.current} </div>
-                            </Col>
-                          </Row>
-                          : <></>
-                      )
+                    displayBlank? 
+                      <Row style={{background:'white', margin: '4px'}}  align="middle">
+                        <Col span={4}>
+                          <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag}/>
+                        </Col>
+                        <Col span={20}>
+                          <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px'}}> {blank.current} </div>
+                        </Col>
+                      </Row>
+                      : <></>
                   }
                     <div style={{ position: 'relative' }}>
                     {disableBoard
@@ -306,6 +301,11 @@ const Board = props => {
       </Modal>
       <Modal className='blob' title="Leader Board" visible={isGameOver} closable={false} destroyonClose={true} footer={null}>
         <Table columns={scoreColumns.current} dataSource={sessionScores}/>
+      </Modal>
+      <Modal className='blob' title="Unable to Connect to Server" visible={isSessionDisconnected} closable={false} destroyonClose={true} footer={null}>
+        <center>
+          <Button type='primary' onClick={() => { window.history.pushState({ path: HOME_PAGE_URL }, '', HOME_PAGE_URL); setSessionDisconnect(false);}}> Go To Home</Button>
+        </center>
       </Modal>
     </>
     );
