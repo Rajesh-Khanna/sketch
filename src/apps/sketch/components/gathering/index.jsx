@@ -119,6 +119,9 @@ const GatheringSpace = props => {
                             <Col flex="auto">
                                 <Card  className='clearBg'>{shareURL}</Card>
                             </Col>
+                            <Col flex="auto">
+                                <Button className='clearBg' onClick={()=>{navigator.clipboard.writeText(shareURL)}}>copy</Button>
+                            </Col>
                         </Row>
                             <Divider> Game Settings </Divider>
                         {

@@ -132,6 +132,13 @@ export class ActivityManager {
             console.log(this.playerIds[this.playerIds.length - 1]); //
             const userId = this.playerIds[this.playerIds.length - 1].userId;
             console.log(userId);
+            const statusCheck = this.players.getAllPlayers().find(o => o.userId === userId);
+            console.log(statusCheck);
+            if (!statusCheck) {
+                this.playerIds.pop();
+                this.initiateSession();
+                return;
+            }
             /** timeout is added so that users get the time to check the scores
              * Note: Initially(when the page loads for the first time), it might happen that host sends the message
              * before guests start listening. Adding time out also mitigates this issue.
