@@ -184,7 +184,7 @@ const GatheringSpace = props => {
             </div>
             <Modal className='blob' title="Name" visible={isNameModalVisible} closable={false} destroyOnClose={true} footer={null}>
                 Type your name and press ENTER <br/>
-                <Input style={{ margin: '4px' }} onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
+                <Input autoFocus style={{ margin: '4px' }} onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
                 <br />
                 <center>
                     <Button type='primary' onClick={sumbitName}> Submit </Button>
@@ -192,7 +192,7 @@ const GatheringSpace = props => {
             </Modal>
             <Modal className='blob' title="Unable to Connect to Server" visible={isSessionDisconnected} closable={false} destroyOnClose={true} footer={null}>
                 <center>
-                    <Button type='primary' onClick={() => { window.history.pushState(null, HOME_PAGE_URL); setSessionDisconnect(false);}}> Go To Home</Button>
+                    <a type='primary' href={HOME_PAGE_URL}> Go To Home</a>
                 </center>
             </Modal>
         </>

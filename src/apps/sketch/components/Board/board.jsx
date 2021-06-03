@@ -3,12 +3,12 @@ import SketchBoard from './sketchBoard';
 import ChatBoard from './chatBoard';
 import {getNWords} from '../../words';
 import Timer from './timer';
-import { Table, Row, Col, Modal, Button } from 'antd';
+import { Table, Row, Col, Modal, Button, notification } from 'antd';
 
 
 import {MAX_FONT, MIN_FONT, HOME_PAGE_URL} from '../../constants';
 import Palette from './../Palette';
-import { EditFilled } from '@ant-design/icons';
+import { EditFilled, DisconnectOutlined } from '@ant-design/icons';
 
 function useHookWithRefCallback() {
   const ref = useRef(null)
@@ -100,6 +100,16 @@ const Board = props => {
     const [ disableBoard, setDisableBoard ] = useState(true);
     // eslint-disable-next-line no-unused-vars
     const [ disableChat, setDisableChat ] = useState(false);
+
+    const [api, contextHolder] = notification.useNotification();
+
+    const openNotification = id => {
+      api.info({
+        icon: <DisconnectOutlined />,
+        message: `Payer ${getPlayerById(id).name} got Disconnected`,
+        placement: 'topLeft',
+      });
+    };
 
     useEffect(() => {
       console.log(allPlayers);
@@ -219,6 +229,9 @@ const Board = props => {
             setIsGameOver(true);
             break;
 
+          case "DISCONNECTED":
+            openNotification(obj.id);
+            break;
           default:
             console.log('unkown type: ' + obj.type);
         }  
@@ -272,6 +285,7 @@ const Board = props => {
 
   return (
     <>
+      {contextHolder}
       <div>Round: {roundNum}</div>
       <Row justify='center'>
         <Col lg={4} className='fullHeight'>
@@ -336,7 +350,7 @@ const Board = props => {
       </Modal>
       <Modal className='blob' title="Unable to Connect to Server" visible={isSessionDisconnected} closable={false} destroyonClose={true} footer={null}>
         <center>
-          <Button type='primary' onClick={() => { window.history.pushState({ path: HOME_PAGE_URL }, '', HOME_PAGE_URL); setSessionDisconnect(false);}}> Go To Home</Button>
+          <a type='primary' href={HOME_PAGE_URL}> Go To Home</a>
         </center>
       </Modal>
     </>
