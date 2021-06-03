@@ -77,32 +77,39 @@ body,
     border: none;
 }
 
-
-/* @import url(https://fonts.googleapis.com/css?family=Bangers); */
-
+@import url(https://fonts.googleapis.com/css?family=Bangers);
 .ant-modal-content {
     margin: 25px;
-    width: 250px;
+    /* width: 250px; */
     /* font-family: 'Bangers', cursive; */
     font-size: 25px;
     background: #fff;
     border: solid black;
     border-color: black;
     float: left;
-    width: 350px;
     border-width: 3px 3px 5px 5px;
     border-radius: 4% 95% 6% 95%/95% 4% 92% 5%;
-    transform: rotate(-2deg);
+    transform: rotate(-1deg);
 }
 
-.evenboxinner {
+.navElement {
     transform: rotate(2deg);
     margin: 15px;
     padding: 0 5px;
-    float: right;
+    color: black;
+    font-family: 'Bangers', cursive;
+    /* float: right; */
     background: #ddd;
     border: 1px solid #222;
     box-shadow: 3px 3px 0 #222;
+    transition: 0.3s;
+}
+
+.navElement:hover {
+    color: rgb(255, 0, 0);
+    background: rgb(241, 238, 223);
+    border: 1px solid rgb(255, 230, 0);
+    box-shadow: 3px 3px 0 rgb(255, 230, 0);
 }
 
 .ant-modal-header {

@@ -1,11 +1,11 @@
 import React from 'react';
 import "antd/dist/antd.css";
 import "./App.css";
-import Sketch from './apps/sketch';
+import Home from './apps/Home/index';
 
 const App = () => (
   <div className="App">
-    <Sketch />
+    <Home />
   </div>
 );
 

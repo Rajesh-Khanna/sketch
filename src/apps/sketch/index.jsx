@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Button, Layout, Row, Col, Modal} from 'antd';
+import {Modal} from 'antd';
 
 import { APP_STATE, SKETCH_CHANNELS, firebaseConfig, HOME_PAGE_URL } from './constants';
 
@@ -28,7 +28,6 @@ const Sketch = () => {
     const userType = useRef('');
     const disconnectMessage = useRef('Unable to Connect to Server, Try Refreshing the page');
     
-    const { Header, Content } = Layout;
     const setRoomId = (id) => {
         roomId.current = id;
     }
@@ -110,64 +109,42 @@ const Sketch = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return (
-        <Layout className='gradientBg fullHeight' >
-            <Header className='text-light'>
-                <Row>
-                    <Col md={{ span: 24 }} lg={{ span: 2, offset: 6 }} >
-                        Sketch-Room
-                    </Col>
-                    <Col md={{ span: 24 }} lg={{ span: 2, offset: 6 }} >
-                        Other games
-                    </Col>
-                    <Col md={{ span: 24 }} lg={{ span: 2 }} >
-                        About us
-                    </Col>
-                </Row>
-            </Header>
-            <Content className='fullHeight' style={{ padding: '8px', height: '100%' }}>
-            {(() => {
-                    switch(appState) { 
-                        case APP_STATE.HOST: 
-                            return <SketchHost handleHost = {handleHost}/> 
-                        case APP_STATE.GATHERING:
-                            return <GatheringSpace 
-                                        hostLobbyKey={hostLobbyKey} 
-                                        userType={userType.current} 
-                                        dataChannel={dataChannel} 
-                                        setAppState={setAppState}
-                                        setMyInfo={setMyInfo}
-                                        setAllPlayers={setAllPlayers}
-                                        myInfo={myInfo.current}
-                                        allPlayers={allPlayers.current}
-                                        getMyInfo={getMyInfo}
-                                    />
-                        case APP_STATE.DISCONNECTED:
-                            return (
-                                <Modal className='blob' title={disconnectMessage.current} visible={isSessionDisconnected} closable={false} destroyOnClose={true} footer={null}>
-                                    <center>
-                                        <Button type='primary' onClick={() => { window.history.pushState(null, HOME_PAGE_URL); setSessionDisconnect(false);}}> Go To Home</Button>
-                                    </center>
-                                </Modal>
-                            );
-                        case APP_STATE.PASSIVE_BOARD:
-                            return <></>
-                        case APP_STATE.ACTIVE_BOARD:
-                            return <Board sketchChannel={dataChannel} getMyInfo={getMyInfo} getPlayerById={getPlayerById} allPlayers={allPlayers.current} />;
-                        case APP_STATE.TERMINAL:
-                            return <></>;
-                        default:
-                            <></>;
-                    }
-                })()
-            }
-            </Content>
-            {/* <Footer style={{ textAlign: 'center' }}> 
-                Authors: <a  target="_blank" rel='noreferrer' style={{paddingRight: '5px'}} href="https://github.com/Rajesh-Khanna">@Rajesh</a>
-                <a  target="_blank" rel='noreferrer' href="https://github.com/theVirtualMan">@Rohit</a>
-            </Footer>  */}
-        </Layout>
-    );
+    return (<>
+        {(() => {
+                switch(appState) { 
+                    case APP_STATE.HOST: 
+                        return <SketchHost handleHost = {handleHost}/> 
+                    case APP_STATE.GATHERING:
+                        return <GatheringSpace 
+                                    hostLobbyKey={hostLobbyKey} 
+                                    userType={userType.current} 
+                                    dataChannel={dataChannel} 
+                                    setAppState={setAppState}
+                                    setMyInfo={setMyInfo}
+                                    setAllPlayers={setAllPlayers}
+                                    myInfo={myInfo.current}
+                                    allPlayers={allPlayers.current}
+                                    getMyInfo={getMyInfo}
+                                />
+                    case APP_STATE.DISCONNECTED:
+                        return (
+                            <Modal className='blob' title={disconnectMessage.current} visible={isSessionDisconnected} closable={false} destroyOnClose={true} footer={null}>
+                                <center>
+                                    <a type='primary' href={HOME_PAGE_URL}> Go To Home</a>
+                                </center>
+                            </Modal>
+                        );
+                    case APP_STATE.PASSIVE_BOARD:
+                        return <></>
+                    case APP_STATE.ACTIVE_BOARD:
+                        return <Board sketchChannel={dataChannel} getMyInfo={getMyInfo} getPlayerById={getPlayerById} allPlayers={allPlayers.current} />;
+                    case APP_STATE.TERMINAL:
+                        return <></>;
+                    default:
+                        <></>;
+                }
+            })()}
+        </>);
 }
 
 export default Sketch;
