@@ -7,7 +7,7 @@ export const getURLParam = (param) => {
 }
 
 export const getPathParam = () => {
-    const pathValues = window.location.pathname.split('/');
+    const pathValues = window.location.pathname.split('/').filter(el => el.length !== 0);
     if (pathValues.length === 0) return null;
     return pathValues[pathValues.length - 1];
 }
