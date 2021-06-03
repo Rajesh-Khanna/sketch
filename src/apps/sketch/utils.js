@@ -8,6 +8,7 @@ export const getURLParam = (param) => {
 
 export const getPathParam = () => {
     const pathValues = window.location.pathname.split('/').filter(el => el.length !== 0);
+    console.log({ pathValues });
     if (pathValues.length === 0) return null;
     return pathValues[pathValues.length - 1];
 }

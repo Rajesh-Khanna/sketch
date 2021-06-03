@@ -11,7 +11,7 @@ const Home = () => {
     const [showNav, setShowNav] = useState(false);
 
     const currPath = getPathParam();
-
+    console.log({currPath});
     const toggleNav = () => {
         setShowNav(p => !p);
     }
