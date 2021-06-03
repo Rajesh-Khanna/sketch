@@ -44,6 +44,9 @@ export class Players {
 
     getScore() {
         return Object.values(this.players)
+            .sort(function(a, b) {
+                return a.sessionScore - b.sessionScore;
+            })
             .map((player, index) => {
                 return {
                     name: player.name,

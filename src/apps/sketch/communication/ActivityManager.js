@@ -128,15 +128,10 @@ export class ActivityManager {
         }
 
         if (this.playerIds.length) {
+            console.log(this.playerIds); //
+            console.log(this.playerIds[this.playerIds.length - 1]); //
             const userId = this.playerIds[this.playerIds.length - 1].userId;
             console.log(userId);
-            const statusCheck = this.players.getAllPlayers().find(o => o.userId === userId);
-            console.log(statusCheck);
-            if (!statusCheck) {
-                this.playerIds.pop();
-                this.initiateSession();
-                return;
-            }
             /** timeout is added so that users get the time to check the scores
              * Note: Initially(when the page loads for the first time), it might happen that host sends the message
              * before guests start listening. Adding time out also mitigates this issue.
@@ -283,12 +278,6 @@ export class ActivityManager {
                     console.log(this.players.getAllPlayers());
                 }
             }
-            // whenever a player disconnects updated players list will be sent to everyone
-            const resp = {
-                type: META_TYPES.PLAYERS,
-                players: this.players.getAllPlayers(),
-            }
-            this.publish({ data: JSON.stringify(resp) }, 'meta');
         }, 3000);
     }
 
