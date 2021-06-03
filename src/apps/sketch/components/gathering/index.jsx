@@ -184,7 +184,7 @@ const GatheringSpace = props => {
             </div>
             <Modal className='blob' title="Name" visible={isNameModalVisible} closable={false} destroyOnClose={true} footer={null}>
                 Type your name and press ENTER <br/>
-                <Input autoFocus style={{ margin: '4px' }} onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
+                <Input style={{ margin: '4px' }} onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
                 <br />
                 <center>
                     <Button type='primary' onClick={sumbitName}> Submit </Button>
