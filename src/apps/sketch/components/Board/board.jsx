@@ -45,28 +45,24 @@ const Board = props => {
       {
         title: 'Score',
         dataIndex: 'sessionScore',
-        sorter: {
-          compare: (a, b) => a.sessionScore - b.sessionScore,
-          multiple: 1,
-        },
       },
     ]);
 
     const scoreColumns = useRef([
       {
         title: 'Player',
-        dataIndex: 'name',
+        dataIndex: 'userId',
         props:{ className:'clearBg' },
         render: (text, row, index) => {
           if (text === currPlayer.current) {
             return (
               <>
-                <b>{text}</b>
+                <b>{getPlayerById(text).name}</b>
                 <EditFilled /> 
               </>
             );
           }
-          return <span>{text}</span>;
+          return <span>{getPlayerById(text).name}</span>;
         },
       },
       {
@@ -79,6 +75,7 @@ const Board = props => {
     const blank = useRef('');
     const word = useRef('');
     const [sessionScores, setSessionScores] = useState();
+    const [scores, setScores] = useState();
     const [isWordModalVisible, setWordModalVisible ] = useState(false);
     const correctWord = useRef('');
     const [isScoresVisible, setIsScoreVisible] = useState(false);
@@ -105,8 +102,9 @@ const Board = props => {
     const [ disableChat, setDisableChat ] = useState(false);
 
     useEffect(() => {
-      setSessionScores(Object.values(allPlayers).reduce((acc,player) => {
-        return [ ...acc, { name: player.name, score: 0 } ];
+      console.log(allPlayers);
+      setScores(Object.keys(allPlayers).reduce((acc,id) => {
+        return [ ...acc, { userId: id, score: 0 } ];
       }, []));
       setBrush(sketchChannel.current.getChannel('brush'));
       setChat(sketchChannel.current.getChannel('chat'));
@@ -133,6 +131,24 @@ const Board = props => {
       setWordModalVisible(false);
     }
 
+    const getSessionSortedScores = (sessionScores) => {
+      return sessionScores.sort((a,b) => {
+          return b.sessionScore - a.sessionScore;
+      });
+    }
+
+    const getSortedScores = (scores) => {
+        return scores.sort((a,b) => {
+            return b.score - a.score;
+        });
+    }
+
+    const getOrderedScores = (scores) => {
+      return scores.sort((a,b) => {
+          return b.index - a.index;
+      });
+    }
+
     const initTurn = () => {
       console.log('initTurn');//
 
@@ -148,7 +164,7 @@ const Board = props => {
             setTimer(obj.timer);
             setRoundNum(obj.roundNum);
             const myInfo = getMyInfo();
-            currPlayer.current = myInfo.name;
+            currPlayer.current = myInfo.id;
             if (myInfo.id === obj.userId) {
               setDisableBoard(false);
               setDisableChat(true);
@@ -165,7 +181,7 @@ const Board = props => {
               }, 10000);
             }
             else {
-              currPlayer.current = getPlayerById(obj.userId).name;
+              currPlayer.current = obj.userId;
               setDisableBoard(true);
               setDisableChat(false);
             }
@@ -187,7 +203,8 @@ const Board = props => {
             console.log("testing end turn");//
             console.log(obj.scores);//
             setRefreshBoard(true);
-            setSessionScores(obj.scores);
+            setScores(getOrderedScores(obj.scores));
+            setSessionScores(getSessionSortedScores(obj.scores));
             setDisplayBlank(false);
             word.current = '';
             blank.current = '';
@@ -197,6 +214,8 @@ const Board = props => {
             break;
 
           case "WINNER":
+            currPlayer.current = '';
+            setScores(getSortedScores(obj.scores));
             setIsGameOver(true);
             break;
 
@@ -256,7 +275,7 @@ const Board = props => {
       <div>Round: {roundNum}</div>
       <Row justify='center'>
         <Col lg={4} className='fullHeight'>
-          <Table className='clearBg' columns={scoreColumns.current} dataSource={sessionScores} pagination={false}/>
+          <Table className='clearBg' columns={scoreColumns.current} dataSource={scores} pagination={false}/>
         </Col>
 
         <Col lg={16}>
@@ -313,7 +332,7 @@ const Board = props => {
         <Table columns={sessionScoreColumns.current} dataSource={sessionScores} pagination={false}/>
       </Modal>
       <Modal className='blob' title="Leader Board" visible={isGameOver} closable={false} destroyonClose={true} footer={null}>
-        <Table columns={scoreColumns.current} dataSource={sessionScores} pagination={false}/>
+        <Table columns={scoreColumns.current} dataSource={scores} pagination={false}/>
       </Modal>
       <Modal className='blob' title="Unable to Connect to Server" visible={isSessionDisconnected} closable={false} destroyonClose={true} footer={null}>
         <center>
