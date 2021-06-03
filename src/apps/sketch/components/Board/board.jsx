@@ -6,9 +6,8 @@ import Timer from './timer';
 import { Table, Row, Col, Modal, Button } from 'antd';
 
 
-import {MAX_FONT, MIN_FONT, HOME_PAGE_URL} from '../../constants';
+import { MAX_FONT, MIN_FONT } from '../../constants';
 import Palette from './../Palette';
-import { EditFilled } from '@ant-design/icons';
 
 function useHookWithRefCallback() {
   const ref = useRef(null)
@@ -45,25 +44,24 @@ const Board = props => {
       {
         title: 'Score',
         dataIndex: 'sessionScore',
+        sorter: {
+          compare: (a, b) => a.sessionScore - b.sessionScore,
+          multiple: 1,
+        },
       },
     ]);
 
     const scoreColumns = useRef([
       {
         title: 'Player',
-        dataIndex: 'userId',
-        props:{ className:'clearBg' },
-        render: (text, row, index) => {
-          if (text === currPlayer.current) {
-            return (
-              <>
-                <b>{getPlayerById(text).name}</b>
-                <EditFilled /> 
-              </>
-            );
-          }
-          return <span>{getPlayerById(text).name}</span>;
-        },
+        dataIndex: 'name',
+        props:{ className:'clearBg' }
+        // render: (text, row, index) => {
+        //   if (text === currPlayer.current) {
+        //     return <b style={{color: '#ffff00'}} >{text}</b>;
+        //   }
+        //   return <span>{text}</span>;
+        // },
       },
       {
         title: 'Score',
@@ -75,7 +73,6 @@ const Board = props => {
     const blank = useRef('');
     const word = useRef('');
     const [sessionScores, setSessionScores] = useState();
-    const [scores, setScores] = useState();
     const [isWordModalVisible, setWordModalVisible ] = useState(false);
     const correctWord = useRef('');
     const [isScoresVisible, setIsScoreVisible] = useState(false);
@@ -94,7 +91,6 @@ const Board = props => {
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
     const [refreshBoard, setRefreshBoard] = useState(false);
-    const [isSessionDisconnected, setSessionDisconnect] = useState(false);
 
     // eslint-disable-next-line no-unused-vars
     const [ disableBoard, setDisableBoard ] = useState(true);
@@ -102,23 +98,15 @@ const Board = props => {
     const [ disableChat, setDisableChat ] = useState(false);
 
     useEffect(() => {
-      console.log(allPlayers);
-      setScores(Object.keys(allPlayers).reduce((acc,id) => {
-        return [ ...acc, { userId: id, score: 0 } ];
+      setSessionScores(Object.values(allPlayers).reduce((acc,player) => {
+        return [ ...acc, { name: player.name, score: 0 } ];
       }, []));
       setBrush(sketchChannel.current.getChannel('brush'));
       setChat(sketchChannel.current.getChannel('chat'));
       background.current = sketchChannel.current.getChannel('background');
-
-      handleSessionDisconnected();
-
       initTurn();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const handleSessionDisconnected = () => {
-      background.current.onclose = (e) => { setSessionDisconnect(true); }
-    }
 
     const chooseWord = (index) => {
       console.log(wordList.current[index]);//
@@ -129,24 +117,6 @@ const Board = props => {
       };
       background.current.send(JSON.stringify(wordObj));
       setWordModalVisible(false);
-    }
-
-    const getSessionSortedScores = (sessionScores) => {
-      return sessionScores.sort((a,b) => {
-          return b.sessionScore - a.sessionScore;
-      });
-    }
-
-    const getSortedScores = (scores) => {
-        return scores.sort((a,b) => {
-            return b.score - a.score;
-        });
-    }
-
-    const getOrderedScores = (scores) => {
-      return scores.sort((a,b) => {
-          return b.index - a.index;
-      });
     }
 
     const initTurn = () => {
@@ -164,7 +134,7 @@ const Board = props => {
             setTimer(obj.timer);
             setRoundNum(obj.roundNum);
             const myInfo = getMyInfo();
-            currPlayer.current = myInfo.id;
+            currPlayer.current = myInfo.name;
             if (myInfo.id === obj.userId) {
               setDisableBoard(false);
               setDisableChat(true);
@@ -172,16 +142,9 @@ const Board = props => {
               wordList.current = getNWords(3);
               console.log(wordList.current);//
               setWordModalVisible(true);
-              setTimeout(() => {
-                console.log('word choosing time out',word.current);
-                if(word.current === '') {
-                  console.log('word not choosen');
-                  chooseWord(Math.floor(Math.random() * (3)));
-                }
-              }, 10000);
             }
             else {
-              currPlayer.current = obj.userId;
+              currPlayer.current = getPlayerById(obj.userId).name;
               setDisableBoard(true);
               setDisableChat(false);
             }
@@ -203,8 +166,7 @@ const Board = props => {
             console.log("testing end turn");//
             console.log(obj.scores);//
             setRefreshBoard(true);
-            setScores(getOrderedScores(obj.scores));
-            setSessionScores(getSessionSortedScores(obj.scores));
+            setSessionScores(obj.scores);
             setDisplayBlank(false);
             word.current = '';
             blank.current = '';
@@ -214,8 +176,6 @@ const Board = props => {
             break;
 
           case "WINNER":
-            currPlayer.current = '';
-            setScores(getSortedScores(obj.scores));
             setIsGameOver(true);
             break;
 
@@ -272,10 +232,10 @@ const Board = props => {
 
   return (
     <>
-      <div>Round: {roundNum}</div>
+      <div>Round: {roundNum} ({currPlayer.current})</div>
       <Row justify='center'>
         <Col lg={4} className='fullHeight'>
-          <Table className='clearBg' columns={scoreColumns.current} dataSource={scores} pagination={false}/>
+          <Table className='clearBg' columns={scoreColumns.current} dataSource={sessionScores}/>
         </Col>
 
         <Col lg={16}>
@@ -283,7 +243,8 @@ const Board = props => {
             brush 
               ? <>
                   {
-                    displayBlank? 
+                    displayBlank 
+                      ? 
                       <Row style={{background:'white', margin: '4px'}}  align="middle">
                         <Col span={4}>
                           <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag}/>
@@ -329,15 +290,10 @@ const Board = props => {
         <center>
           <h3> Word is: <b> {correctWord.current} </b> </h3>
         </center>
-        <Table columns={sessionScoreColumns.current} dataSource={sessionScores} pagination={false}/>
+        <Table columns={sessionScoreColumns.current} dataSource={sessionScores}/>
       </Modal>
       <Modal className='blob' title="Leader Board" visible={isGameOver} closable={false} destroyonClose={true} footer={null}>
-        <Table columns={scoreColumns.current} dataSource={scores} pagination={false}/>
-      </Modal>
-      <Modal className='blob' title="Unable to Connect to Server" visible={isSessionDisconnected} closable={false} destroyonClose={true} footer={null}>
-        <center>
-          <Button type='primary' onClick={() => { window.history.pushState({ path: HOME_PAGE_URL }, '', HOME_PAGE_URL); setSessionDisconnect(false);}}> Go To Home</Button>
-        </center>
+        <Table columns={scoreColumns.current} dataSource={sessionScores}/>
       </Modal>
     </>
     );

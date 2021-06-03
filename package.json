@@ -19,7 +19,7 @@
         "react-virtualized": "^9.22.3",
         "react-window": "^1.8.6",
         "web-vitals": "^0.2.4",
-        "webrtc-firebase": "^1.0.4"
+        "webrtc-firebase": "^1.0.3"
     },
     "scripts": {
         "start": "react-scripts start",

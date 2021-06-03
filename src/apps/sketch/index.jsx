@@ -1,10 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Button, Layout, Row, Col, Modal} from 'antd';
-
-import { APP_STATE, SKETCH_CHANNELS, firebaseConfig, HOME_PAGE_URL } from './constants';
+import { APP_STATE, SKETCH_CHANNELS, firebaseConfig } from './constants';
 
 // componenets
 import SketchHost from './components/sketchHost/SketchHost';
+import { Layout, Row, Col } from 'antd';
 import GatheringSpace from './components/gathering/index';
 import Board from './components/Board/board';
 import rtcFirebase from 'webrtc-firebase';
@@ -23,10 +22,8 @@ const Sketch = () => {
     // eslint-disable-next-line no-unused-vars
     const [appState, setAppState] = useState(); 
     const [hostLobbyKey, setHostLobbyKey] = useState(null);
-    const [isSessionDisconnected, setSessionDisconnect] = useState(false);
     const roomId = useRef('');
     const userType = useRef('');
-    const disconnectMessage = useRef('Unable to Connect to Server, Try Refreshing the page');
     
     const { Header, Content } = Layout;
     const setRoomId = (id) => {
@@ -49,29 +46,12 @@ const Sketch = () => {
 
     const getMyInfo = () => myInfo.current;
 
-    const setSessionState = (connectionState, isOfferReceived) => {
-        console.log(connectionState, isOfferReceived);
-        if (connectionState === 'failed') {
-            if(isOfferReceived === false) {
-                disconnectMessage.current = "You are trying to connect to an inactive game, please recheck the url"
-            }
-            else {
-                disconnectMessage.current = "Sorry, A technical issue from our side, please reload the page"
-            }
-            setSessionDisconnect(true);
-            setAppState(APP_STATE.DISCONNECTED);
-        } else if(connectionState === 'unknown') {
-            setSessionDisconnect(true);
-            setAppState(APP_STATE.DISCONNECTED);
-        }
-    };
-
     const handleGuest = (lobbyKey) => {
         // write guest setup logic
         dataChannel.current = new rtcFirebase.Guest(lobbyKey, firebaseConfig, SKETCH_CHANNELS , () => {
             console.log('APP_STATE.GATHERING');
             setAppState(APP_STATE.GATHERING);
-        }, (connectionState, isOfferReceived) => {setSessionState(connectionState, isOfferReceived)});
+        });
         userType.current = 'GUEST';
     }
 
@@ -107,7 +87,6 @@ const Sketch = () => {
                 setHostLobbyKey(hostKey);
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -142,14 +121,6 @@ const Sketch = () => {
                                         allPlayers={allPlayers.current}
                                         getMyInfo={getMyInfo}
                                     />
-                        case APP_STATE.DISCONNECTED:
-                            return (
-                                <Modal className='blob' title={disconnectMessage.current} visible={isSessionDisconnected} closable={false} destroyOnClose={true} footer={null}>
-                                    <center>
-                                        <Button type='primary' onClick={() => { window.history.pushState(null, HOME_PAGE_URL); setSessionDisconnect(false);}}> Go To Home</Button>
-                                    </center>
-                                </Modal>
-                            );
                         case APP_STATE.PASSIVE_BOARD:
                             return <></>
                         case APP_STATE.ACTIVE_BOARD:
