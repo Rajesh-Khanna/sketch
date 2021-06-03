@@ -33,7 +33,7 @@ const Home = () => {
                             case 'sketch':
                                 return (<Sketch className='sketch' />)
                             default:
-                                return <></>;
+                                return <h1> - Empty Page - </h1>;
                         }
                     })()}
                     <Modal className='blob' title={null} visible={showNav} onCancel={toggleNav} destroyOnClose={true} footer={
