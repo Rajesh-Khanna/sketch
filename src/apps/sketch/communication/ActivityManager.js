@@ -280,7 +280,6 @@ export class ActivityManager {
                 if (!this.alivePlayers.includes(allPlayers[i].userId)) {
                     console.log(allPlayers[i].userId);
                     this.players.deletePlayer(allPlayers[i].userId);
-                    this.publish({ data: JSON.stringify({ type: 'DISCONNECTED', id: allPlayers[i].userId }) }, 'background');
                     console.log(this.players.getAllPlayers());
                 }
             }

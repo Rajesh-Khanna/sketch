@@ -6,13 +6,6 @@ export const getURLParam = (param) => {
     return urlParams.get(param)
 }
 
-export const getPathParam = () => {
-    const pathValues = window.location.pathname.split('/');
-    if (pathValues.length === 0) return null;
-    return pathValues[pathValues.length - 1];
-}
-
-
 export function insertParam(key, value) {
     if (window.history.pushState) {
         var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?${key}=${value}`;
