@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect} from 'react';
 import { Input, Button, Card, Row, Col, Modal, Divider } from 'antd';
-import { APP_STATE, META_TYPES, ROUNDS, TURN_TIME } from '../../constants';
+import { APP_STATE, META_TYPES, ROUNDS, TURN_TIME, HOME_PAGE_URL } from '../../constants';
 import { gridStyle } from '../../style';
 
 const GatheringSpace = props => {
     const metaChannel = useRef();
     const [players, setPlayers] = useState([]);
+    const [isSessionDisconnected, setSessionDisconnect] = useState(false);
     const [isNameModalVisible, setNameModalVisible ] = useState(false);
     const [nameValue, setNameValue ] = useState('player');
     // eslint-disable-next-line no-unused-vars
@@ -20,10 +21,16 @@ const GatheringSpace = props => {
         metaChannel.current.send(JSON.stringify({type: META_TYPES.START_GAME, turns: turns.current.state.value, rounds: rounds.current.state.value }));
     }
 
+    const handleSessionDisconnected = () => {
+        metaChannel.current.onclose = (e) => { setSessionDisconnect(true); }
+    }
+
     useEffect(() => {
         console.log({hostLobbyKey})
         setShareURL(window.location.protocol + "//" + window.location.host + window.location.pathname + `?k=${hostLobbyKey}`);
         metaChannel.current = dataChannel.current.getChannel('meta');
+
+        handleSessionDisconnected();
 
         metaChannel.current.onmessage = (message) => {
             console.log(message);
@@ -112,6 +119,9 @@ const GatheringSpace = props => {
                             <Col flex="auto">
                                 <Card  className='clearBg'>{shareURL}</Card>
                             </Col>
+                            <Col flex="auto">
+                                <Button className='clearBg' onClick={()=>{navigator.clipboard.writeText(shareURL)}}>copy</Button>
+                            </Col>
                         </Row>
                             <Divider> Game Settings </Divider>
                         {
@@ -174,10 +184,15 @@ const GatheringSpace = props => {
             </div>
             <Modal className='blob' title="Name" visible={isNameModalVisible} closable={false} destroyOnClose={true} footer={null}>
                 Type your name and press ENTER <br/>
-                <Input autoFocus style={{ margin: '4px' }} onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
+                <Input style={{ margin: '4px' }} onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
                 <br />
                 <center>
                     <Button type='primary' onClick={sumbitName}> Submit </Button>
+                </center>
+            </Modal>
+            <Modal className='blob' title="Unable to Connect to Server" visible={isSessionDisconnected} closable={false} destroyOnClose={true} footer={null}>
+                <center>
+                    <Button type='primary' onClick={() => { window.history.pushState(null, HOME_PAGE_URL); setSessionDisconnect(false);}}> Go To Home</Button>
                 </center>
             </Modal>
         </>
