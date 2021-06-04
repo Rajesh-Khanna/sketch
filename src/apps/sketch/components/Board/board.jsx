@@ -244,6 +244,7 @@ const Board = props => {
     }
 
   const handleColor = (c) => {
+      console.log({color: c, board: 'board'});
       setColor(c);
   }
 
