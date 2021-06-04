@@ -6,8 +6,9 @@ import { isScreenLarge } from './../../utils';
 
 export default function SketchBoard(props) {
 
-    const { brush, disable, refresh, sketchBoardRef } = props;
+    const { brush, disable, refresh, sketchBoardRef, paletteHandler } = props;
 
+    const { getColor } = paletteHandler;
     const canvasRef = useRef(null);
     const contextRef = useRef(null);      
 
@@ -28,7 +29,7 @@ export default function SketchBoard(props) {
       context.lineCap = "round";
       context.lineJoin = 'round'
 
-      context.strokeStyle = props.color;
+      context.strokeStyle = getColor();
       context.lineWidth = props.font;
       contextRef.current = context;
 
@@ -42,7 +43,8 @@ export default function SketchBoard(props) {
     }
 
     const draw = ({ start, end, thick, color }) => {
-        contextRef.current.strokeStyle = (color || props.color) === 'eraser'? DEFAULT_BACKGROUND_COLOR : props.color;
+        console.log({color, color2: getColor()});
+        contextRef.current.strokeStyle = (color || getColor()) === 'eraser'? DEFAULT_BACKGROUND_COLOR : color || getColor();
         contextRef.current.lineWidth = thick || props.font;
         contextRef.current.beginPath();
         contextRef.current.moveTo(start.x, start.y);
@@ -51,10 +53,12 @@ export default function SketchBoard(props) {
         contextRef.current.closePath();
     }
 
-    const startDrawing = ({nativeEvent}) => {
-        const { offsetX, offsetY } = nativeEvent;
-        startPos.current = { x: offsetX, y: offsetY };
-        contextRef.current.strokeStyle = 'black';
+    const startDrawing = (event) => {
+        // const { offsetX, offsetY } = nativeEvent;
+        const { offsetX, offsetY } = event.nativeEvent;
+        var rect = canvasRef.current.getBoundingClientRect();
+        startPos.current = {x: offsetX || event.touches[0].clientX - rect.left, y: offsetY || event.touches[0].clientY - rect.top};
+        contextRef.current.strokeStyle = getColor();
         setIsDrawing(true);
     };
 
@@ -65,14 +69,17 @@ export default function SketchBoard(props) {
     const send = (start, end) => {
         start = {x: start.x / canvasRef.current.width, y: start.y / canvasRef.current.height };
         end = {x: end.x / canvasRef.current.width, y: end.y / canvasRef.current.height };
-        brush.send(JSON.stringify( { start, end, thick: props.font, color: props.color } ));
+        console.log({color: getColor()});
+        brush.send(JSON.stringify( { start, end, thick: props.font, color: getColor() } ));
     }
 
-    const mouseMove = ({ nativeEvent }) => {
+    const mouseMove = (event) => {
         if (!isDrawing.current || disable)
             return;
-        const { offsetX, offsetY } = nativeEvent;
-        const end = {x: offsetX, y: offsetY};
+        const { offsetX, offsetY } = event.nativeEvent;
+        var rect = canvasRef.current.getBoundingClientRect();
+
+        const end = {x: offsetX || event.touches[0].clientX - rect.left, y: offsetY || event.touches[0].clientY - rect.top};
         draw({ start: startPos.current, end } );
         send(startPos.current, end);
         startPos.current = end;
@@ -119,6 +126,9 @@ export default function SketchBoard(props) {
                 onMouseDown={startDrawing}
                 onMouseUp={finishDrawing}
                 onMouseMove={mouseMove}
+                onTouchStart={startDrawing}
+                onTouchEnd={finishDrawing}
+                onTouchMove={mouseMove}
                 ref={canvasRef}
             />
         </center>
