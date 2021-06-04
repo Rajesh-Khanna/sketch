@@ -84,8 +84,8 @@ body,
     /* font-family: 'Bangers', cursive; */
     font-size: 25px;
     background: #fff;
-    border: solid black;
-    border-color: black;
+    border: solid #cc0bee;
+    /* border-color: black; */
     float: left;
     border-width: 3px 3px 5px 5px;
     border-radius: 4% 95% 6% 95%/95% 4% 92% 5%;
