@@ -4,6 +4,7 @@ import { getPathParam } from '../sketch/utils';
 import { Button, Layout, Modal, Divider } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { HOME_PAGE_URL } from './../sketch/constants';
+import '../../background.scss';
 
 const Home = () => {
 
@@ -16,10 +17,27 @@ const Home = () => {
         setShowNav(p => !p);
     }
 
+    
     console.log('Home page');
 
     return (
         <>
+                    <div class="area" >
+                        <ul class="circles">
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                        </ul>
+                    </div >
+
+
             <Layout className='gradientBg fullHeight' >
                 <Content className='fullHeight' style={{ padding: '8px', height: '100%' }}>
                     <div style={{ background: 'none', height: '50px', paddingLeft: '50px' }}>

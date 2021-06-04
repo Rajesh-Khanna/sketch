@@ -1,4 +1,4 @@
 export const gridStyle = {
-    width: '25%',
+    width: 'auto',
     textAlign: 'center',
 };

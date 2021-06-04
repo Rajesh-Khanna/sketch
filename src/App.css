@@ -20,13 +20,11 @@ body,
     height: 100%;
 }
 
-.gradientBg {
+
+/* .gradientBg {
     background: #D3CCE3;
-    /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #E9E4F0, #D3CCE3);
-    /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #E9E4F0, #D3CCE3);
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 @keyframes gradient {
@@ -40,6 +38,7 @@ body,
         background-position: 0% 50%;
     }
 }
+ */
 
 .text-light {
     color: aliceblue;
