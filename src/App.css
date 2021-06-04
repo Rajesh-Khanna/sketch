@@ -115,3 +115,22 @@ body,
 .ant-modal-header {
     background: none;
 }
+
+.rooms-container {
+    text-align: center;
+}
+
+.room-buttons {
+    display: block;
+    background-color: rgb(255, 78, 240);
+    color: white;
+    border-radius: 25px;
+    margin: 15px;
+    padding: 15px;
+}
+
+.room-buttons:hover {
+    font-weight: bold;
+    box-shadow: 0px 0px 20px #f0f;
+    color: rgb(75, 102, 255);
+}
