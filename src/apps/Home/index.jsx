@@ -5,6 +5,7 @@ import { Button, Layout, Modal, Divider } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { HOME_PAGE_URL } from './../sketch/constants';
 import '../../background.scss';
+import EmptyPage from './home';
 
 const Home = () => {
 
@@ -38,7 +39,7 @@ const Home = () => {
                     </div >
 
 
-            <Layout className='gradientBg fullHeight' >
+            <Layout className='gradientBg fullHeight'>
                 <Content className='fullHeight' style={{ padding: '8px', height: '100%' }}>
                     <div style={{ background: 'none', height: '50px', paddingLeft: '50px' }}>
                         <Button onClick={toggleNav}>
@@ -48,10 +49,10 @@ const Home = () => {
 
                     {(() => { 
                         switch(currPath) {
-                            case 'sketch':
+                            case 'room':
                                 return (<Sketch className='sketch' />)
                             default:
-                                return <h1> - Empty Page - </h1>;
+                                return <EmptyPage/>;
                         }
                     })()}
                     <Modal className='blob' title={null} visible={showNav} onCancel={toggleNav} destroyOnClose={true} footer={
