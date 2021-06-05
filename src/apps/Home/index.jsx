@@ -1,43 +1,40 @@
 import React, {useState} from 'react';
 import Sketch from './../sketch/index';
-import { getPathParam } from '../sketch/utils';
 import { Button, Layout, Modal, Divider } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { HOME_PAGE_URL } from './../sketch/constants';
 import '../../background.scss';
 import EmptyPage from './home';
+import { getURLParam } from './../sketch/utils';
 
 const Home = () => {
 
     const { Content } = Layout;
     const [showNav, setShowNav] = useState(false);
+    const [activateRoom, setactivateRoom] = useState(getURLParam('k'));
 
-    const currPath = getPathParam();
-    console.log({currPath});
     const toggleNav = () => {
         setShowNav(p => !p);
     }
-
     
     console.log('Home page');
 
     return (
         <>
-                    <div class="area" >
-                        <ul class="circles">
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                        </ul>
-                    </div >
-
+            <div class="area" >
+                <ul class="circles">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                </ul>
+            </div >
 
             <Layout className='gradientBg fullHeight'>
                 <Content className='fullHeight' style={{ padding: '8px', height: '100%' }}>
@@ -46,15 +43,11 @@ const Home = () => {
                             <MenuOutlined />
                         </Button>
                     </div>
-
-                    {(() => { 
-                        switch(currPath) {
-                            case 'room':
-                                return (<Sketch className='sketch' />)
-                            default:
-                                return <EmptyPage/>;
-                        }
-                    })()}
+                    { 
+                        activateRoom?
+                            (<Sketch className='sketch' />)
+                            :(<EmptyPage setactivateRoom={setactivateRoom}/>)
+                    }
                     <Modal className='blob' title={null} visible={showNav} onCancel={toggleNav} destroyOnClose={true} footer={
                         <span style={{ fontSize: '15px' }}>This app is built by <a href="https://github.com/Rajesh-Khanna">@Rajesh</a> and <a href="https://github.com/theVirtualMan">@Rohit</a></span>
                     }>
