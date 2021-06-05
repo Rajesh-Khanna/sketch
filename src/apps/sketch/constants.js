@@ -37,7 +37,7 @@ export const MESSAGE_TYPE = {
 
 Object.freeze(MESSAGE_TYPE);
 
-export const HOME_PAGE_URL = '/sketch/home'; // todo: change this to a valid home page url
+export const HOME_PAGE_URL = '/sketch'; // todo: change this to a valid home page url
 
 export const LOBBY_COLLECTION = 'LOBBY_COLLECTION';
 
