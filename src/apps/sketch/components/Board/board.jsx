@@ -35,6 +35,8 @@ const Board = props => {
     // font and colours
     const [font, setFont] = useState(5);
     const [color, setColor] = useState('black');
+		const [fillColor, setFillColor] = useState(false);
+		const [undo, setUndo] = useState(false);
     const [sketchBoardRef] = useHookWithRefCallback();
 
     const sessionScoreColumns = useRef([
@@ -238,10 +240,19 @@ const Board = props => {
       }
     }
 
-    const handleFont = (f) => {
-      sizeRef.current.state.ref = f;
-      setFont(f);
-    }
+	const handleFont = (f) => {
+		setFillColor(false);
+		sizeRef.current.state.ref = f;
+		setFont(f);
+	}
+
+	const handleFillColor = (flag) => {
+		setFillColor(flag);
+	}
+
+	const handleUndo = (flag) => {
+		setUndo(flag);
+	}
 
   const handleColor = (c) => {
       console.log({color: c, board: 'board'});
@@ -249,6 +260,7 @@ const Board = props => {
   }
 
   const increaseFont = () => {
+		setFillColor(false);
     setFont(prevFont => {
       sizeRef.current.state.value = prevFont < MAX_FONT? prevFont + 1: prevFont;
       return prevFont < MAX_FONT? prevFont + 1: prevFont;
@@ -256,6 +268,7 @@ const Board = props => {
   }
   
   const reduceFont = () => {
+		setFillColor(false);
     setFont(prevFont => {
       sizeRef.current.state.value = prevFont > MIN_FONT? prevFont - 1 : prevFont;
       return prevFont > MIN_FONT? prevFont - 1 : prevFont;
@@ -263,6 +276,7 @@ const Board = props => {
   }
 
   const onFontSlider = (e) => {
+		setFillColor(false);
     console.log({e});
     setFont(e);
   }
@@ -317,11 +331,11 @@ const Board = props => {
                       </div>
                     </div>
                   }
-                    <SketchBoard ref = {sketchBoardRef} sketchBoardRef={sketchBoardRef} brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} disable={disableBoard} refresh={refreshBoard}/>
+                    <SketchBoard ref = {sketchBoardRef} sketchBoardRef={sketchBoardRef} brush = {brush} font = {font} color = {color} fillColorFlag = {fillColor} undo = {undo} setUndo = {setUndo} paletteHandler = {paletteHandler} disable={disableBoard} refresh={refreshBoard}/>
                   </div>
                   {disableBoard
                     ? <></>
-                    : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font}/>
+                    : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font} handleFillColor={handleFillColor} handleUndo={handleUndo}/>
                   }
                 </>
               : <></>

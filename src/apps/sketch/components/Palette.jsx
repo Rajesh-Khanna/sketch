@@ -51,9 +51,11 @@ export default function Palette(props) {
                     <Button onClick={ () => props.handleFont(1)}> 1px </Button>
                     <Button onClick={ () => props.handleFont(5)}> 5px </Button>
                     <Button onClick={ () => props.handleFont(10)}> 10px </Button>
+                    <Button onClick={ () => props.handleFillColor(true)}> fill </Button>
+                    <Button onClick={ () => props.handleUndo(true)}> undo </Button>
 
                     <Tooltip placement="top" title='or click "d"'>
-                        <Button onClick={ () => props.handleColor('black')}> pen </Button>
+                        <Button onClick={ () => {props.handleColor('black'); props.handleFillColor(false)}}> pen </Button>
                     </Tooltip>
                     <Tooltip placement="top" title='or click "e"'>
                         <Button onClick={ () => props.handleColor('eraser')}> eraser </Button>
