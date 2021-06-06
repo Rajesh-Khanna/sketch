@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useRef } from "react";
-import { DEFAULT_BACKGROUND_COLOR } from './../../constants';
+import { DEFAULT_BACKGROUND_COLOR, BRUSH_TYPE } from './../../constants';
 import { isScreenLarge } from './../../utils';
 
 
@@ -73,6 +73,7 @@ export default function SketchBoard(props) {
     }
 
     const hexToRGBA = (hex) => {
+        if(!hex) hex='#ffffff';
         var c;
         if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
             c= hex.substring(1).split('');
@@ -80,11 +81,11 @@ export default function SketchBoard(props) {
                 c= [c[0], c[0], c[1], c[1], c[2], c[2]];
             }
             c= '0x'+c.join('');
-            return [(c>>16)&255, (c>>8)&255, c&255, 1];
+            return [(c>>16)&255, (c>>8)&255, c&255, 255];
         }
     }
 
-    const fillColor = (point) => {
+    const fillColor = (point, color) => {
         console.log('pointer pointed to: ',point);
         console.log('canvas width: ',canvasRef.current.width);
         console.log('canvas height: ',canvasRef.current.height);
@@ -94,11 +95,10 @@ export default function SketchBoard(props) {
 
         let copiedData = Object.assign({}, data);
 
-
         const pointerRGBA = getRGB(copiedData,point.x,point.y);
         console.log('pixel color: ',pointerRGBA);
 
-        var targetRGBA = hexToRGBA(getColor())
+        var targetRGBA = hexToRGBA(color || getColor())
         console.log('target fill color rgba:', targetRGBA);
 
         var visited = new Array(canvasRef.current.width);
@@ -172,24 +172,53 @@ export default function SketchBoard(props) {
         setIsDrawing(true);
         if (fillColorFlag) {
             fillColor(startPos.current);
+            let brushObj = {
+                type: BRUSH_TYPE.FILL,
+                data: {point: {x: startPos.current.x / canvasRef.current.width, y: startPos.current.y / canvasRef.current.height }, color: getColor() || '#ffffff'}
+            }
+            brush.send(JSON.stringify(brushObj));
         }
     };
 
-    const finishDrawing = () => {
-        setIsDrawing(false);
+    const saveHistory = () => {
         // limiting undo to 5 steps only (to save memory). Might increase it later after testing
         if(undoHistory.current.length === 5) {
             undoHistory.current.shift();
         }
         console.log('saving history...');
         undoHistory.current.push(contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height));
+    }
+
+    const handleUndo = () => {
+        if(!(undoHistory.current.length === 0)) {
+            console.log('retrieving history...');
+            var pix = undoHistory.current[undoHistory.current.length-1];
+            undoHistory.current.pop();
+            contextRef.current.putImageData(pix,0,0);
+        }
+    }
+
+    const finishDrawing = () => {
+        setIsDrawing(false);
+
+        // save history
+        saveHistory();
+
+        let brushObj = {
+            type: BRUSH_TYPE.SAVE,
+        }
+        brush.send(JSON.stringify(brushObj));
     };
 
     const send = (start, end) => {
         start = {x: start.x / canvasRef.current.width, y: start.y / canvasRef.current.height };
         end = {x: end.x / canvasRef.current.width, y: end.y / canvasRef.current.height };
         console.log({color: getColor()});
-        brush.send(JSON.stringify( { start, end, thick: props.font, color: getColor() } ));
+        let brushObj = {
+            type: BRUSH_TYPE.DRAW,
+            data: { start, end, thick: props.font, color: getColor() },
+        }
+        brush.send(JSON.stringify(brushObj));
     }
 
     const mouseMove = (event) => {
@@ -213,13 +242,31 @@ export default function SketchBoard(props) {
 
     useEffect(() => {
         brush.onmessage = (message) => {
-            if( Array.isArray(message.data)){
-                const points = JSON.parse(message.data);
-                points.forEach(point => {
-                    draw(projectPoints(point));
-                });
-            }else{
-                draw(projectPoints(JSON.parse(message.data)));
+            const brushMessage = JSON.parse(message.data);
+            console.log('brush message:', message.data);
+
+            switch(brushMessage.type) {
+                case BRUSH_TYPE.DRAW:
+                    if( Array.isArray(brushMessage.data)){
+                        const points = brushMessage.data
+                        points.forEach(point => {
+                            draw(projectPoints(point));
+                        });
+                    }else{
+                        draw(projectPoints(brushMessage.data));
+                    }
+                    break;
+                case BRUSH_TYPE.FILL:
+                    fillColor({x: Math.floor(brushMessage.data.point.x * canvasRef.current.width), y: Math.floor(brushMessage.data.point.y * canvasRef.current.height)}, brushMessage.data.color);
+                    break;
+                case BRUSH_TYPE.SAVE:
+                    saveHistory();
+                    break;
+                case BRUSH_TYPE.UNDO:
+                    handleUndo();
+                    break;
+                default:
+                    console.log('unknown brush type');
             }
         }
 
@@ -228,12 +275,11 @@ export default function SketchBoard(props) {
     useEffect(() => {
         if(undo === true) {
             setUndo(false);
-            if(!(undoHistory.current.length === 0)) {
-                console.log('retrieving history...');
-                var pix = undoHistory.current[undoHistory.current.length-1];
-                undoHistory.current.pop();
-                contextRef.current.putImageData(pix,0,0);
+
+            let brushObj = {
+                type: BRUSH_TYPE.UNDO,
             }
+            brush.send(JSON.stringify(brushObj));
         }
     }, [undo]);
 

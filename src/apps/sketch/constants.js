@@ -66,6 +66,13 @@ export const CHAT_TYPE = {
     CORRECT_WORD: 'CORRECT_WORD',
 }
 
+export const BRUSH_TYPE = {
+    DRAW: 'DRAW',
+    FILL: 'FILL',
+    SAVE: 'SAVE',
+    UNDO: 'UNDO',
+}
+
 export const POPUP_TIMEOUT = 4000;
 
 export const TURN_TIME = 80;
