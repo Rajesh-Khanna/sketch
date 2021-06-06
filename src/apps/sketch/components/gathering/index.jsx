@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect} from 'react';
 import { Input, Button, Card, Row, Col, Modal, Divider } from 'antd';
 import { APP_STATE, META_TYPES, ROUNDS, TURN_TIME, HOME_PAGE_URL } from '../../constants';
-import { gridStyle } from '../../style';
+import { gridStyle, copyStyle } from '../../style';
 
 const GatheringSpace = props => {
     const metaChannel = useRef();
@@ -112,15 +112,24 @@ const GatheringSpace = props => {
             <div id = 'waitingRoom'>
                 <Row justify='center'>
                     <Col md={24} lg={16}>
-                        <Row wrap={false} justify='center' align='middle'>
-                            <Col flex="none">
-                                <Card className='clearBg'> Share this link </Card>
+                        <div className='roomtitle'>
+                            <center>
+                            <h1 style={{ color: 'white' }} > - Sketch - </h1>   
+                            </center>
+                        </div>
+                        <Row wrap={false} justify="space-between" align='middle' className='sharedLink'>
+                            <Col>
+                                <span className='sharedLinkCol'>
+                                    Share this link
+                                </span>
                             </Col>
-                            <Col flex="auto">
-                                <Card  className='clearBg'>{shareURL}</Card>
+                            <Col>
+                                <span className='sharedLinkCol'>
+                                    {shareURL}
+                                </span>
                             </Col>
-                            <Col flex="auto">
-                                <Button className='clearBg' onClick={()=>{navigator.clipboard.writeText(shareURL)}}>copy</Button>
+                            <Col>
+                                <Button style={copyStyle} className='sharedLinkCol' onClick={()=>{navigator.clipboard.writeText(shareURL)}}>copy</Button>
                             </Col>
                         </Row>
                             <Divider> Game Settings </Divider>
@@ -133,7 +142,7 @@ const GatheringSpace = props => {
                                             Time per turn
                                         </Col>
                                         <Col md={24} lg={4}>
-                                            <Input style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={10} type="number" />
+                                            <Input style={{ borderRadius: '15px', textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={10} type="number" />
                                         </Col>
                                     </Row>
                                     <Row justify='center' gutter={[4, 4]}>
@@ -141,7 +150,7 @@ const GatheringSpace = props => {
                                             Rounds
                                         </Col>
                                         <Col md={24} lg={4}>
-                                            <Input style={{ textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={3} type="number" /> <br />
+                                            <Input style={{ borderRadius: '15px', textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={3} type="number" /> <br />
                                         </Col>
                                     </Row>
                                     <Row justify='center'>
