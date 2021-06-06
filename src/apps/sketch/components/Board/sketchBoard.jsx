@@ -202,8 +202,6 @@ export default function SketchBoard(props) {
         setIsDrawing(false);
 
         // save history
-        saveHistory();
-
         let brushObj = {
             type: BRUSH_TYPE.SAVE,
         }
