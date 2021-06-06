@@ -1,14 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useRef } from "react";
+import React, {useEffect, useRef, useState } from "react";
 import { DEFAULT_BACKGROUND_COLOR, BRUSH_TYPE } from './../../constants';
 import { isScreenLarge } from './../../utils';
 
+import Palette from './../Palette';
 
 export default function SketchBoard(props) {
 
-    const { brush, disable, refresh, sketchBoardRef, paletteHandler, fillColorFlag, undo, setUndo } = props;
+    // font and colours
+    const [font, setFont] = useState(5);
+    const [color, setColor] = useState('#000000');
+    const [fillColor, setFillColor] = useState(false);
+    const sizeRef = useRef();
 
-    const { getColor } = paletteHandler;
+    const { brush, disable, refresh, sketchBoardRef } = props;
+
     const canvasRef = useRef(null);
     const contextRef = useRef(null);      
 
@@ -32,7 +38,7 @@ export default function SketchBoard(props) {
       context.lineJoin = 'round'
 
       context.strokeStyle = getColor();
-      context.lineWidth = props.font;
+      context.lineWidth = font;
       contextRef.current = context;
 
     };
@@ -47,7 +53,7 @@ export default function SketchBoard(props) {
     const draw = ({ start, end, thick, color }) => {
         console.log({color, color2: getColor()});
         contextRef.current.strokeStyle = (color || getColor()) === 'eraser'? DEFAULT_BACKGROUND_COLOR : color || getColor();
-        contextRef.current.lineWidth = thick || props.font;
+        contextRef.current.lineWidth = thick || font;
         contextRef.current.beginPath();
         contextRef.current.moveTo(start.x, start.y);
         contextRef.current.lineTo(end.x, end.y);
@@ -73,7 +79,6 @@ export default function SketchBoard(props) {
     }
 
     const hexToRGBA = (hex) => {
-        if(!hex) hex='#ffffff';
         var c;
         if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
             c= hex.substring(1).split('');
@@ -85,7 +90,7 @@ export default function SketchBoard(props) {
         }
     }
 
-    const fillColor = (point, color) => {
+    const fillBackgroundColor = (point, color) => {
         console.log('pointer pointed to: ',point);
         console.log('canvas width: ',canvasRef.current.width);
         console.log('canvas height: ',canvasRef.current.height);
@@ -170,8 +175,8 @@ export default function SketchBoard(props) {
         startPos.current = {x: offsetX || event.touches[0].clientX - rect.left, y: offsetY || event.touches[0].clientY - rect.top};
         contextRef.current.strokeStyle = getColor();
         setIsDrawing(true);
-        if (fillColorFlag) {
-            fillColor(startPos.current);
+        if (fillColor) {
+            fillBackgroundColor(startPos.current);
             let brushObj = {
                 type: BRUSH_TYPE.FILL,
                 data: {point: {x: startPos.current.x / canvasRef.current.width, y: startPos.current.y / canvasRef.current.height }, color: getColor() || '#ffffff'}
@@ -189,7 +194,7 @@ export default function SketchBoard(props) {
         undoHistory.current.push(contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height));
     }
 
-    const handleUndo = () => {
+    const retrieveHistory = () => {
         if(!(undoHistory.current.length === 0)) {
             console.log('retrieving history...');
             var pix = undoHistory.current[undoHistory.current.length-1];
@@ -214,7 +219,7 @@ export default function SketchBoard(props) {
         console.log({color: getColor()});
         let brushObj = {
             type: BRUSH_TYPE.DRAW,
-            data: { start, end, thick: props.font, color: getColor() },
+            data: { start, end, thick: font, color: getColor() },
         }
         brush.send(JSON.stringify(brushObj));
     }
@@ -255,13 +260,13 @@ export default function SketchBoard(props) {
                     }
                     break;
                 case BRUSH_TYPE.FILL:
-                    fillColor({x: Math.floor(brushMessage.data.point.x * canvasRef.current.width), y: Math.floor(brushMessage.data.point.y * canvasRef.current.height)}, brushMessage.data.color);
+                    fillBackgroundColor({x: Math.floor(brushMessage.data.point.x * canvasRef.current.width), y: Math.floor(brushMessage.data.point.y * canvasRef.current.height)}, brushMessage.data.color);
                     break;
                 case BRUSH_TYPE.SAVE:
                     saveHistory();
                     break;
                 case BRUSH_TYPE.UNDO:
-                    handleUndo();
+                    retrieveHistory();
                     break;
                 default:
                     console.log('unknown brush type');
@@ -269,17 +274,6 @@ export default function SketchBoard(props) {
         }
 
     }, []);
-
-    useEffect(() => {
-        if(undo === true) {
-            setUndo(false);
-
-            let brushObj = {
-                type: BRUSH_TYPE.UNDO,
-            }
-            brush.send(JSON.stringify(brushObj));
-        }
-    }, [undo]);
 
     useEffect(() => {
         console.log(sketchBoardRef);
@@ -295,18 +289,72 @@ export default function SketchBoard(props) {
         contextRef.current.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);  
     }, [refresh]);
 
+    const handleFont = (f) => {
+		setFillColor(false);
+		sizeRef.current.state.ref = f;
+		setFont(f);
+	}
+
+    const onFontSlider = (e) => {
+		setFillColor(false);
+        console.log({e});
+        setFont(e);
+    }
+
+    const handleColor = (c) => {
+        console.log({color: c, board: 'board'});
+        setColor(c);
+    }
+
+    const getColor = () => {
+        return color;
+    }
+
+    const handleFillColor = (flag) => {
+		setFillColor(flag);
+	}
+
+    const handleUndo = () => {
+        let brushObj = {
+            type: BRUSH_TYPE.UNDO,
+        }
+        brush.send(JSON.stringify(brushObj));
+    }
+
+    var circleStyle = {
+        display:"inline-block",
+        backgroundColor: color === 'eraser'? 'white' : color,
+        borderRadius: color === 'eraser'? '0%' : "50%",
+        borderStyle: color === 'eraser'? 'solid': 'none',
+        width: font,
+        height: font,
+    };
+
     return (
-        <center>
-            <canvas
-                onMouseDown={startDrawing}
-                onMouseUp={finishDrawing}
-                onMouseMove={mouseMove}
-                onTouchStart={startDrawing}
-                onTouchEnd={finishDrawing}
-                onTouchMove={mouseMove}
-                ref={canvasRef}
-            />
-        </center>
+        <>
+            { disable
+                ? <></>
+                :<div bordered style={{ width: font, height: font, marginLeft: '10px' , textAlign:'center', position: 'absolute'}}>
+                    <div style={circleStyle}>
+                    </div>
+                </div>
+            }
+            <center>
+                <canvas
+                    onMouseDown={startDrawing}
+                    onMouseUp={finishDrawing}
+                    onMouseMove={mouseMove}
+                    onTouchStart={startDrawing}
+                    onTouchEnd={finishDrawing}
+                    onTouchMove={mouseMove}
+                    ref={canvasRef}
+                />
+            </center>
+            { disable
+                    ? <></>
+                    : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font} handleFillColor={handleFillColor} handleUndo={handleUndo}/>
+            }
+        </>
     );
 
     // return <Sketch setup={setup} draw={draw} />;
