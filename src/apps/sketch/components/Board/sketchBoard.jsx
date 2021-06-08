@@ -4,6 +4,7 @@ import { DEFAULT_BACKGROUND_COLOR, BRUSH_TYPE } from './../../constants';
 import { isScreenLarge } from './../../utils';
 
 import Palette from './../Palette';
+import { fillBackgroundColor } from './../../sketchColor';
 
 export default function SketchBoard(props) {
 
@@ -61,112 +62,6 @@ export default function SketchBoard(props) {
         contextRef.current.closePath();
     }
 
-    const getRGB = (data, x, y) => {
-        const index = y * (canvasRef.current.width * 4) + x * 4;
-        const rgba = `rgba(${data[index]}, ${data[index+1]}, ${data[index+2]}, ${data[index+3] / 255})`;
-        return rgba;
-    }
-
-    const setRGB = (data, targetRGBA, x, y) => {
-        const index = y * (canvasRef.current.width * 4) + x * 4;
-
-        // console.log('previous colors: ',data[index],data[index+1],data[index+2],data[index+3]);
-        data[index] = targetRGBA[0];
-        data[index+1] = targetRGBA[1];
-        data[index+2] = targetRGBA[2];
-        data[index+3] = targetRGBA[3];
-        // console.log('after colors: ',data[index],data[index+1],data[index+2],data[index+3]);
-    }
-
-    const hexToRGBA = (hex) => {
-        var c;
-        if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-            c= hex.substring(1).split('');
-            if(c.length === 3){
-                c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-            }
-            c= '0x'+c.join('');
-            return [(c>>16)&255, (c>>8)&255, c&255, 255];
-        }
-    }
-
-    const fillBackgroundColor = (point, color) => {
-        console.log('pointer pointed to: ',point);
-        console.log('canvas width: ',canvasRef.current.width);
-        console.log('canvas height: ',canvasRef.current.height);
-
-        var pixel = contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
-        var data = pixel.data;
-
-        let copiedData = Object.assign({}, data);
-
-        const pointerRGBA = getRGB(copiedData,point.x,point.y);
-        console.log('pixel color: ',pointerRGBA);
-
-        var targetRGBA = hexToRGBA(color || getColor())
-        console.log('target fill color rgba:', targetRGBA);
-
-        var visited = new Array(canvasRef.current.width);
-
-        for (var i = 0; i < visited.length; i++) {
-            visited[i] = new Array(canvasRef.current.height);
-        }
-        for ( i = 0; i < visited.length; i++) {
-            for (var j = 0; j < visited[i].length; j++) {
-                visited[i][j] = 0;
-            }
-        }
-
-        let arr = [{x:point.x, y:point.y}];
-        var p;
-        while(!(arr.length === 0)) {
-            p = arr[arr.length - 1];
-            // if(visited[p.x][p.y]===1) {
-            //     arr.pop();
-            //     continue;
-            // }
-            // console.log(p);
-            visited[p.x][p.y] = 1;
-            arr.pop();
-            if (pointerRGBA === getRGB(copiedData,p.x,p.y)) {
-                setRGB(data, targetRGBA, p.x, p.y);
-
-                if (p.x>0 && p.y>0 && visited[p.x-1][p.y-1]===0) {
-                    arr.push({x:p.x-1,y:p.y-1});
-                    visited[p.x-1][p.y-1] = 1;
-                }
-                if (p.y>0 && visited[p.x][p.y-1]===0) {
-                    arr.push({x:p.x,y:p.y-1});
-                    visited[p.x][p.y-1] = 1;
-                }
-                if (p.x<canvasRef.current.width-1 && p.y>0 && visited[p.x+1][p.y-1]===0) {
-                    arr.push({x:p.x+1,y:p.y-1});
-                    visited[p.x+1][p.y-1] = 1;
-                }
-                if (p.x>0 && visited[p.x-1][p.y]===0) {
-                    arr.push({x:p.x-1,y:p.y});
-                    visited[p.x-1][p.y] = 1;
-                }
-                if (p.x<canvasRef.current.width-1 && visited[p.x+1][p.y]===0) {
-                    arr.push({x:p.x+1,y:p.y});
-                    visited[p.x+1][p.y] = 1;
-                }
-                if (p.x>0 && p.y<canvasRef.current.height-1 && visited[p.x-1][p.y+1]===0) {
-                    arr.push({x:p.x-1,y:p.y+1});
-                    visited[p.x-1][p.y+1] = 1;
-                }
-                if (p.y<canvasRef.current.height-1 && visited[p.x][p.y+1]===0) {
-                    arr.push({x:p.x,y:p.y+1});
-                    visited[p.x][p.y+1] = 1;
-                }
-                if (p.x<canvasRef.current.width-1 && p.y<canvasRef.current.height-1 && visited[p.x+1][p.y+1]===0) {
-                    arr.push({x:p.x+1,y:p.y+1});
-                    visited[p.x+1][p.y+1] = 1;
-                }
-            }
-        }
-        contextRef.current.putImageData(pixel,0,0);
-    }
 
     const startDrawing = (event) => {
         // const { offsetX, offsetY } = nativeEvent;
@@ -176,7 +71,7 @@ export default function SketchBoard(props) {
         contextRef.current.strokeStyle = getColor();
         setIsDrawing(true);
         if (fillColor) {
-            fillBackgroundColor(startPos.current);
+            fillBackgroundColor(canvasRef, contextRef, getColor, startPos.current);
             let brushObj = {
                 type: BRUSH_TYPE.FILL,
                 data: {point: {x: startPos.current.x / canvasRef.current.width, y: startPos.current.y / canvasRef.current.height }, color: getColor() || '#ffffff'}
@@ -260,7 +155,7 @@ export default function SketchBoard(props) {
                     }
                     break;
                 case BRUSH_TYPE.FILL:
-                    fillBackgroundColor({x: Math.floor(brushMessage.data.point.x * canvasRef.current.width), y: Math.floor(brushMessage.data.point.y * canvasRef.current.height)}, brushMessage.data.color);
+                    fillBackgroundColor(canvasRef, contextRef, getColor, {x: Math.floor(brushMessage.data.point.x * canvasRef.current.width), y: Math.floor(brushMessage.data.point.y * canvasRef.current.height)}, brushMessage.data.color);
                     break;
                 case BRUSH_TYPE.SAVE:
                     saveHistory();
