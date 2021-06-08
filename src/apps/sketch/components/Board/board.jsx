@@ -6,8 +6,7 @@ import Timer from './timer';
 import { Table, Row, Col, Modal, Button, notification } from 'antd';
 
 
-import {MAX_FONT, MIN_FONT, HOME_PAGE_URL} from '../../constants';
-import Palette from './../Palette';
+import { HOME_PAGE_URL} from '../../constants';
 import { EditFilled, DisconnectOutlined } from '@ant-design/icons';
 
 function useHookWithRefCallback() {
@@ -32,9 +31,6 @@ function useHookWithRefCallback() {
 }
 
 const Board = props => {
-    // font and colours
-    const [font, setFont] = useState(5);
-    const [color, setColor] = useState('black');
     const [sketchBoardRef] = useHookWithRefCallback();
 
     const sessionScoreColumns = useRef([
@@ -89,7 +85,6 @@ const Board = props => {
     const wordList = useRef(['','','']);
     const background = useRef();
 
-    const sizeRef = useRef();
     const { sketchChannel, getMyInfo, getPlayerById, allPlayers } = props;
     const [ brush, setBrush ] = useState();
     const [ chat, setChat ] = useState();
@@ -238,52 +233,6 @@ const Board = props => {
       }
     }
 
-    const handleFont = (f) => {
-      sizeRef.current.state.ref = f;
-      setFont(f);
-    }
-
-  const handleColor = (c) => {
-      console.log({color: c, board: 'board'});
-      setColor(c);
-  }
-
-  const increaseFont = () => {
-    setFont(prevFont => {
-      sizeRef.current.state.value = prevFont < MAX_FONT? prevFont + 1: prevFont;
-      return prevFont < MAX_FONT? prevFont + 1: prevFont;
-    })
-  }
-  
-  const reduceFont = () => {
-    setFont(prevFont => {
-      sizeRef.current.state.value = prevFont > MIN_FONT? prevFont - 1 : prevFont;
-      return prevFont > MIN_FONT? prevFont - 1 : prevFont;
-    })
-  }
-
-  const onFontSlider = (e) => {
-    console.log({e});
-    setFont(e);
-  }
-
-  const paletteHandler = {
-    font: handleFont,
-    color: handleColor,
-    getColor: () => { return color },
-    increaseFont: increaseFont,
-    reduceFont: reduceFont,
-  }
-
-  var circleStyle = {
-    display:"inline-block",
-    backgroundColor: color === 'eraser'? 'white' : color,
-    borderRadius: color === 'eraser'? '0%' : "50%",
-    borderStyle: color === 'eraser'? 'solid': 'none',
-    width: font,
-    height: font,
-  };
-
   return (
     <>
       {contextHolder}
@@ -309,20 +258,9 @@ const Board = props => {
                       </Row>
                       : <></>
                   }
-                    <div style={{ position: 'relative' }}>
-                    {disableBoard
-                    ? <></>
-                    :<div bordered style={{ width: font, height: font, marginLeft: '10px' , textAlign:'center', position: 'absolute'}}>
-                      <div style={circleStyle}>
-                      </div>
-                    </div>
-                  }
-                    <SketchBoard ref = {sketchBoardRef} sketchBoardRef={sketchBoardRef} brush = {brush} font = {font} color = {color} paletteHandler = {paletteHandler} disable={disableBoard} refresh={refreshBoard}/>
+                  <div style={{ position: 'relative' }}>
+                    <SketchBoard ref = {sketchBoardRef} sketchBoardRef={sketchBoardRef} brush = {brush} disable={disableBoard} refresh={refreshBoard}/>
                   </div>
-                  {disableBoard
-                    ? <></>
-                    : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font}/>
-                  }
                 </>
               : <></>
           }

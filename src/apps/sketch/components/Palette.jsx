@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button, Tooltip, Slider, Col, Row } from 'antd';
 
+import {MAX_FONT, MIN_FONT} from '../constants'
+
 export default function Palette(props) {
 
     const ColorOptions = () => {
@@ -40,8 +42,8 @@ export default function Palette(props) {
         <div>
             <Slider
                 ref={props.sizeRef}
-                min={1}
-                max={80}
+                min={MIN_FONT}
+                max={MAX_FONT}
                 onChange={props.onFontSlider}
                 defaultValue={10}
                 value={props.font}
@@ -51,9 +53,11 @@ export default function Palette(props) {
                     <Button onClick={ () => props.handleFont(1)}> 1px </Button>
                     <Button onClick={ () => props.handleFont(5)}> 5px </Button>
                     <Button onClick={ () => props.handleFont(10)}> 10px </Button>
+                    <Button onClick={ () => props.handleFillColor(true)}> fill </Button>
+                    <Button onClick={ () => props.handleUndo()}> undo </Button>
 
                     <Tooltip placement="top" title='or click "d"'>
-                        <Button onClick={ () => props.handleColor('black')}> pen </Button>
+                        <Button onClick={ () => {props.handleColor('black'); props.handleFillColor(false)}}> pen </Button>
                     </Tooltip>
                     <Tooltip placement="top" title='or click "e"'>
                         <Button onClick={ () => props.handleColor('eraser')}> eraser </Button>
