@@ -5,6 +5,7 @@ import { isScreenLarge } from './../../utils';
 
 import Palette from './../Palette';
 import { fillBackgroundColor } from './../../sketchColor';
+import { disableScroll, enableScroll } from './../../utils';
 
 export default function SketchBoard(props) {
 
@@ -69,6 +70,7 @@ export default function SketchBoard(props) {
         var rect = canvasRef.current.getBoundingClientRect();
         startPos.current = {x: offsetX || event.touches[0].clientX - rect.left, y: offsetY || event.touches[0].clientY - rect.top};
         contextRef.current.strokeStyle = getColor();
+        disableScroll();
         setIsDrawing(true);
         if (fillColor) {
             fillBackgroundColor(canvasRef, contextRef, getColor, startPos.current);
@@ -99,6 +101,7 @@ export default function SketchBoard(props) {
     }
 
     const finishDrawing = () => {
+        enableScroll();
         setIsDrawing(false);
 
         // save history
@@ -125,7 +128,17 @@ export default function SketchBoard(props) {
         const { offsetX, offsetY } = event.nativeEvent;
         var rect = canvasRef.current.getBoundingClientRect();
 
-        const end = {x: offsetX || event.touches[0].clientX - rect.left, y: offsetY || event.touches[0].clientY - rect.top};
+        let x,y;
+
+        if(event.touches){
+            x = offsetX || event.touches[0].clientX - rect.left;
+            y = offsetY || event.touches[0].clientY - rect.top;
+        }else{
+            x = offsetX;
+            y = offsetY;
+        }
+
+        const end = {x: x, y: y};
         draw({ start: startPos.current, end } );
         send(startPos.current, end);
         startPos.current = end;
