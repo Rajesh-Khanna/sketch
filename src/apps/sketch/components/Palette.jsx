@@ -1,7 +1,10 @@
 import React from 'react';
-import { Button, Tooltip, Slider, Col, Row } from 'antd';
+import { Button, Slider, Col, Row } from 'antd';
 
 import {MAX_FONT, MIN_FONT} from '../constants'
+import { IoMdColorFill } from 'react-icons/io';
+import { GrClear} from 'react-icons/gr';
+import { FaEraser, FaPaintBrush, FaUndo } from 'react-icons/fa';
 
 export default function Palette(props) {
 
@@ -35,35 +38,60 @@ export default function Palette(props) {
             '#6f3198',
             '#b5a5d5', ];
         
-        return  colors.map(color => <Col> <Button style={{ backgroundColor: color}} onClick={ () => { props.handleColor(color) } } > • </Button> </Col>)
+        return  colors.map(color => <Col> <Button className='colorButton' style={{ backgroundColor: color}} onClick={ () => { props.handleColor(color) } } > </Button> </Col>)
+    }
+
+    const marks = {
+        [MIN_FONT]: MIN_FONT,
+        [MAX_FONT]: MAX_FONT,
     }
 
     return (
         <div>
-            <Slider
-                ref={props.sizeRef}
-                min={MIN_FONT}
-                max={MAX_FONT}
-                onChange={props.onFontSlider}
-                defaultValue={10}
-                value={props.font}
-            />
             <Row>
-                <Col span={8}>
-                    <Button onClick={ () => props.handleFont(1)}> 1px </Button>
-                    <Button onClick={ () => props.handleFont(5)}> 5px </Button>
-                    <Button onClick={ () => props.handleFont(10)}> 10px </Button>
-                    <Button onClick={ () => props.handleFillColor(true)}> fill </Button>
-                    <Button onClick={ () => props.handleUndo()}> undo </Button>
-
-                    <Tooltip placement="top" title='or click "d"'>
-                        <Button onClick={ () => {props.handleColor('black'); props.handleFillColor(false)}}> pen </Button>
-                    </Tooltip>
-                    <Tooltip placement="top" title='or click "e"'>
-                        <Button onClick={ () => props.handleColor('eraser')}> eraser </Button>
-                    </Tooltip>                
+                <Col md={24} lg={12} style={{ padding: '5px' }}>
+                    <Row justify="space-around">
+                        <Col>
+                            <Button className='actionButton' onClick={ () => props.handleFont(2)}> small </Button>
+                        </Col>
+                        <Col>
+                            <Button className='actionButton' onClick={ () => props.handleFont(25)}> md </Button>
+                        </Col>
+                        <Col>
+                            <Button className='actionButton' onClick={ () => props.handleFont(60)}> lg  </Button>
+                        </Col>
+                        <Col>
+                            <Button className='actionButton' onClick={ () => props.handleUndo()}> <FaUndo /> </Button>
+                        </Col>
+                        <Col>
+                            <Button className='actionButton' onClick={ () => props.handleClear()}> <GrClear /> </Button>
+                        </Col>
+                        <Col>
+                            <Button className='actionButton' onClick={ () => props.handleFillColor(true)}> <IoMdColorFill /> </Button>
+                        </Col>
+                        <Col>
+                            <Button className='actionButton' onClick={ () => {props.handleColor('black'); props.handleFillColor(false)}}> <FaPaintBrush/> </Button>
+                        </Col>
+                        <Col>
+                            <Button className='actionButton' onClick={ () => props.handleColor('eraser')}> <FaEraser/> </Button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Slider
+                                className='sizeSlider'
+                                marks={marks}
+                                ref={props.sizeRef}
+                                min={MIN_FONT}
+                                max={MAX_FONT}
+                                onChange={props.onFontSlider}
+                                defaultValue={10}
+                                value={props.font}
+                            />
+                        </Col>
+                    </Row>
                 </Col>
-                <Col span={16}>
+                <Col md={24} lg={12} style={{ padding: '5px' }}>
                     <Row>
                         <ColorOptions />
                     </Row>

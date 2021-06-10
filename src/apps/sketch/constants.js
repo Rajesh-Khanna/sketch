@@ -71,6 +71,7 @@ export const BRUSH_TYPE = {
     FILL: 'FILL',
     SAVE: 'SAVE',
     UNDO: 'UNDO',
+    CLEAR: 'CLEAR',
 }
 
 export const POPUP_TIMEOUT = 4000;
