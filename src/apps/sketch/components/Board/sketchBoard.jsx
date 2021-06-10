@@ -151,6 +151,11 @@ export default function SketchBoard(props) {
         return { ...point, start, end };
     }
 
+    const clearScreen = () => {
+        contextRef.current.fillStyle = DEFAULT_BACKGROUND_COLOR;
+        contextRef.current.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    }
+
     useEffect(() => {
         brush.onmessage = (message) => {
             const brushMessage = JSON.parse(message.data);
@@ -176,6 +181,9 @@ export default function SketchBoard(props) {
                 case BRUSH_TYPE.UNDO:
                     retrieveHistory();
                     break;
+                case BRUSH_TYPE.CLEAR:
+                    clearScreen();
+                    break;
                 default:
                     console.log('unknown brush type');
             }
@@ -193,8 +201,7 @@ export default function SketchBoard(props) {
     }, [canvasRef]);
     
     useEffect(() => {
-        contextRef.current.fillStyle = DEFAULT_BACKGROUND_COLOR;
-        contextRef.current.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);  
+        clearScreen();
     }, [refresh]);
 
     const handleFont = (f) => {
@@ -205,7 +212,6 @@ export default function SketchBoard(props) {
 
     const onFontSlider = (e) => {
 		setFillColor(false);
-        console.log({e});
         setFont(e);
     }
 
@@ -225,6 +231,13 @@ export default function SketchBoard(props) {
     const handleUndo = () => {
         let brushObj = {
             type: BRUSH_TYPE.UNDO,
+        }
+        brush.send(JSON.stringify(brushObj));
+    }
+
+    const handleClear = () => {
+        let brushObj = {
+            type: BRUSH_TYPE.CLEAR,
         }
         brush.send(JSON.stringify(brushObj));
     }
@@ -260,7 +273,17 @@ export default function SketchBoard(props) {
             </center>
             { disable
                     ? <></>
-                    : <Palette handleFont={handleFont} handleColor={handleColor} sizeRef={sizeRef} onFontSlider={onFontSlider} color={color} font={font} handleFillColor={handleFillColor} handleUndo={handleUndo}/>
+                    : <Palette 
+                        handleFont={handleFont} 
+                        handleColor={handleColor} 
+                        sizeRef={sizeRef} 
+                        onFontSlider={onFontSlider} 
+                        color={color} 
+                        font={font} 
+                        handleFillColor={handleFillColor} 
+                        handleUndo={handleUndo} 
+                        handleClear={handleClear}
+                    />
             }
         </>
     );
