@@ -159,7 +159,6 @@ const Board = props => {
 
       background.current.onmessage = (message) => {
         console.log('message received');//
-        console.log(message.data);//
         let obj = JSON.parse(message.data);
         switch (obj.type) {
           case "INIT_TURN":
@@ -175,12 +174,9 @@ const Board = props => {
               setDisableChat(true);
 
               wordList.current = getNWords(3);
-              console.log(wordList.current);//
               setWordModalVisible(true);
               setTimeout(() => {
-                console.log('word choosing time out',word.current);
                 if(word.current === '') {
-                  console.log('word not choosen');
                   chooseWord(Math.floor(Math.random() * (3)));
                 }
               }, 10000);

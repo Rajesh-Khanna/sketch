@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Modal} from 'antd';
+import { Modal, Row, Col } from 'antd';
 
 import { APP_STATE, SKETCH_CHANNELS, firebaseConfig, HOME_PAGE_URL } from './constants';
 
@@ -113,8 +113,10 @@ const Sketch = () => {
         {(() => {
                 switch(appState) { 
                     case APP_STATE.HOST: 
+                        console.log('host state');
                         return <SketchHost handleHost = {handleHost}/> 
                     case APP_STATE.GATHERING:
+                        console.log('gathering state');
                         return <GatheringSpace 
                                     hostLobbyKey={hostLobbyKey} 
                                     userType={userType.current} 
@@ -127,6 +129,7 @@ const Sketch = () => {
                                     getMyInfo={getMyInfo}
                                 />
                     case APP_STATE.DISCONNECTED:
+                        console.log('disconnected state');
                         return (
                             <Modal className='blob' title={disconnectMessage.current} visible={isSessionDisconnected} closable={false} destroyOnClose={true} footer={null}>
                                 <center>
@@ -135,13 +138,37 @@ const Sketch = () => {
                             </Modal>
                         );
                     case APP_STATE.PASSIVE_BOARD:
+                        console.log('passive state');
                         return <></>
                     case APP_STATE.ACTIVE_BOARD:
+                        console.log('active state');
                         return <Board sketchChannel={dataChannel} getMyInfo={getMyInfo} getPlayerById={getPlayerById} allPlayers={allPlayers.current} />;
                     case APP_STATE.TERMINAL:
+                        console.log('terminal state');
                         return <></>;
                     default:
-                        <></>;
+                        console.log('default state');
+                        return (
+                            <Row justify='center'>
+                                <Col>
+                                <section id="global">
+
+                                    <div id="top" class="mask">
+                                    <div class="plane"></div>
+                                    </div>
+                                    <div id="middle" class="mask">
+                                    <div class="plane"></div>
+                                    </div>
+
+                                    <div id="bottom" class="mask">
+                                    <div class="plane"></div>
+                                    </div>
+                                    <p id="connectingText" ><i>CONNECTING...</i></p>
+
+                                    </section>
+                                </Col>
+                            </Row>
+                        );
                 }
             })()}
         </>);
