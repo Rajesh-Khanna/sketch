@@ -53,7 +53,6 @@ export default function SketchBoard(props) {
     }
 
     const draw = ({ start, end, thick, color }) => {
-        console.log({color, color2: getColor()});
         contextRef.current.strokeStyle = (color || getColor()) === 'eraser'? DEFAULT_BACKGROUND_COLOR : color || getColor();
         contextRef.current.lineWidth = thick || font;
         contextRef.current.beginPath();
@@ -114,7 +113,6 @@ export default function SketchBoard(props) {
     const send = (start, end) => {
         start = {x: start.x / canvasRef.current.width, y: start.y / canvasRef.current.height };
         end = {x: end.x / canvasRef.current.width, y: end.y / canvasRef.current.height };
-        console.log({color: getColor()});
         let brushObj = {
             type: BRUSH_TYPE.DRAW,
             data: { start, end, thick: font, color: getColor() },
@@ -159,7 +157,6 @@ export default function SketchBoard(props) {
     useEffect(() => {
         brush.onmessage = (message) => {
             const brushMessage = JSON.parse(message.data);
-            console.log('brush message:', message.data);
 
             switch(brushMessage.type) {
                 case BRUSH_TYPE.DRAW:

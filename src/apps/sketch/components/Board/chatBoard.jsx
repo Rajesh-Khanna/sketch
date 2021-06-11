@@ -20,7 +20,6 @@ const ChatBoard = props => {
 
     const handleKeyDown = (event) => {
         if (event.key === "Enter" && !disable) {
-            console.log(event.target.value);
             chat.send(JSON.stringify({type: CHAT_TYPE.GUESS, userId: getMyInfo().id, data: event.target.value}));
             event.target.value = '';
         }
