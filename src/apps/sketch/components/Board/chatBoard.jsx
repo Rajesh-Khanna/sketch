@@ -30,12 +30,12 @@ const ChatBoard = props => {
         const msg = messages[index].data
         if(messages[index].type === CHAT_TYPE.SOLVED){
             return(
-                <div style={style} color='green'><b>{name}: GUESSED CORRECTLY</b></div>
+                <div style={style}><b style={{ color:'green' }}>{name}: GUESSED CORRECTLY</b></div>
             )
         }
         else if(messages[index].type === CHAT_TYPE.CORRECT_WORD){
             return(
-                <div style={style} color='yellow'><b>The Correct word is "{msg}"</b></div>
+                <div style={style}><b style={{ color:'yellow' }}>The Correct word is "{msg}"</b></div>
             )
         }
         return(

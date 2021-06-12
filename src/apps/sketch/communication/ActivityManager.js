@@ -173,7 +173,7 @@ export class ActivityManager {
     }
 
     generateBlanks(word) {
-        return word.replace(/([a-zA-Z])/g, "_ ").slice(0, -1);
+        return word.replace(/([a-zA-Z])/g, "_");
     }
 
     checkIfEveryOneSolved() {

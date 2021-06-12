@@ -229,6 +229,32 @@ const Board = props => {
       }
     }
 
+  const ShowBlanks = () => {
+    if(blank.current.includes('_')){
+      const words = blank.current.split(' ');
+      const wordCount = words.map(w => w.length);
+      const word_cells = blank.current.split('').map((w) => {
+        if(w === ' ')
+          return <span className='emptyCell'> </span>;
+        return <span className='wordCell'> </span>
+      });
+  
+      return (
+        <Row align='middle' justify='center'>
+          <Col>
+            {word_cells}
+          </Col>
+          <Col>
+          <span style={{ paddingLeft: '10px' }}>
+            {wordCount.join('-')}
+          </span>
+          </Col>
+        </Row>
+      );
+    }
+    return blank.current;
+  }
+
   return (
     <>
       {contextHolder}
@@ -249,7 +275,7 @@ const Board = props => {
                           <Timer timer={timer} setTimer={setTimer} timerFlag={timerFlag}/>
                         </Col>
                         <Col span={20}>
-                          <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px'}}> {blank.current} </div>
+                          <div  style={{ fontWeight: 'bold', textAlign: 'center', padding: '4px'}}> <ShowBlanks /> </div>
                         </Col>
                       </Row>
                       : <></>
