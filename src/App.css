@@ -247,6 +247,22 @@ svg text {
     backface-visibility: hidden;
 }
 
+.emptyCell {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+
+.wordCell {
+    display: inline-block;
+    border: solid rgb(93, 147, 192);
+    border-radius: 3px;
+    margin: 1px;
+    width: 16px;
+    height: 20px;
+    background: white;
+}
+
 .animation {
     transition: all 0.3s ease;
 }
