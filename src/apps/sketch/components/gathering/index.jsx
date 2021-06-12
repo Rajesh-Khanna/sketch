@@ -111,16 +111,16 @@ const GatheringSpace = props => {
         <>
             <div id = 'waitingRoom'>
                 <Row justify='center'>
-                    <Col md={24} lg={16}>
+                    <Col sm={24} md={16}>
                         <Row wrap={false} justify='center' align='middle'>
                             <Col flex="none">
-                                <Card className='clearBg'> Share this link </Card>
+                                <div className='clearBg tbGg'> Share this link </div>
                             </Col>
                             <Col flex="auto">
-                                <Card  className='clearBg'>{shareURL}</Card>
+                                <div  className='clearBg tbGg'>{shareURL}</div>
                             </Col>
                             <Col flex="auto">
-                                <Button className='clearBg' onClick={()=>{navigator.clipboard.writeText(shareURL)}}>copy</Button>
+                                <Button className='clearBg tbGg' onClick={()=>{navigator.clipboard.writeText(shareURL)}}>copy</Button>
                             </Col>
                         </Row>
                             <Divider> Game Settings </Divider>
@@ -129,19 +129,19 @@ const GatheringSpace = props => {
                                 (
                                     <>
                                     <Row justify='center' gutter={[4, 4]}>
-                                        <Col md={24} lg={6}>
+                                        <Col xs={16} sm={16} md={16} lg={6}>
                                             Time per turn
                                         </Col>
-                                        <Col md={24} lg={4}>
-                                            <Input style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={10} type="number" />
+                                        <Col xs={8} sm={8} md={8} lg={4}>
+                                            <Input className='ipf' style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={10} type="number" />
                                         </Col>
                                     </Row>
                                     <Row justify='center' gutter={[4, 4]}>
-                                        <Col md={24} lg={6}>
+                                        <Col xs={16} sm={16} md={16} lg={6}>
                                             Rounds
                                         </Col>
-                                        <Col md={24} lg={4}>
-                                            <Input style={{ textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={3} type="number" /> <br />
+                                        <Col xs={8} sm={8} md={8} lg={4}>
+                                            <Input className='ipf' style={{ textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={3} type="number" /> <br />
                                         </Col>
                                     </Row>
                                     <Row justify='center'>

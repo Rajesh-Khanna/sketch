@@ -110,6 +110,24 @@ const Sketch = () => {
     }, []);
 
     return (<>
+        <Row justify='center'>
+            <Col>
+                <div class="patterns">
+                    <svg width="100%" height="100%">
+                        <defs>
+                            <style>
+                                @import url("https://fonts.googleapis.com/css?  family=Lora:400,400i,700,700i");
+                            </style>            
+                        </defs>
+                        <rect x="0" y="0" width="100%" height="100%" fill="url(#polka-dots)"> </rect>
+                        <text x="50%" y="60%"  text-anchor="middle"  >
+                            Sketch
+                        </text>
+                    </svg>
+                </div>
+                
+            </Col>
+        </Row>
         {(() => {
                 switch(appState) { 
                     case APP_STATE.HOST: 
