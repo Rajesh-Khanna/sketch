@@ -42,7 +42,9 @@ const GatheringSpace = props => {
                     setAllPlayers(messageObj.players);
                     break;
                 case META_TYPES.START_GAME:
-                    setAppState(APP_STATE.ACTIVE_BOARD);
+                    console.log('checking my info before starting game: ', getMyInfo());
+                    if (Object.keys(getMyInfo()).length !== 0)
+                        setAppState(APP_STATE.ACTIVE_BOARD);
                     break;
                 case META_TYPES.END_GAME:
                     setAppState(APP_STATE.GATHERING);
