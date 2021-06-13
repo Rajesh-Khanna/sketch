@@ -77,6 +77,7 @@ const Sketch = () => {
     const handleHost = (onLobbyKey) => {
         // write hosting logic
         const activityManager = new ActivityManager();
+        activityManager.setSignalEndOnStartGame(false);
         dataChannel.current = new rtcFirebase.RoomHost(onLobbyKey, firebaseConfig, SKETCH_CHANNELS, activityManager);
         userType.current = 'HOST';
         setAppState(APP_STATE.GATHERING);

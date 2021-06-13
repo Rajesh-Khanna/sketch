@@ -30,9 +30,19 @@ export class ActivityManager {
 
     playerPositions = {};
 
+    isSignalEndOnStartGame = true;
+
+    signalEnd;
+
+    isGameActive = false;
+
     // constructor() {
     //     setInterval( () => {if(this.publish) this.checkHeartBeat();}, 1000)
     // }
+
+    setSignalEndOnStartGame(flag) {
+        this.isSignalEndOnStartGame = flag;
+    }
 
     setGameSession(flag) {
         this.isGameSessionActive = flag;
@@ -168,6 +178,7 @@ export class ActivityManager {
             };
             setTimeout(() => {
                 this.publish({ data: JSON.stringify(engObj) }, 'meta');
+                this.isGameActive = false;
             }, POPUP_TIMEOUT);
         }
     }
@@ -251,8 +262,13 @@ export class ActivityManager {
         const data = JSON.parse(message.data);
         this.turnTime = data.turns;
         this.rounds = data.rounds;
+        this.isGameActive = true;
 
         this.initiateSession();
+
+        if(this.isSignalEndOnStartGame) {
+            this.signalEnd();
+        }
     }
 
     handleNewPlayer(message) {
@@ -263,6 +279,10 @@ export class ActivityManager {
             players: this.players.getAllPlayers(),
         }
         this.publish({ data: JSON.stringify(resp) }, getChannel(message));
+
+        // If player joins in between game
+        if (this.isGameActive)
+            this.publish({ data: JSON.stringify({type: META_TYPES.START_GAME, turns: this.turnTime, rounds: this.rounds }) }, 'meta');
     }
 
     checkHeartBeat() {
