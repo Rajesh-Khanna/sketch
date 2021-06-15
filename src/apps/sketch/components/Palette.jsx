@@ -1,10 +1,9 @@
 import React from 'react';
-import { Button, Slider, Col, Row } from 'antd';
+import { Button, Slider, Col, Row, Tooltip } from 'antd';
 
 import {MAX_FONT, MIN_FONT} from '../constants'
 import { IoMdColorFill } from 'react-icons/io';
-import { GrClear} from 'react-icons/gr';
-import { FaEraser, FaPaintBrush, FaUndo } from 'react-icons/fa';
+import { FaEraser, FaPaintBrush, FaUndo, FaTrashAlt } from 'react-icons/fa';
 
 export default function Palette(props) {
 
@@ -52,28 +51,44 @@ export default function Palette(props) {
                 <Col md={24} lg={12} style={{ padding: '5px' }}>
                     <Row justify="space-around">
                         <Col>
-                            <Button className='actionButton' onClick={ () => props.handleFont(2)}> small </Button>
+                            <Tooltip title = 'small'>
+                                <Button className='actionButton' onClick={ () => props.handleFont(2)}> small </Button>
+                            </Tooltip>
                         </Col>
                         <Col>
-                            <Button className='actionButton' onClick={ () => props.handleFont(25)}> md </Button>
+                            <Tooltip title = 'medium'>
+                                <Button className='actionButton' onClick={ () => props.handleFont(25)}> md </Button>
+                            </Tooltip>
                         </Col>
                         <Col>
-                            <Button className='actionButton' onClick={ () => props.handleFont(60)}> lg  </Button>
+                            <Tooltip title = 'large'>
+                                <Button className='actionButton' onClick={ () => props.handleFont(60)}> lg  </Button>
+                            </Tooltip>
                         </Col>
                         <Col>
-                            <Button className='actionButton' onClick={ () => props.handleUndo()}> <FaUndo /> </Button>
+                            <Tooltip title = 'undo'>
+                                <Button className='actionButton' onClick={ () => props.handleUndo()}> <FaUndo /> </Button>
+                            </Tooltip>
                         </Col>
                         <Col>
-                            <Button className='actionButton' onClick={ () => props.handleClear()}> <GrClear /> </Button>
+                            <Tooltip title = 'clear screen'>
+                                <Button className='actionButton' onClick={ () => props.handleClear()}> <FaTrashAlt /> </Button>
+                            </Tooltip>
                         </Col>
                         <Col>
-                            <Button className='actionButton' onClick={ () => props.handleFillColor(true)}> <IoMdColorFill /> </Button>
+                            <Tooltip title = 'color Bucket'>
+                                <Button className='actionButton' onClick={ () => props.handleFillColor(true)}> <IoMdColorFill /> </Button>
+                            </Tooltip>
                         </Col>
                         <Col>
-                            <Button className='actionButton' onClick={ () => {props.handleColor('black'); props.handleFillColor(false)}}> <FaPaintBrush/> </Button>
+                            <Tooltip title = 'brush'>
+                                <Button className='actionButton' onClick={ () => {props.handleColor('black'); props.handleFillColor(false)}}> <FaPaintBrush/> </Button>
+                            </Tooltip>
                         </Col>
                         <Col>
-                            <Button className='actionButton' onClick={ () => props.handleColor('eraser')}> <FaEraser/> </Button>
+                            <Tooltip title = 'eraser'>
+                                <Button className='actionButton' onClick={ () => props.handleColor('eraser')}> <FaEraser/> </Button>
+                            </Tooltip>
                         </Col>
                     </Row>
                     <Row>

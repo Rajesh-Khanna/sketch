@@ -109,6 +109,7 @@ svg text {
 .halfHeight {
     height: 50%;
     overflow-y: scroll;
+    background: white;
 }
 
 .clearBg {

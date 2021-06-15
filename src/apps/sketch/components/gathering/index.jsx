@@ -8,7 +8,7 @@ const GatheringSpace = props => {
     const [players, setPlayers] = useState([]);
     const [isSessionDisconnected, setSessionDisconnect] = useState(false);
     const [isNameModalVisible, setNameModalVisible ] = useState(false);
-    const [nameValue, setNameValue ] = useState('player');
+    const [nameValue, setNameValue ] = useState('');
     // eslint-disable-next-line no-unused-vars
     const { userType, hostLobbyKey = '', dataChannel, setAppState, setMyInfo, setAllPlayers, myInfo, allPlayers, getMyInfo } = props;
     const [ shareURL, setShareURL] = useState('');
@@ -26,6 +26,7 @@ const GatheringSpace = props => {
     }
 
     useEffect(() => {
+        setNameValue(localStorage.getItem('sketchName'));
         console.log({hostLobbyKey})
         setShareURL(window.location.protocol + "//" + window.location.host + window.location.pathname + `?k=${hostLobbyKey}`);
         metaChannel.current = dataChannel.current.getChannel('meta');
@@ -91,6 +92,7 @@ const GatheringSpace = props => {
             const id = Math.random().toString(36).slice(-6);
             metaChannel.current.send(JSON.stringify({ type: META_TYPES.NEW_PLAYER, userId: id, name: nameValue }));
             setMyInfo(id,nameValue);
+            localStorage.setItem('sketchName', nameValue);
             setNameModalVisible(false);
         }
     }
@@ -154,7 +156,7 @@ const GatheringSpace = props => {
                                             Time per turn
                                         </Col>
                                         <Col xs={8} sm={8} md={8} lg={4}>
-                                            <Input className='ipf' style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={10} type="number" />
+                                            <Input min={30} className='ipf' style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={10} type="number" />
                                         </Col>
                                     </Row>
                                     <Row justify='center' gutter={[4, 4]}>
@@ -162,7 +164,7 @@ const GatheringSpace = props => {
                                             Rounds
                                         </Col>
                                         <Col xs={8} sm={8} md={8} lg={4}>
-                                            <Input className='ipf' style={{ textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={3} type="number" /> <br />
+                                            <Input min={1} className='ipf' style={{ textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={3} type="number" /> <br />
                                         </Col>
                                     </Row>
                                     <Row justify='center'>
@@ -205,7 +207,7 @@ const GatheringSpace = props => {
             </div>
             <Modal className='blob' title="Name" visible={isNameModalVisible} closable={false} destroyOnClose={true} footer={null}>
                 Type your name and press ENTER <br/>
-                <Input autoFocus style={{ margin: '4px' }} onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
+                <Input autoFocus style={{ margin: '4px' }} placeholder='name' onChange={e => setNameValue(e.target.value)} onKeyDown={onTextChange} value={nameValue}/>
                 <br />
                 <center>
                     <Button type='primary' onClick={sumbitName}> Submit </Button>
