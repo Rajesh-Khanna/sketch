@@ -1,5 +1,5 @@
 import { Players } from './Players';
-import { META_TYPES, POPUP_TIMEOUT } from '../constants';
+import { META_TYPES, POPUP_TIMEOUT, SMALL_TIMEOUT } from '../constants';
 import { getChannel } from '../utils';
 import { CHAT_TYPE } from './../constants';
 
@@ -125,7 +125,12 @@ export class ActivityManager {
         this.publish({ data: JSON.stringify(endObj) }, 'background');
         this.resetSessionScores();
 
-        this.initiateSession();
+        /** timeout is added so that users get the time to
+         * check the scores
+        */
+        setTimeout(() => {
+            this.initiateSession();
+        }, POPUP_TIMEOUT);
     }
 
     initiateSession() {
@@ -147,10 +152,11 @@ export class ActivityManager {
                 this.initiateSession();
                 return;
             }
-            /** timeout is added so that users get the time to check the scores
-             * Note: Initially(when the page loads for the first time), it might happen that host sends the message
+
+            /** Note: Initially(when the page loads for the first time), it might happen that host sends the message 
              * before guests start listening. Adding time out also mitigates this issue.
-             */
+             * If a timeout of 1 sec is not solving the issue, good to implement a ack reply check
+            */
             setTimeout(() => {
                 console.log('message sent'); //
                 let initObj = {
@@ -161,7 +167,8 @@ export class ActivityManager {
                     "rounds": this.rounds
                 };
                 this.publish({ data: JSON.stringify(initObj) }, 'background');
-            }, POPUP_TIMEOUT);
+            }, SMALL_TIMEOUT);
+
             this.playerIds.pop();
         } else {
             // Game over logic

@@ -217,6 +217,7 @@ const Board = props => {
           case "WINNER":
             currPlayer.current = '';
             setScores(getSortedScores(obj.scores));
+            setIsScoreVisible(false);
             setIsGameOver(true);
             break;
 

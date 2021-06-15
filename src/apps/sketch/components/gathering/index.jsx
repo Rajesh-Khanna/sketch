@@ -30,6 +30,13 @@ const GatheringSpace = props => {
         setShareURL(window.location.protocol + "//" + window.location.host + window.location.pathname + `?k=${hostLobbyKey}`);
         metaChannel.current = dataChannel.current.getChannel('meta');
 
+        // fetching name from local storage
+        if (!myInfo.id) {
+            let storedName = localStorage.getItem("name");
+            if (storedName !== null && storedName.length > 0)
+                setNameValue(storedName);
+        }
+
         handleSessionDisconnected();
 
         metaChannel.current.onmessage = (message) => {
@@ -90,6 +97,7 @@ const GatheringSpace = props => {
         if(nameValue.length > 0) {
             const id = Math.random().toString(36).slice(-6);
             metaChannel.current.send(JSON.stringify({ type: META_TYPES.NEW_PLAYER, userId: id, name: nameValue }));
+            localStorage.setItem("name", nameValue);
             setMyInfo(id,nameValue);
             setNameModalVisible(false);
         }
