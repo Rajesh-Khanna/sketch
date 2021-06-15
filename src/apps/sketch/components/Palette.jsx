@@ -71,7 +71,7 @@ export default function Palette(props) {
                             </Tooltip>
                         </Col>
                         <Col>
-                            <Tooltip title = 'clear screen'>
+                            <Tooltip title = 'clear screen' color='red'>
                                 <Button className='actionButton' onClick={ () => props.handleClear()}> <FaTrashAlt /> </Button>
                             </Tooltip>
                         </Col>
