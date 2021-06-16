@@ -1,5 +1,5 @@
 import { Players } from './Players';
-import { META_TYPES, POPUP_TIMEOUT } from '../constants';
+import { META_TYPES, POPUP_TIMEOUT, SMALL_TIMEOUT } from '../constants';
 import { getChannel } from '../utils';
 import { CHAT_TYPE } from './../constants';
 
@@ -125,7 +125,9 @@ export class ActivityManager {
         this.publish({ data: JSON.stringify(endObj) }, 'background');
         this.resetSessionScores();
 
-        this.initiateSession();
+        setTimeout(() => {
+            this.initiateSession();
+        }, POPUP_TIMEOUT);
     }
 
     initiateSession() {
@@ -161,7 +163,7 @@ export class ActivityManager {
                     "rounds": this.rounds
                 };
                 this.publish({ data: JSON.stringify(initObj) }, 'background');
-            }, POPUP_TIMEOUT);
+            }, SMALL_TIMEOUT);
             this.playerIds.pop();
         } else {
             // Game over logic
