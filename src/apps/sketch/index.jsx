@@ -91,7 +91,6 @@ const Sketch = () => {
             (e || window.event).returnValue = confirmationMessage; //Gecko + IE
             return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
         });
-        // window.beforeunload = ;
 
         const urlParams = new URLSearchParams(window.location.search);
         const lobbyKey = urlParams.get('k');
