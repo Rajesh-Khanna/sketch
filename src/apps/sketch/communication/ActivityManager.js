@@ -36,6 +36,8 @@ export class ActivityManager {
 
     isGameActive = false;
 
+    artist;
+
     // constructor() {
     //     setInterval( () => {if(this.publish) this.checkHeartBeat();}, 1000)
     // }
@@ -106,6 +108,9 @@ export class ActivityManager {
     handleTimeOut() {
         console.log('hello'); //
         this.setGameSession(false);
+
+        this.players.calculateScores(this.artist);
+
         console.log(this.players.getScore());
 
         this.sessionBrushQueue['brush'] = [];
@@ -154,6 +159,7 @@ export class ActivityManager {
              * before guests start listening. Adding time out also mitigates this issue.
              */
             setTimeout(() => {
+                this.artist = userId;
                 console.log('message sent'); //
                 let initObj = {
                     "type": "INIT_TURN",
@@ -231,7 +237,7 @@ export class ActivityManager {
             return;
 
         if ((data.data.toLowerCase() === this.currWord.toLowerCase()) && (this.isGameSessionActive)) {
-            this.players.getUserById(data.userId).addScore(1);
+            this.players.getUserById(data.userId).addGuessedTime(data.time/this.turnTime);
             const resp = {
                 userId: data.userId,
                 type: CHAT_TYPE.SOLVED,

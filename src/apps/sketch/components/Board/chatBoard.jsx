@@ -6,7 +6,7 @@ import { CHAT_TYPE } from './../../constants';
   
 const ChatBoard = props => {
 
-    const { chat, getMyInfo, getPlayerById, disable } = props;
+    const { chat, getMyInfo, getPlayerById, disable, timer } = props;
     const [messages, setMessage] = useState([]);
     useEffect(() => {
         chat.onmessage = (message) => {
@@ -20,7 +20,7 @@ const ChatBoard = props => {
 
     const handleKeyDown = (event) => {
         if (event.key === "Enter" && !disable) {
-            chat.send(JSON.stringify({type: CHAT_TYPE.GUESS, userId: getMyInfo().id, data: event.target.value}));
+            chat.send(JSON.stringify({type: CHAT_TYPE.GUESS, userId: getMyInfo().id, time: timer, data: event.target.value}));
             event.target.value = '';
         }
     };
@@ -35,7 +35,7 @@ const ChatBoard = props => {
         }
         else if(messages[index].type === CHAT_TYPE.CORRECT_WORD){
             return(
-                <div style={style}><b style={{ color:'yellow' }}>The Correct word is "{msg}"</b></div>
+                <div style={style}><b style={{ color:'darkorange' }}>The Correct word is "{msg}"</b></div>
             )
         }
         return(

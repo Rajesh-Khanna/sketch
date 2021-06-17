@@ -78,6 +78,7 @@ const Board = props => {
     const [isGameOver, setIsGameOver] = useState(false);
     const [roundNum, setRoundNum] = useState(1);
     const currPlayer = useRef('');
+    const wordTimeout = useRef();
 
 
     const [timer, setTimer] = useState(0);
@@ -126,6 +127,7 @@ const Board = props => {
     }
 
     const chooseWord = (index) => {
+      clearTimeout(wordTimeout.current);
       console.log(wordList.current[index]);//
       word.current = wordList.current[index];
       let wordObj = {
@@ -175,7 +177,7 @@ const Board = props => {
 
               wordList.current = getNWords(3);
               setWordModalVisible(true);
-              setTimeout(() => {
+              wordTimeout.current = setTimeout(() => {
                 if(word.current === '') {
                   chooseWord(Math.floor(Math.random() * (3)));
                 }
@@ -291,7 +293,7 @@ const Board = props => {
         <Col lg={4} xs={24}>
           {
             chat
-              ? <ChatBoard chat = {chat} getPlayerById={getPlayerById} getMyInfo={getMyInfo} disable={disableChat}/>
+              ? <ChatBoard chat = {chat} getPlayerById={getPlayerById} getMyInfo={getMyInfo} disable={disableChat} timer={timer}/>
               : <></>
           }
         </Col>
