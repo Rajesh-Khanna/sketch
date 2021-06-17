@@ -77,7 +77,7 @@ export const BRUSH_TYPE = {
 export const POPUP_TIMEOUT = 4000;
 export const SMALL_TIMEOUT = 1000;
 
-export const TURN_TIME = 80;
+export const TURN_TIME = 10;
 export const ROUNDS = 3;
 
 export const SKETCH_CHANNELS = [
