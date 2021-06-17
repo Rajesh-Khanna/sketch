@@ -1,5 +1,5 @@
 import { Players } from './Players';
-import { META_TYPES, POPUP_TIMEOUT, SMALL_TIMEOUT } from '../constants';
+import { META_TYPES, POPUP_TIMEOUT, SMALL_TIMEOUT, TURN_TIME, ROUNDS } from '../constants';
 import { getChannel } from '../utils';
 import { CHAT_TYPE } from './../constants';
 
@@ -18,9 +18,9 @@ export class ActivityManager {
 
     isGameSessionActive = false;
 
-    turnTime = 10;
+    turnTime = TURN_TIME;
 
-    rounds = 3;
+    rounds = ROUNDS;
 
     handleTimeOutVariable;
 
@@ -252,6 +252,14 @@ export class ActivityManager {
             case META_TYPES.ALIVE:
                 this.checkLiveness(message);
                 break;
+            case META_TYPES.TURN_TIME:
+                this.turnTime = JSON.parse(message.data).value;
+                this.publish(message);
+                break;
+            case META_TYPES.ROUND_NUM:
+                this.rounds = JSON.parse(message.data).value;
+                this.publish(message);
+                break;
             case META_TYPES.START_GAME:
                 this.handleStartGame(message);
                 // eslint-disable-next-line no-fallthrough
@@ -281,6 +289,9 @@ export class ActivityManager {
             players: this.players.getAllPlayers(),
         }
         this.publish({ data: JSON.stringify(resp) }, getChannel(message));
+
+        this.publish({ data: JSON.stringify({type: META_TYPES.TURN_TIME, value: this.turnTime}) }, getChannel(message));
+        this.publish({ data: JSON.stringify({type: META_TYPES.ROUND_NUM, value: this.rounds}) }, getChannel(message));
 
         // If player joins in between game
         if (this.isGameActive)

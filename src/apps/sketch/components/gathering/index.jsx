@@ -156,7 +156,7 @@ const GatheringSpace = props => {
                                             Time per turn
                                         </Col>
                                         <Col xs={8} sm={8} md={8} lg={4}>
-                                            <Input min={30} className='ipf' style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={10} type="number" />
+                                            <Input min={30} className='ipf' style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={gameMeta.turns} type="number" />
                                         </Col>
                                     </Row>
                                     <Row justify='center' gutter={[4, 4]}>
@@ -164,7 +164,7 @@ const GatheringSpace = props => {
                                             Rounds
                                         </Col>
                                         <Col xs={8} sm={8} md={8} lg={4}>
-                                            <Input min={1} className='ipf' style={{ textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={3} type="number" /> <br />
+                                            <Input min={1} className='ipf' style={{ textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={gameMeta.rounds} type="number" /> <br />
                                         </Col>
                                     </Row>
                                     <Row justify='center'>
