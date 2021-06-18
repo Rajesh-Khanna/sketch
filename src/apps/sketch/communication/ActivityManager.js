@@ -320,8 +320,14 @@ export class ActivityManager {
         this.publish({ data: JSON.stringify({type: META_TYPES.ROUND_NUM, value: this.rounds}) }, getChannel(message));
 
         // If player joins in between game
-        if (this.isGameActive)
+        if (this.isGameActive) {
             this.publish({ data: JSON.stringify({type: META_TYPES.START_GAME, turns: this.turnTime, rounds: this.rounds }) }, 'meta');
+            setTimeout(() => {
+                this.publish({ data: JSON.stringify({type: "SCORE", scores: this.players.getScore(), artist: this.artist }) }, 'background');
+                this.publish({ data: JSON.stringify({ type: CHAT_TYPE.NEW_PLAYER, userId: data.userId, data:'' }) }, 'chat');
+            }, SMALL_TIMEOUT);
+        }
+
     }
 
     checkHeartBeat() {
@@ -339,7 +345,7 @@ export class ActivityManager {
                 if (!this.alivePlayers.includes(allPlayers[i].userId)) {
                     console.log(allPlayers[i].userId);
                     this.players.deletePlayer(allPlayers[i].userId);
-                    this.publish({ data: JSON.stringify({ type: 'DISCONNECTED', id: allPlayers[i].userId }) }, 'background');
+                    this.publish({ data: JSON.stringify({ type: 'DISCONNECTED', id: allPlayers[i].userId, scores: this.players.getScore() }) }, 'background');
                     console.log(this.players.getAllPlayers());
                 }
             }

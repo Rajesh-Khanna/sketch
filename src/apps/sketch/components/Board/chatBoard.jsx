@@ -40,6 +40,11 @@ const ChatBoard = props => {
                 <div style={style}><b style={{ color:'darkorange' }}>The Correct word is "{msg}"</b></div>
             )
         }
+        else if(messages[index].type === CHAT_TYPE.NEW_PLAYER) {
+            return(
+                <div style={style}><b style={{ color:'green' }}>{name} JOINED</b></div>
+            )
+        }
         else if(isDisplayCloseness) {
             return (
                     <div style={style}><b>{name}: </b>{msg} <b style={{ color:'orange' }}>(is close!)</b></div>
