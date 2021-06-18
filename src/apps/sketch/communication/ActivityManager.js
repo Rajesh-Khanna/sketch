@@ -209,6 +209,21 @@ export class ActivityManager {
         }
     }
 
+    isGuessedWordClose(guessedWord, originalWord) {
+        if (Math.abs(guessedWord.length - originalWord.length) > 1) {
+            return false;
+        }
+        let count = 0;
+        if (guessedWord.length !== originalWord.length) count = 1;
+        for (let i = 0; i < Math.min(guessedWord.length, originalWord.length); i++) {
+            if (guessedWord[i] !== originalWord[i]) {
+                count++;
+            }
+            if (count > 1) return false;
+        }
+        return true;
+    }
+
     handleBackGround(message) {
         const data = JSON.parse(message.data);
 
@@ -245,7 +260,12 @@ export class ActivityManager {
             this.publish({ data: JSON.stringify(resp) }, getChannel(message));
             this.checkIfEveryOneSolved();
         } else {
-            this.publish(message);
+            if(this.isGuessedWordClose(data.data.toLowerCase(), this.currWord.toLowerCase())) {
+                data.isClose = true;
+            } else {
+                data.isClose = false;
+            }
+            this.publish({data: JSON.stringify(data)}, getChannel(message))
         }
     }
 

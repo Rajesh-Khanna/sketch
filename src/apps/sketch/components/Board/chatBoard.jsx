@@ -28,6 +28,8 @@ const ChatBoard = props => {
     const MessageRow = ({ index, style }) => {
         const name = getPlayerById(messages[index].userId).name;
         const msg = messages[index].data
+        const isDisplayCloseness = messages[index].isClose & (getMyInfo().id === messages[index].userId)
+
         if(messages[index].type === CHAT_TYPE.SOLVED){
             return(
                 <div style={style}><b style={{ color:'green' }}>{name}: GUESSED CORRECTLY</b></div>
@@ -36,6 +38,11 @@ const ChatBoard = props => {
         else if(messages[index].type === CHAT_TYPE.CORRECT_WORD){
             return(
                 <div style={style}><b style={{ color:'darkorange' }}>The Correct word is "{msg}"</b></div>
+            )
+        }
+        else if(isDisplayCloseness) {
+            return (
+                    <div style={style}><b>{name}: </b>{msg} <b style={{ color:'orange' }}>(is close!)</b></div>
             )
         }
         return(
