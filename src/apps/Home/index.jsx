@@ -57,8 +57,11 @@ const Home = () => {
                         </h3>
                         <Divider />
                         <p>
-                            <h3> Something </h3>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. At itaque, harum aperiam numquam nam vitae ratione nesciunt quibusdam error, quis ipsa fugit possimus praesentium natus quae dicta officia? Esse, excepturi!
+                            <h3> Hi </h3>
+                            This is an online game where you guess what other people are drawing. One can easily understand how to play the game even as a beginner. <br />
+                            Since this is peer to peer game, To get the best experience of the game it's always good that hosted person should have a better internet connectivity and a well equipped device.
+                            <br />
+                            If you enjoyed our game, Buy me coffee here , though I am more of a tea guy.
                             <br />
                         </p>
                     </Modal>

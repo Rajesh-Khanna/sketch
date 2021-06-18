@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect} from 'react';
-import { Input, Button, Card, Row, Col, Modal, Divider } from 'antd';
+import { Input, InputNumber, Button, Card, Row, Col, Modal, Divider } from 'antd';
 import { APP_STATE, META_TYPES, ROUNDS, TURN_TIME, HOME_PAGE_URL } from '../../constants';
 import { gridStyle } from '../../style';
 
@@ -18,7 +18,16 @@ const GatheringSpace = props => {
 
 
     const startBoard = () => {
-        metaChannel.current.send(JSON.stringify({type: META_TYPES.START_GAME, turns: turns.current.state.value, rounds: rounds.current.state.value }));
+        if(turns.current.state.value < 30){
+            alert('Each turn should be atleast 30 secs');
+        }
+        if(rounds.current.state.value < 1){
+            alert('Minimum 1 round should be selected');
+        }
+        if(parseInt(turns.current.state.value) && parseInt(rounds.current.state.value))
+            metaChannel.current.send(JSON.stringify({type: META_TYPES.START_GAME, turns: turns.current.state.value, rounds: rounds.current.state.value }));
+        else
+            alert("Please check turns and rounds value");
     }
 
     const handleSessionDisconnected = () => {
@@ -156,7 +165,7 @@ const GatheringSpace = props => {
                                             Time per turn
                                         </Col>
                                         <Col xs={8} sm={8} md={8} lg={4}>
-                                            <Input min={30} className='ipf' style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={gameMeta.turns} type="number" />
+                                            <InputNumber min={30} className='ipf' style={{ textAlign: 'center' }} ref={turns} onChange={updateTurnTime} defaultValue={gameMeta.turns} type="number" />
                                         </Col>
                                     </Row>
                                     <Row justify='center' gutter={[4, 4]}>
@@ -164,7 +173,7 @@ const GatheringSpace = props => {
                                             Rounds
                                         </Col>
                                         <Col xs={8} sm={8} md={8} lg={4}>
-                                            <Input min={1} className='ipf' style={{ textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={gameMeta.rounds} type="number" /> <br />
+                                            <InputNumber min={1} className='ipf' style={{ textAlign: 'center' }} ref={rounds} onChange={updateRoundNum} defaultValue={gameMeta.rounds} type="number" /> <br />
                                         </Col>
                                     </Row>
                                     <Row justify='center'>
