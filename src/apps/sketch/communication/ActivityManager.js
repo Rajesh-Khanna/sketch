@@ -26,6 +26,8 @@ export class ActivityManager {
 
     alivePlayers;
 
+    sessionDrawingQueue = [];
+
     sessionBrushQueue = {};
 
     playerPositions = {};
@@ -67,6 +69,8 @@ export class ActivityManager {
                 this.handleBackGround(message);
                 break;
             case 'brush':
+                this.handleBrush(message);
+                break;
             default:
                 this.publish(message);
         }
@@ -110,10 +114,12 @@ export class ActivityManager {
         this.setGameSession(false);
 
         this.players.calculateScores(this.artist);
+        this.artist = '';
 
         console.log(this.players.getScore());
 
         this.sessionBrushQueue['brush'] = [];
+        this.sessionDrawingQueue = [];
 
         const correctWord = {
             "type": "CORRECT_WORD",
@@ -160,6 +166,7 @@ export class ActivityManager {
              */
             setTimeout(() => {
                 this.artist = userId;
+                this.sessionDrawingQueue = [];
                 console.log('message sent'); //
                 let initObj = {
                     "type": "INIT_TURN",
@@ -222,6 +229,11 @@ export class ActivityManager {
             if (count > 1) return false;
         }
         return true;
+    }
+
+    handleBrush(message) {
+        this.sessionDrawingQueue.push(message);
+        this.publish(message);
     }
 
     handleBackGround(message) {
@@ -325,6 +337,9 @@ export class ActivityManager {
             setTimeout(() => {
                 this.publish({ data: JSON.stringify({type: "SCORE", scores: this.players.getScore(), artist: this.artist }) }, 'background');
                 this.publish({ data: JSON.stringify({ type: CHAT_TYPE.NEW_PLAYER, userId: data.userId, data:'' }) }, 'chat');
+                for (var i = 0; i < this.sessionDrawingQueue.length; i++) {
+                    this.publish(this.sessionDrawingQueue[i]);
+                }
             }, SMALL_TIMEOUT);
         }
 
@@ -346,6 +361,11 @@ export class ActivityManager {
                     console.log(allPlayers[i].userId);
                     this.players.deletePlayer(allPlayers[i].userId);
                     this.publish({ data: JSON.stringify({ type: 'DISCONNECTED', id: allPlayers[i].userId, scores: this.players.getScore() }) }, 'background');
+                    if (this.artist === allPlayers[i].userId) {
+                        clearTimeout(this.handleTimeOutVariable);
+                        this.resetSessionScores();
+                        this.handleTimeOut();
+                    }
                     console.log(this.players.getAllPlayers());
                 }
             }
