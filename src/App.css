@@ -107,7 +107,7 @@ svg text {
 }
 
 .halfHeight {
-    height: 50%;
+    height: 100%;
     overflow-y: scroll;
     background: white;
 }
@@ -174,9 +174,17 @@ svg text {
     text-align: center;
 }
 
+.introText {
+    background: white;
+    border-radius: 25px;
+    padding: 25px;
+    font-family: roboto;
+}
+
 .room-buttons {
     display: block;
     background-color: rgb(255, 78, 240);
+    border: none;
     color: white;
     border-radius: 25px;
     margin: 15px;

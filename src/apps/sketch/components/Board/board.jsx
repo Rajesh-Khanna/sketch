@@ -295,7 +295,13 @@ const Board = props => {
                       : <></>
                   }
                   <div style={{ position: 'relative' }}>
-                    <SketchBoard ref = {sketchBoardRef} sketchBoardRef={sketchBoardRef} brush = {brush} disable={disableBoard} refresh={refreshBoard}/>
+                    <SketchBoard  
+                      ref = {sketchBoardRef} 
+                      sketchBoardRef={sketchBoardRef} 
+                      brush = {brush} 
+                      disable={disableBoard} 
+                      refresh={refreshBoard}
+                    />
                   </div>
                 </>
               : <></>

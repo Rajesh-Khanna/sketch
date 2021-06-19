@@ -239,25 +239,25 @@ export default function SketchBoard(props) {
         brush.send(JSON.stringify(brushObj));
     }
 
-    var circleStyle = {
-        display:"inline-block",
-        backgroundColor: color === 'eraser'? 'white' : color,
-        borderRadius: color === 'eraser'? '0%' : "50%",
-        borderStyle: color === 'eraser'? 'solid': 'none',
-        width: font,
-        height: font,
-    };
+    // var circleStyle = {
+    //     display:"inline-block",
+    //     backgroundColor: color === 'eraser'? 'white' : color,
+    //     borderRadius: color === 'eraser'? '0%' : "50%",
+    //     borderStyle: color === 'eraser'? 'solid': 'none',
+    //     width: font,
+    //     height: font,
+    // };
 
     return (
         <>
-            { disable
+            {/* { disable
                 ? <></>
                 :<div bordered style={{ width: font, height: font, marginLeft: '10px' , textAlign:'center', position: 'absolute'}}>
                     <div style={circleStyle}>
                     </div>
                 </div>
-            }
-            <center>
+            } */}
+            <center style={{ background: color, paddingTop: '5px' }}>
                 <canvas
                     onMouseDown={startDrawing}
                     onMouseUp={finishDrawing}
@@ -266,6 +266,7 @@ export default function SketchBoard(props) {
                     onTouchEnd={finishDrawing}
                     onTouchMove={mouseMove}
                     ref={canvasRef}
+                    style={{ border: 'solid 2px', borderRadius: '10px' }}
                 />
             </center>
             { disable
