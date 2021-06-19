@@ -86,6 +86,7 @@ export class Players {
      *  considering avg as 60% so that the cubic equation will be strictly increasing with time (avg => at 60% of time, score will be half(200))
     */
     calculateScores(artist) {
+        console.log(artist);
         let p = Object.values(this.players);
         let i = 0, count = 0;
 
@@ -124,6 +125,8 @@ export class Players {
         }
 
         //Artist score
+
+        if(!artist) return;
         if (count === 0) {
             p[artistIndex].addScore(0);
         } else {
@@ -131,6 +134,7 @@ export class Players {
             relativeScore = scoreSum/(4*(p.length-1));
 
             score = Math.min(Math.round(absoluteScore+relativeScore), 500);
+            console.log(score);
             p[artistIndex].addScore(score);
         }
     }
