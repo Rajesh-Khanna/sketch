@@ -1,18 +1,24 @@
 const getRGB = (canvasRef, data, x, y) => {
-    const index = y * (canvasRef.current.width * 4) + x * 4;
-    const rgba = `rgba(${data[index]}, ${data[index+1]}, ${data[index+2]}, ${data[index+3] / 255})`;
-    return rgba;
+    if (data) {
+        const index = y * (canvasRef.current.width * 4) + x * 4;
+        const rgba = `rgba(${data[index]}, ${data[index+1]}, ${data[index+2]}, ${data[index+3] / 255})`;
+        return rgba;
+    } else {
+        return 'rgba(255,255,255,1)';
+    }
 }
 
 const setRGB = (canvasRef, data, targetRGBA, x, y) => {
-    const index = y * (canvasRef.current.width * 4) + x * 4;
+    if (data && targetRGBA) {
+        const index = y * (canvasRef.current.width * 4) + x * 4;
 
-    // console.log('previous colors: ',data[index],data[index+1],data[index+2],data[index+3]);
-    data[index] = targetRGBA[0];
-    data[index + 1] = targetRGBA[1];
-    data[index + 2] = targetRGBA[2];
-    data[index + 3] = targetRGBA[3];
-    // console.log('after colors: ',data[index],data[index+1],data[index+2],data[index+3]);
+        // console.log('previous colors: ',data[index],data[index+1],data[index+2],data[index+3]);
+        data[index] = targetRGBA[0];
+        data[index + 1] = targetRGBA[1];
+        data[index + 2] = targetRGBA[2];
+        data[index + 3] = targetRGBA[3];
+        // console.log('after colors: ',data[index],data[index+1],data[index+2],data[index+3]);    
+    }
 }
 
 const hexToRGBA = (hex) => {

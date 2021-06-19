@@ -18,13 +18,12 @@ const GatheringSpace = props => {
 
 
     const startBoard = () => {
+        console.log(turns.current.state.value);
         if(turns.current.state.value < 30){
             alert('Each turn should be atleast 30 secs');
-        }
-        if(rounds.current.state.value < 1){
+        } else if(rounds.current.state.value < 1){
             alert('Minimum 1 round should be selected');
-        }
-        if(parseInt(turns.current.state.value) && parseInt(rounds.current.state.value))
+        } else if(parseInt(turns.current.state.value) && parseInt(rounds.current.state.value))
             metaChannel.current.send(JSON.stringify({type: META_TYPES.START_GAME, turns: turns.current.state.value, rounds: rounds.current.state.value }));
         else
             alert("Please check turns and rounds value");
@@ -113,11 +112,11 @@ const GatheringSpace = props => {
     }
 
     const updateTurnTime = (e) => {
-        metaChannel.current.send(JSON.stringify({ type: META_TYPES.TURN_TIME, value: e.target.value }));
+        metaChannel.current.send(JSON.stringify({ type: META_TYPES.TURN_TIME, value: e }));
     }
 
     const updateRoundNum = (e) => {
-        metaChannel.current.send(JSON.stringify({ type: META_TYPES.ROUND_NUM, value: e.target.value }));
+        metaChannel.current.send(JSON.stringify({ type: META_TYPES.ROUND_NUM, value: e }));
     }
 
     return (

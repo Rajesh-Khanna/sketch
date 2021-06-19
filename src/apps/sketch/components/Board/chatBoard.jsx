@@ -28,19 +28,16 @@ const ChatBoard = props => {
     const MessageRow = ({ index, style }) => {
         const name = getPlayerById(messages[index].userId).name;
         const msg = messages[index].data
+        let row = <></>;
         if(messages[index].type === CHAT_TYPE.SOLVED){
-            return(
-                <div style={style}><b style={{ color:'green' }}>{name}: GUESSED CORRECTLY</b></div>
-            )
+            row = <b style={{ color:'green' }}>{name}: GUESSED CORRECTLY</b>;
         }
         else if(messages[index].type === CHAT_TYPE.CORRECT_WORD){
-            return(
-                <div style={style}><b style={{ color:'darkorange' }}>The Correct word is "{msg}"</b></div>
-            )
+            row = <b style={{ color:'darkorange' }}>The Correct word is "{msg}"</b>;
+        }else{
+            row = (<span><b>{name}: </b>{msg}</span>);
         }
-        return(
-            <div style={style}><b>{name}: </b>{msg}</div>
-        )
+        return <div style={{ ...style, background: index % 2? '#ddd': '#fff', paddingLeft: '5px' }}>{row}</div>
     }
 
     return (
@@ -53,7 +50,7 @@ const ChatBoard = props => {
         <Row>
             <Col>
                 <List
-                    height={150}
+                    height={400}
                     width={250}
                     itemCount={messages.length}
                     itemSize={() => 25}

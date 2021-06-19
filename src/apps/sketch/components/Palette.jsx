@@ -7,6 +7,8 @@ import { FaEraser, FaPaintBrush, FaUndo, FaTrashAlt } from 'react-icons/fa';
 
 export default function Palette(props) {
 
+    const { color } = props;
+
     const ColorOptions = () => {
         const colors = [ '#000000',
             '#464646',
@@ -37,7 +39,7 @@ export default function Palette(props) {
             '#6f3198',
             '#b5a5d5', ];
         
-        return  colors.map(color => <Col> <Button className='colorButton' style={{ backgroundColor: color}} onClick={ () => { props.handleColor(color) } } > </Button> </Col>)
+        return  colors.map(colorS => <Col> <Button className='colorButton' style={{ backgroundColor: colorS, border: (color === colorS? 'dashed' : 'none') }} onClick={ () => { props.handleColor(colorS) } } > </Button> </Col>)
     }
 
     const marks = {
