@@ -29,11 +29,21 @@ const ChatBoard = props => {
         const name = getPlayerById(messages[index].userId).name;
         const msg = messages[index].data
         let row = <></>;
+        const isDisplayCloseness = messages[index].isClose & (getMyInfo().id === messages[index].userId)
+
         if(messages[index].type === CHAT_TYPE.SOLVED){
             row = <b style={{ color:'green' }}>{name}: GUESSED CORRECTLY</b>;
         }
         else if(messages[index].type === CHAT_TYPE.CORRECT_WORD){
             row = <b style={{ color:'darkorange' }}>The Correct word is "{msg}"</b>;
+        }else if(messages[index].type === CHAT_TYPE.NEW_PLAYER) {
+            row = (
+                <b style={{ color:'green' }}>{name} JOINED</b>
+            )
+        }else if(isDisplayCloseness) {
+            row = (
+                    <><b>{name}: </b>{msg} <b style={{ color:'orange' }}>(is close!)</b></>
+            );
         }else{
             row = (<span><b>{name}: </b>{msg}</span>);
         }

@@ -225,6 +225,17 @@ const Board = props => {
 
           case "DISCONNECTED":
             openNotification(obj.id);
+            setScores(obj.scores);
+            break;
+
+          case "SCORE":
+            console.log(obj);
+            /**
+             * Used to give necessary context to the new player joined
+             * in between game (also updates player list everywhere)
+             */
+            currPlayer.current = obj.artist;
+            setScores(obj.scores);
             break;
           default:
             console.log('unkown type: ' + obj.type);

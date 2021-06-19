@@ -64,6 +64,7 @@ export const CHAT_TYPE = {
     SOLVED: 'SOLVED',
     CLUE: 'CLUE',
     CORRECT_WORD: 'CORRECT_WORD',
+    NEW_PLAYER: 'NEW_PLAYER',
 }
 
 export const BRUSH_TYPE = {

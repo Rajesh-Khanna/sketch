@@ -26,6 +26,8 @@ export class ActivityManager {
 
     alivePlayers;
 
+    sessionDrawingQueue = [];
+
     sessionBrushQueue = {};
 
     playerPositions = {};
@@ -67,6 +69,8 @@ export class ActivityManager {
                 this.handleBackGround(message);
                 break;
             case 'brush':
+                this.handleBrush(message);
+                break;
             default:
                 this.publish(message);
         }
@@ -110,10 +114,12 @@ export class ActivityManager {
         this.setGameSession(false);
 
         this.players.calculateScores(this.artist);
+        this.artist = '';
 
         console.log(this.players.getScore());
 
         this.sessionBrushQueue['brush'] = [];
+        this.sessionDrawingQueue = [];
 
         const correctWord = {
             "type": "CORRECT_WORD",
@@ -160,6 +166,7 @@ export class ActivityManager {
              */
             setTimeout(() => {
                 this.artist = userId;
+                this.sessionDrawingQueue = [];
                 console.log('message sent'); //
                 let initObj = {
                     "type": "INIT_TURN",
@@ -209,6 +216,26 @@ export class ActivityManager {
         }
     }
 
+    isGuessedWordClose(guessedWord, originalWord) {
+        if (Math.abs(guessedWord.length - originalWord.length) > 1) {
+            return false;
+        }
+        let count = 0;
+        if (guessedWord.length !== originalWord.length) count = 1;
+        for (let i = 0; i < Math.min(guessedWord.length, originalWord.length); i++) {
+            if (guessedWord[i] !== originalWord[i]) {
+                count++;
+            }
+            if (count > 1) return false;
+        }
+        return true;
+    }
+
+    handleBrush(message) {
+        this.sessionDrawingQueue.push(message);
+        this.publish(message);
+    }
+
     handleBackGround(message) {
         const data = JSON.parse(message.data);
 
@@ -245,7 +272,12 @@ export class ActivityManager {
             this.publish({ data: JSON.stringify(resp) }, getChannel(message));
             this.checkIfEveryOneSolved();
         } else {
-            this.publish(message);
+            if(this.isGuessedWordClose(data.data.toLowerCase(), this.currWord.toLowerCase())) {
+                data.isClose = true;
+            } else {
+                data.isClose = false;
+            }
+            this.publish({data: JSON.stringify(data)}, getChannel(message))
         }
     }
 
@@ -300,8 +332,17 @@ export class ActivityManager {
         this.publish({ data: JSON.stringify({type: META_TYPES.ROUND_NUM, value: this.rounds}) }, getChannel(message));
 
         // If player joins in between game
-        if (this.isGameActive)
+        if (this.isGameActive) {
             this.publish({ data: JSON.stringify({type: META_TYPES.START_GAME, turns: this.turnTime, rounds: this.rounds }) }, 'meta');
+            setTimeout(() => {
+                this.publish({ data: JSON.stringify({type: "SCORE", scores: this.players.getScore(), artist: this.artist }) }, 'background');
+                this.publish({ data: JSON.stringify({ type: CHAT_TYPE.NEW_PLAYER, userId: data.userId, data:'' }) }, 'chat');
+                // for (var i = 0; i < this.sessionDrawingQueue.length; i++) {
+                //     this.publish(this.sessionDrawingQueue[i]);
+                // }
+            }, SMALL_TIMEOUT);
+        }
+
     }
 
     checkHeartBeat() {
@@ -319,7 +360,12 @@ export class ActivityManager {
                 if (!this.alivePlayers.includes(allPlayers[i].userId)) {
                     console.log(allPlayers[i].userId);
                     this.players.deletePlayer(allPlayers[i].userId);
-                    this.publish({ data: JSON.stringify({ type: 'DISCONNECTED', id: allPlayers[i].userId }) }, 'background');
+                    this.publish({ data: JSON.stringify({ type: 'DISCONNECTED', id: allPlayers[i].userId, scores: this.players.getScore() }) }, 'background');
+                    if (this.artist === allPlayers[i].userId) {
+                        clearTimeout(this.handleTimeOutVariable);
+                        this.resetSessionScores();
+                        this.handleTimeOut();
+                    }
                     console.log(this.players.getAllPlayers());
                 }
             }
