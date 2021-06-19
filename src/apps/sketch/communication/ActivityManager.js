@@ -337,9 +337,9 @@ export class ActivityManager {
             setTimeout(() => {
                 this.publish({ data: JSON.stringify({type: "SCORE", scores: this.players.getScore(), artist: this.artist }) }, 'background');
                 this.publish({ data: JSON.stringify({ type: CHAT_TYPE.NEW_PLAYER, userId: data.userId, data:'' }) }, 'chat');
-                for (var i = 0; i < this.sessionDrawingQueue.length; i++) {
-                    this.publish(this.sessionDrawingQueue[i]);
-                }
+                // for (var i = 0; i < this.sessionDrawingQueue.length; i++) {
+                //     this.publish(this.sessionDrawingQueue[i]);
+                // }
             }, SMALL_TIMEOUT);
         }
 
