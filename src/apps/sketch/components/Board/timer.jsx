@@ -11,14 +11,15 @@ const Timer = (props) => {
 
     useEffect(() => {
         id.current = window.setInterval(() => {
-            setTimer((time)=>time-1)
+            if(timer >0)
+                setTimer((time)=>time-1)
         },1000)
         return ()=>clear();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timerFlag]);
 
     useEffect(() => {
-        if (timer === 0) {
+        if (timer <= 0) {
             clear();
         }
     }, [timer]);

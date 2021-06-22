@@ -43,7 +43,7 @@ const EmptyPage = ({setactivateRoom}) => {
                         <li>Its a simple game of pictionary</li>
                         <li>The drawer will be given a word which he has to convey to his friends by drawing</li>
                         <li>The faster other players guess the word from the drawing greater the points that they get</li>
-                        <li>In this fasion each player will get an chance to draw per round</li>
+                        <li>In this fashion each player will get an chance to draw per round</li>
                         <li>Finally who ever has the highest score wins</li>
                     </ul>
                 </Col>

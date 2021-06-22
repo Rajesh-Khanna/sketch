@@ -82,7 +82,7 @@ export class Players {
     }
 
     /** player -> 400 (formula) + 100 bonus (100/no.of players guessed)
-     *  artist -> 400 ((400/playerCount) * no. of players guessed) + 100 bonus ((sum of each player formula score)/(4*(playerCount)) )
+     *  artist -> 200 ((200/playerCount) * no. of players guessed) + 300 bonus (3*(sum of each player formula score)/(4*(playerCount)) )
      *  considering avg as 60% so that the cubic equation will be strictly increasing with time (avg => at 60% of time, score will be half(200))
     */
     calculateScores(artist) {
@@ -120,22 +120,22 @@ export class Players {
                 }
                 score = Math.min(Math.round(absoluteScore+relativeScore), 500);
                 scoreSum += score;
-                p[i].addScore(score);
+                p[i].addScore(Math.max(score,0));
             }
         }
 
         //Artist score
 
-        if(!artist) return;
+        if(!artist || artist==='') return;
         if (count === 0) {
             p[artistIndex].addScore(0);
         } else {
-            absoluteScore = (400/(p.length-1))*count;
-            relativeScore = scoreSum/(4*(p.length-1));
+            absoluteScore = (200/(p.length-1))*count;
+            relativeScore = 3*(scoreSum/(4*(p.length-1)));
 
             score = Math.min(Math.round(absoluteScore+relativeScore), 500);
             console.log(score);
-            p[artistIndex].addScore(score);
+            p[artistIndex].addScore(Math.max(score,0));
         }
     }
 }

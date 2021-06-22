@@ -363,6 +363,7 @@ export class ActivityManager {
                     this.publish({ data: JSON.stringify({ type: 'DISCONNECTED', id: allPlayers[i].userId, scores: this.players.getScore() }) }, 'background');
                     if (this.artist === allPlayers[i].userId) {
                         clearTimeout(this.handleTimeOutVariable);
+                        this.artist = '';
                         this.resetSessionScores();
                         this.handleTimeOut();
                     }
