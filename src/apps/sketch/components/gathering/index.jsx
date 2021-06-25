@@ -177,7 +177,7 @@ const GatheringSpace = props => {
                                     </Row>
                                     <Row justify='center'>
                                         <Col md={24} lg={6}  style={{ textAlign: 'center', padding: '8px' }}>
-                                            <Button type="primary" className='startButton' onClick={startBoard}> Start Board </Button>
+                                            <Button type="primary" className='startButton' onClick={startBoard}> Start Game </Button>
                                         </Col>                                    
                                     </Row>
                                     </>
