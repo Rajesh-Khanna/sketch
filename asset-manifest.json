@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/sketch/static/css/main.4efd9b02.chunk.css",
+    "main.js": "/sketch/static/js/main.eb6fb0e5.chunk.js",
+    "main.js.map": "/sketch/static/js/main.eb6fb0e5.chunk.js.map",
+    "runtime-main.js": "/sketch/static/js/runtime-main.9fb50aca.js",
+    "runtime-main.js.map": "/sketch/static/js/runtime-main.9fb50aca.js.map",
+    "static/css/2.f3f01324.chunk.css": "/sketch/static/css/2.f3f01324.chunk.css",
+    "static/js/2.a187b3e4.chunk.js": "/sketch/static/js/2.a187b3e4.chunk.js",
+    "static/js/2.a187b3e4.chunk.js.map": "/sketch/static/js/2.a187b3e4.chunk.js.map",
+    "static/js/3.4803ddf5.chunk.js": "/sketch/static/js/3.4803ddf5.chunk.js",
+    "static/js/3.4803ddf5.chunk.js.map": "/sketch/static/js/3.4803ddf5.chunk.js.map",
+    "index.html": "/sketch/index.html",
+    "static/css/2.f3f01324.chunk.css.map": "/sketch/static/css/2.f3f01324.chunk.css.map",
+    "static/css/main.4efd9b02.chunk.css.map": "/sketch/static/css/main.4efd9b02.chunk.css.map",
+    "static/js/2.a187b3e4.chunk.js.LICENSE.txt": "/sketch/static/js/2.a187b3e4.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/sketch/static/media/Roboto-Regular.a8d6ac03.ttf"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9fb50aca.js",
+    "static/css/2.f3f01324.chunk.css",
+    "static/js/2.a187b3e4.chunk.js",
+    "static/css/main.4efd9b02.chunk.css",
+    "static/js/main.eb6fb0e5.chunk.js"
+  ]
+}
