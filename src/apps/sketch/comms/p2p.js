@@ -5,7 +5,7 @@ export default class p2pConnection {
     }
 
     async makeCall(sc) {
-        const configuration = { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] }
+        const configuration = { 'iceServers': [{ 'urls': 'turn:172.31.23.24:3478' }] }
         this.peerConnection = new RTCPeerConnection(configuration);
         this.peerConnection.createDataChannel('channel');
         this.peerConnection.ondatachannel = e => {
@@ -41,7 +41,7 @@ export default class p2pConnection {
     }
 
     async receiveCall(sc) {
-        const configuration = { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] }
+        const configuration = { 'iceServers': [{ 'urls': 'turn:172.31.23.24:3478' }] }
 
         this.peerConnection = new RTCPeerConnection(configuration);
 
